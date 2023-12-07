@@ -1,6 +1,7 @@
 import { prismaClient } from "../app/database.js";
 import { ResponseError } from "../error/response-error.js";
 import {
+  adminGetValidation,
   adminLoginValidation,
   adminRegistValidation,
 } from "../validation/admin-validation.js";
@@ -105,9 +106,29 @@ const regist = async (request) => {
       name: true,
       nip: true,
       email: true,
-      password: true,
     },
   });
 };
 
-export default { login, regist };
+const logout = async (email) => {
+  email = validate(adminGetValidation, email);
+
+  const isEmailExist = await prismaClient.admin.findUnique({
+    where: {
+      email: email,
+    },
+  });
+
+  if (!isEmailExist) throw new ResponseError(400, "Admin tidak ditemukan");
+
+  return prismaClient.admin.update({
+    where: {
+      email: email,
+    },
+    data: {
+      token: null,
+    },
+  });
+};
+
+export default { login, regist, logout };

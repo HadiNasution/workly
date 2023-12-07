@@ -1,5 +1,9 @@
 import supertest from "supertest";
-import { removeTestAdmin, createTestAdmin } from "./admin-test-utils.js";
+import {
+  removeTestAdmin,
+  createTestAdmin,
+  getTestAdmin,
+} from "./admin-test-utils.js";
 import { web } from "../src/app/web.js";
 import { logger } from "../src/app/logging.js";
 
@@ -74,7 +78,6 @@ describe("POST /api/admin/login", function () {
 
 // UNIT TEST API REGIST ADMIN
 describe("POST /api/admin/regist", function () {
-  // lalu hapus datanya setelah test selesai
   afterEach(async () => {
     await removeTestAdmin();
   });
@@ -94,7 +97,6 @@ describe("POST /api/admin/regist", function () {
     expect(result.body.data.name).toBe("test");
     expect(result.body.data.nip).toBe("11111111");
     expect(result.body.data.email).toBe("test@gmail.com");
-    expect(result.body.data.password).toBeDefined();
   });
   // TEST REGIST INVALID REQUEST
   it("should reject regist if request is invalid", async () => {
@@ -129,6 +131,42 @@ describe("POST /api/admin/regist", function () {
     logger.info(result.body);
 
     expect(result.status).toBe(400);
+    expect(result.body.errors).toBeDefined();
+  });
+});
+
+// UNIT TEST API LOGOUT ADMIN
+describe("DELETE /api/admin/logout", function () {
+  beforeEach(async () => {
+    await createTestAdmin();
+  });
+  afterEach(async () => {
+    await removeTestAdmin();
+  });
+
+  // TEST LOGOUT BERHASIL
+  it("should can be logout", async () => {
+    const result = await supertest(web)
+      .delete("/api/admin/logout")
+      .set("Authorization", "test");
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(200);
+    expect(result.body.data).toBe("Logout Success");
+
+    const admin = await getTestAdmin();
+    expect(admin.token).toBeNull();
+  });
+  // TEST LOGOUT GAGAL
+  it("should reject logout if token is invalid", async () => {
+    const result = await supertest(web)
+      .delete("/api/admin/logout")
+      .set("Authorization", "salah");
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(401);
     expect(result.body.errors).toBeDefined();
   });
 });

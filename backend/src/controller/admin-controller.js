@@ -1,6 +1,6 @@
 import adminService from "../services/admin-service.js";
 
-const loginController = async (req, res, next) => {
+const login = async (req, res, next) => {
   try {
     const result = await adminService.login(req.body);
     res.status(200).json({ data: result });
@@ -9,7 +9,7 @@ const loginController = async (req, res, next) => {
   }
 };
 
-const registController = async (req, res, next) => {
+const regist = async (req, res, next) => {
   try {
     const result = await adminService.regist(req.body);
     res.status(201).json({ data: result });
@@ -18,4 +18,13 @@ const registController = async (req, res, next) => {
   }
 };
 
-export default { loginController, registController };
+const logout = async (req, res, next) => {
+  try {
+    await adminService.logout(req.admin.email);
+    res.status(200).json({ data: "Logout Success" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { login, regist, logout };

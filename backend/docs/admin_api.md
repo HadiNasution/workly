@@ -59,8 +59,7 @@ Response body success :
   "data": {
     "name": "admin2",
     "nip": "123344553322",
-    "email": "admin2@mail.com",
-    "password": "rahasia"
+    "email": "admin2@mail.com"
   }
 }
 ```

@@ -14,4 +14,7 @@ const adminRegistValidation = Joi.object({
   password: Joi.string().max(100).required(),
 });
 
-export { adminLoginValidation, adminRegistValidation };
+//validasi get admin
+const adminGetValidation = Joi.string().max(100).email().required();
+
+export { adminLoginValidation, adminRegistValidation, adminGetValidation };
