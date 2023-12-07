@@ -1,0 +1,79 @@
+import { prismaClient } from "../app/database.js";
+import { ResponseError } from "../error/response-error.js";
+import { adminLoginValidation } from "../validation/admin-validation.js";
+import { validate } from "../validation/validation.js";
+import bcrypt from "bcrypt";
+import { v4 as uuid } from "uuid";
+import { addMinutes } from "date-fns";
+
+// service untuk login admin
+const login = async (request) => {
+  // 1. Validasi format request
+  const loginRequest = validate(adminLoginValidation, request);
+
+  // 2. Get data admin dari database untuk validasi email dan Password
+  const admin = await prismaClient.admin.findUnique({
+    where: {
+      email: loginRequest.email,
+    },
+    select: {
+      email: true,
+      password: true,
+      token: true,
+      token_expires_at: true,
+    },
+  });
+
+  // jika email tidak ditemukan didatabase, maka berikan pesan error 401
+  if (!admin) throw new ResponseError(401, "Wrong Email or Password");
+
+  // lalu validasi password dengan bcrypt.compare
+  const isAdminValid = await bcrypt.compare(
+    loginRequest.password,
+    admin.password
+  );
+
+  // jika validasi password gagal, maka berikan pesan error 401
+  if (!isAdminValid) throw new ResponseError(401, "Wrong Email or Password");
+
+  // Cek apakah token masih valid, Jika tidak generate token baru. Jika masih valid kembalikan data admin
+  const currentDate = new Date();
+  if (!admin.token_expires_at || currentDate > admin.token_expires_at) {
+    // set waktu aktif token di 30 menit
+    const expirationTime = addMinutes(currentDate, 30);
+    console.log("Waktu sekarang" + currentDate);
+    console.log("Waktu expired" + expirationTime);
+
+    // Generate token baru
+    const newToken = uuid().toString();
+
+    // update data admin dengan token baru yang valid
+    return prismaClient.admin.update({
+      data: {
+        token: newToken,
+        token_expires_at: expirationTime,
+      },
+      where: {
+        email: admin.email,
+      },
+      select: {
+        is_super_admin: true,
+        token: true,
+        token_expires_at: true,
+      },
+    });
+  }
+
+  return prismaClient.admin.findUnique({
+    where: {
+      email: admin.email,
+    },
+    select: {
+      is_super_admin: true,
+      token: true,
+      token_expires_at: true,
+    },
+  });
+};
+
+export default { login };

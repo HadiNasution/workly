@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id Int @id @default(autoincrement())
+  nip String @db.VarChar(16) @unique
+  name String @db.VarChar(100)
+  email String @db.VarChar(100) @unique
+  password String @db.VarChar(100)
+  token String? @db.VarChar(100) @unique
+  token_expires_at DateTime?
+  is_super_admin Boolean @default(false)
+  employee Employee[]
+
+  @@map("Admin")
+}
+
+model Employee {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(100)
+  nip String @db.VarChar(16) @unique
+  email String @db.VarChar(100) @unique
+  password String @db.VarChar(100)
+  role String? @db.VarChar(12)
+  departmen String? @db.VarChar(100)
+  picture String? @db.VarChar(255)
+  token String? @db.VarChar(100) @unique
+  token_expires_at DateTime?
+  join_date DateTime?
+  quit_date DateTime?
+  admin_id Int 
+  admin Admin @relation(fields: [admin_id], references: [id])
+  attendance_recap AttendanceRecap[]
+  attendance Attendance[]
+
+  @@map("Employee")
+}
+
+model Attendance {
+  id Int @id @default(autoincrement())
+  date DateTime
+  time_in DateTime?
+  time_out DateTime?
+  is_working Boolean? @default(false)
+  is_wfh Boolean? @default(false)
+  is_sick Boolean? @default(false)
+  is_leaves Boolean? @default(false)
+  is_permits Boolean? @default(false)
+  notes String? @db.VarChar(255)
+  longtitude_in Int
+  latitude_in Int
+  lontitude_out Int
+  latitude_out Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime 
+  employee_id Int 
+  employee Employee @relation(fields: [employee_id], references: [id])
+
+  @@map("Attendance")
+}
+
+model AttendanceRecap {
+  id Int @id @default(autoincrement())
+  count_sick Int?
+  count_permits Int?
+  count_leaves Int?
+  count_wfh Int?
+  count_works Int?
+  date DateTime
+  notes String? @db.VarChar(255)
+  employee_id Int
+  employee Employee @relation(fields: [employee_id], references: [id])
+
+  @@map("AttendanceRecap")
+}
+
+model Log {
+  id Int @id @default(autoincrement())
+  employee_id Int?
+  admin_id Int?
+  attendance_id Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at DateTime
+  message String? @db.VarChar(255)
+  date DateTime
+
+  @@map("Log")
+}

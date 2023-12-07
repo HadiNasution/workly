@@ -1,0 +1,302 @@
+# Employee/User API Specs
+
+## Login
+
+Endpoint : POST /api/user/login
+
+Request Body :
+
+```json
+{
+  "email": "user@mail.com",
+  "password": "rahasia"
+}
+```
+
+Response Body Success :
+
+```json
+{
+  "data": {
+    "isSuperAdmin": "true",
+    "token": "unique-token"
+  }
+}
+```
+
+## Logout
+
+Endpoint : DELETE /api/user/logout
+
+Headers :
+
+- Authorization : token
+
+Response Body Success :
+
+```json
+{
+  "data": "OK"
+}
+```
+
+Response Body Error :
+
+```json
+{
+  "errors": "anauthorized"
+}
+```
+
+## Absen Time in
+
+Endpoint : POST /api/user/attendance/
+
+Headers :
+
+- Authorization : token
+
+Request Body :
+
+```json
+{
+  "name": "hadi",
+  "nip": "1223445533",
+  "date": "03/12/2023",
+  "time_in": "07:00",
+  "isWfh": "false",
+  "longtitude_in": "21.212",
+  "latitude_in": "2223.11"
+}
+```
+
+Response Body Success :
+
+```json
+{
+  "data": "Absen masuk Berhasil"
+}
+```
+
+Response Body Error :
+
+```json
+{
+  "errors": "anauthorized"
+}
+```
+
+## Absen Time out
+
+Endpoint : PUT /api/user/attendance/
+
+Headers :
+
+- Authorization : token
+
+Request Body :
+
+```json
+{
+  "name": "hadi",
+  "nip": "1223445533",
+  "date": "03/12/2023",
+  "time_out": "07:00",
+  "longtitude_out": "21.212",
+  "latitude_out": "2223.11"
+}
+```
+
+Response Body Success :
+
+```json
+{
+  "data": "Absen keluar Berhasil"
+}
+```
+
+Response Body Error :
+
+```json
+{
+  "errors": "anauthorized"
+}
+```
+
+## Profile details
+
+Endpoint : GET /api/user/profile/
+
+Headers :
+
+- Authorization : token
+
+Response Body Success :
+
+```json
+{
+  "data": {
+    "name": "hadi",
+    "nip": "1122334445",
+    "role": "junior dev",
+    "departmen": "it",
+    "picture": "https://hehe.jpg",
+    "email": "hadi@mail.com",
+    "join_date": "01/01/2024",
+    "quit_date": "null"
+  }
+}
+```
+
+Response Body Error :
+
+```json
+{
+  "errors": "anauthorized"
+}
+```
+
+## Update foto profile
+
+Endpoint : POST /api/user/profile/
+
+Headers :
+
+- Authorization : token
+
+Request Body :
+
+```json
+{
+  "name": "hadi",
+  "nip": "1122334445",
+  "picture": "https://hehe.jpg"
+}
+```
+
+Response Body Success :
+
+```json
+{
+  "data": {
+    "name": "hadi",
+    "nip": "1122334445",
+    "picture": "https://hehe2.jpg"
+  }
+}
+```
+
+Response Body Error :
+
+```json
+{
+  "errors": "Image format is not supported"
+}
+```
+
+## Pengajuan cuti, izin, sakit
+
+Endpoint : POST /api/user/permission/
+
+Headers :
+
+- Authorization : token
+
+Request Body :
+
+```json
+{
+  "name": "hadi",
+  "nip": "1122334445",
+  "isSick": "true", //opt
+  "isPermits": "false", //opt
+  "isLeaves": "false", //opt
+  "notes": "demam"
+}
+```
+
+Response Body Success :
+
+```json
+{
+  "data": "Pengajuan berhasil dikirim"
+}
+```
+
+Response Body Error :
+
+```json
+{
+  "errors": "Image format is not supported"
+}
+```
+
+## Attendance Recap by Day
+
+Endpoint : GET /api/user/recapbyday/
+
+Header :
+
+- Authorization : token
+
+Response body success :
+
+```json
+{
+  "data": {
+    "name": "hadi",
+    "date": "13/12/2023",
+    "time_in": "07:00",
+    "time_out": "17:00",
+    "isWorking": "true",
+    "isLate": "false",
+    "isWfh": "true",
+    "isSick": "false",
+    "isLeaves": "false",
+    "isPermits": "false",
+    "notes": ""
+  }
+}
+```
+
+Response body error :
+
+```json
+{
+  "errors": "Employee is not found"
+}
+```
+
+## Attendance Recap by Month
+
+Endpoint : GET /api/user/recapbymonth/
+
+Header :
+
+- Authorization : token
+
+Response body success :
+
+```json
+{
+  "data": {
+    "name": "hadi",
+    "date": "13/12/2023",
+    "count_sick": "0",
+    "count_permits": "1",
+    "count_leaves": "1",
+    "count_wfh": "2",
+    "count_works": "24",
+    "count_late": "2",
+    "notes": "demam"
+  }
+}
+```
+
+Response body error :
+
+```json
+{
+  "errors": "Employee is not found"
+}
+```
