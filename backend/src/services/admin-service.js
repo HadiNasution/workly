@@ -1,6 +1,9 @@
 import { prismaClient } from "../app/database.js";
 import { ResponseError } from "../error/response-error.js";
-import { adminLoginValidation } from "../validation/admin-validation.js";
+import {
+  adminLoginValidation,
+  adminRegistValidation,
+} from "../validation/admin-validation.js";
 import { validate } from "../validation/validation.js";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
@@ -41,8 +44,8 @@ const login = async (request) => {
   if (!admin.token_expires_at || currentDate > admin.token_expires_at) {
     // set waktu aktif token di 30 menit
     const expirationTime = addMinutes(currentDate, 30);
-    console.log("Waktu sekarang" + currentDate);
-    console.log("Waktu expired" + expirationTime);
+    // console.log("Waktu sekarang" + currentDate);
+    // console.log("Waktu expired" + expirationTime);
 
     // Generate token baru
     const newToken = uuid().toString();
@@ -76,4 +79,35 @@ const login = async (request) => {
   });
 };
 
-export default { login };
+// service untuk regist admin by superadmin
+const regist = async (request) => {
+  const registRequest = validate(adminRegistValidation, request);
+
+  const isNipDuplicate = await prismaClient.admin.count({
+    where: {
+      nip: registRequest.nip,
+    },
+  });
+  const isEmailDuplicate = await prismaClient.admin.count({
+    where: {
+      email: registRequest.email,
+    },
+  });
+
+  if (isNipDuplicate === 1) throw new ResponseError(400, "NIP Sudah ada");
+  if (isEmailDuplicate === 1) throw new ResponseError(400, "Email Sudah ada");
+
+  registRequest.password = await bcrypt.hash(registRequest.password, 10);
+
+  return prismaClient.admin.create({
+    data: registRequest,
+    select: {
+      name: true,
+      nip: true,
+      email: true,
+      password: true,
+    },
+  });
+};
+
+export default { login, regist };

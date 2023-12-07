@@ -4,9 +4,9 @@ import { errorMiddleware } from "../middleware/error-middleware.js";
 
 export const web = express();
 
-// API ADMIN
-web.use(express.json());
+web.use(express.json()); // body parser + url-encoded
 
+// API ADMIN
 web.use(publicRoute);
 
 web.use(errorMiddleware); // handle error

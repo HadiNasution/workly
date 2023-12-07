@@ -33,6 +33,46 @@ Response Body Error :
 }
 ```
 
+## Regist
+
+Endpoint : POST /api/admin/regist
+
+Header :
+
+- Authorization : token
+
+Request body :
+
+```json
+{
+  "name": "admin2",
+  "nip": "123344553322",
+  "email": "admin2@mail.com",
+  "password": "rahasia"
+}
+```
+
+Response body success :
+
+```json
+{
+  "data": {
+    "name": "admin2",
+    "nip": "123344553322",
+    "email": "admin2@mail.com",
+    "password": "rahasia"
+  }
+}
+```
+
+Response body error :
+
+```json
+{
+  "errors": "email is not valid"
+}
+```
+
 ## Logout
 
 Endpoint : DELETE /api/admin/logout
@@ -55,6 +95,32 @@ Response Body Error :
 {
   "errors": "anauthorized"
 }
+```
+
+## Get admin
+
+Endpoint : GET /api/admin/:nip
+
+Header :
+
+- Authorization : token
+
+Response body :
+
+```json
+{
+  "data": {
+    "name": "hadi",
+    "nip": "123344553322",
+    "email": "hadi@mail.com"
+  }
+}
+```
+
+Response body error :
+
+```json
+{ "errors": "email is not valid" }
 ```
 
 ## Create user
@@ -98,6 +164,68 @@ Response body error :
 ```json
 {
   "errors": "email is not valid"
+}
+```
+
+## Update admin
+
+Endpoint : PUT /api/admin/:nip
+
+Header :
+
+- Authorization : token
+
+Request body :
+
+```json
+{
+  "name": "hadi", //opt
+  "email": "hadi@mail.com", //opt
+  "password": "rahasia" //opt
+}
+```
+
+Response body success :
+
+```json
+{
+  "data": {
+    "name": "hadi",
+    "email": "hadi@mail.com",
+    "password": "rahasia"
+  }
+}
+```
+
+Response body error :
+
+```json
+{
+  "errors": "email is not valid"
+}
+```
+
+## Delete admin
+
+Endpoint : DELETE /api/admin/:nip
+
+Header :
+
+- Authorization : token
+
+Response body success :
+
+```json
+{
+  "data": "Deleted"
+}
+```
+
+Response body error :
+
+```json
+{
+  "errors": "Employee is not found"
 }
 ```
 

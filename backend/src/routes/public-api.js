@@ -4,5 +4,6 @@ import adminController from "../controller/admin-controller.js";
 
 const publicRoute = new express.Router();
 publicRoute.post("/api/admin/login", adminController.loginController);
+publicRoute.post("/api/admin/regist", adminController.registController);
 
 export { publicRoute };

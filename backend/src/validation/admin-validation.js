@@ -6,4 +6,12 @@ const adminLoginValidation = Joi.object({
   password: Joi.string().max(100).required(),
 });
 
-export { adminLoginValidation };
+// validasi untuk regist admin by superadmin
+const adminRegistValidation = Joi.object({
+  name: Joi.string().max(100).required(),
+  nip: Joi.string().max(16).required(),
+  email: Joi.string().max(100).email().required(),
+  password: Joi.string().max(100).required(),
+});
+
+export { adminLoginValidation, adminRegistValidation };

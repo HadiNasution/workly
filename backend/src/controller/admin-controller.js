@@ -9,4 +9,13 @@ const loginController = async (req, res, next) => {
   }
 };
 
-export default { loginController };
+const registController = async (req, res, next) => {
+  try {
+    const result = await adminService.regist(req.body);
+    res.status(201).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { loginController, registController };
