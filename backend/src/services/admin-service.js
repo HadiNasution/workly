@@ -29,22 +29,22 @@ const login = async (request) => {
   });
 
   // jika email tidak ditemukan didatabase, maka berikan pesan error 401
-  if (!admin) throw new ResponseError(401, "Wrong Email or Password");
+  if (!admin) throw new ResponseError(401, "Wrong Email");
 
   // lalu validasi password dengan bcrypt.compare
-  const isAdminValid = await bcrypt.compare(
+  const isPasswordValid = await bcrypt.compare(
     loginRequest.password,
     admin.password
   );
 
   // jika validasi password gagal, maka berikan pesan error 401
-  if (!isAdminValid) throw new ResponseError(401, "Wrong Email or Password");
+  if (!isPasswordValid) throw new ResponseError(401, "Wrong Password");
 
   // Cek apakah token masih valid, Jika tidak generate token baru. Jika masih valid kembalikan data admin
   const currentDate = new Date();
   if (!admin.token_expires_at || currentDate > admin.token_expires_at) {
     // set waktu aktif token di 30 menit
-    const expirationTime = addMinutes(currentDate, 30);
+    const expirationTime = addMinutes(currentDate, 120);
     // console.log("Waktu sekarang" + currentDate);
     // console.log("Waktu expired" + expirationTime);
 

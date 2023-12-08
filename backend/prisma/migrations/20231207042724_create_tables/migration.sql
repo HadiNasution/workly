@@ -104,7 +104,7 @@ CREATE UNIQUE INDEX "Employee_email_key" ON "Employee"("email");
 CREATE UNIQUE INDEX "Employee_token_key" ON "Employee"("token");
 
 -- AddForeignKey
-ALTER TABLE "Employee" ADD CONSTRAINT "Employee_admin_id_fkey" FOREIGN KEY ("admin_id") REFERENCES "Admin"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Employee" ADD CONSTRAINT "Employee_admin_id_fkey" FOREIGN KEY ("admin_id") REFERENCES "Admin"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Attendance" ADD CONSTRAINT "Attendance_employee_id_fkey" FOREIGN KEY ("employee_id") REFERENCES "Employee"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

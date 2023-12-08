@@ -37,8 +37,8 @@ model Employee {
   token_expires_at DateTime?
   join_date DateTime?
   quit_date DateTime?
-  admin_id Int 
-  admin Admin @relation(fields: [admin_id], references: [id])
+  admin_id Int? 
+  admin Admin? @relation(fields: [admin_id], references: [id])
   attendance_recap AttendanceRecap[]
   attendance Attendance[]
 
@@ -63,8 +63,8 @@ model Attendance {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   deleted_at DateTime 
-  employee_id Int 
-  employee Employee @relation(fields: [employee_id], references: [id])
+  employee_id Int?
+  employee Employee? @relation(fields: [employee_id], references: [id])
 
   @@map("Attendance")
 }
@@ -78,8 +78,8 @@ model AttendanceRecap {
   count_works Int?
   date DateTime
   notes String? @db.VarChar(255)
-  employee_id Int
-  employee Employee @relation(fields: [employee_id], references: [id])
+  employee_id Int?
+  employee Employee? @relation(fields: [employee_id], references: [id])
 
   @@map("AttendanceRecap")
 }

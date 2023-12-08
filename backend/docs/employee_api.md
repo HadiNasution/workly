@@ -1,8 +1,8 @@
-# Employee/User API Specs
+# Employee API Specs
 
 ## Login
 
-Endpoint : POST /api/user/login
+Endpoint : POST /api/employee/login
 
 Request Body :
 
@@ -18,15 +18,15 @@ Response Body Success :
 ```json
 {
   "data": {
-    "isSuperAdmin": "true",
-    "token": "unique-token"
+    "token": "unique-token",
+    "token_expires_at": "Dec 07 2023 10:11:57 GMT+0700"
   }
 }
 ```
 
 ## Logout
 
-Endpoint : DELETE /api/user/logout
+Endpoint : DELETE /api/employee/logout
 
 Headers :
 
@@ -36,7 +36,7 @@ Response Body Success :
 
 ```json
 {
-  "data": "OK"
+  "data": "Logout Success"
 }
 ```
 
@@ -50,7 +50,7 @@ Response Body Error :
 
 ## Absen Time in
 
-Endpoint : POST /api/user/attendance/
+Endpoint : POST /api/employee/attendance/
 
 Headers :
 
@@ -88,7 +88,7 @@ Response Body Error :
 
 ## Absen Time out
 
-Endpoint : PUT /api/user/attendance/
+Endpoint : PUT /api/employee/attendance/
 
 Headers :
 
@@ -125,7 +125,7 @@ Response Body Error :
 
 ## Profile details
 
-Endpoint : GET /api/user/profile/
+Endpoint : GET /api/employee/profile/
 
 Headers :
 
@@ -158,7 +158,7 @@ Response Body Error :
 
 ## Update foto profile
 
-Endpoint : POST /api/user/profile/
+Endpoint : POST /api/employee/profile/
 
 Headers :
 
@@ -196,7 +196,7 @@ Response Body Error :
 
 ## Pengajuan cuti, izin, sakit
 
-Endpoint : POST /api/user/permission/
+Endpoint : POST /api/employee/permission/
 
 Headers :
 
@@ -233,7 +233,7 @@ Response Body Error :
 
 ## Attendance Recap by Day
 
-Endpoint : GET /api/user/recapbyday/
+Endpoint : GET /api/employee/recapbyday/
 
 Header :
 
@@ -269,7 +269,7 @@ Response body error :
 
 ## Attendance Recap by Month
 
-Endpoint : GET /api/user/recapbymonth/
+Endpoint : GET /api/employee/recapbymonth/
 
 Header :
 
