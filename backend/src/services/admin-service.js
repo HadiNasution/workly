@@ -4,11 +4,14 @@ import {
   adminGetValidation,
   adminLoginValidation,
   adminRegistValidation,
+  adminResetValidation,
 } from "../validation/admin-validation.js";
 import { validate } from "../validation/validation.js";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
-import { addMinutes } from "date-fns";
+import { addMinutes, format } from "date-fns";
+import { utcToZonedTime } from "date-fns-tz";
+import { generate } from "random-words";
 
 // service untuk login admin
 const login = async (request) => {
@@ -43,10 +46,19 @@ const login = async (request) => {
   // Cek apakah token masih valid, Jika tidak generate token baru. Jika masih valid kembalikan data admin
   const currentDate = new Date();
   if (!admin.token_expires_at || currentDate > admin.token_expires_at) {
-    // set waktu aktif token di 30 menit
     const expirationTime = addMinutes(currentDate, 120);
-    // console.log("Waktu sekarang" + currentDate);
-    // console.log("Waktu expired" + expirationTime);
+    // Menentukan zona waktu lokal (misalnya "Asia/Jakarta")
+    const timeZone = "Asia/Jakarta";
+
+    // Mengonversi waktu UTC menjadi waktu di zona waktu lokal
+    const localizedExpirationTime = utcToZonedTime(expirationTime, timeZone);
+
+    // Menampilkan waktu dalam format yang sesuai dengan zona waktu lokal
+    const formattedExpirationTime = format(
+      localizedExpirationTime,
+      "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+      { timeZone }
+    );
 
     // Generate token baru
     const newToken = uuid().toString();
@@ -55,7 +67,7 @@ const login = async (request) => {
     return prismaClient.admin.update({
       data: {
         token: newToken,
-        token_expires_at: expirationTime,
+        token_expires_at: formattedExpirationTime,
       },
       where: {
         email: admin.email,
@@ -127,8 +139,36 @@ const logout = async (email) => {
     },
     data: {
       token: null,
+      token_expires_at: null,
     },
   });
 };
 
-export default { login, regist, logout };
+const reset = async (request) => {
+  const resetRequest = validate(adminResetValidation, request);
+  const isAccountExist = await prismaClient.admin.count({
+    where: {
+      name: resetRequest.name,
+      nip: resetRequest.nip,
+      email: resetRequest.email,
+    },
+  });
+
+  if (!isAccountExist) throw new ResponseError(400, "Akun tidak terdaftar");
+
+  // generate kata random untuk password sementara, dengan min 6 digit dan max 10 digit
+  const dummyPass = generate({ minLength: 6, maxLength: 10 });
+
+  await prismaClient.admin.update({
+    data: {
+      password: await bcrypt.hash(dummyPass, 10),
+    },
+    where: {
+      email: resetRequest.email,
+    },
+  });
+
+  return dummyPass;
+};
+
+export default { login, regist, logout, reset };

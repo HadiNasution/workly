@@ -11,11 +11,20 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    const result = await employeeService.logout(req.employee.email);
+    await employeeService.logout(req.employee.email);
     res.status(200).json({ data: "Logout Success" });
   } catch (error) {
     next(error);
   }
 };
 
-export default { login, logout };
+const reset = async (req, res, next) => {
+  try {
+    const result = await employeeService.reset(req.body);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { login, logout, reset };

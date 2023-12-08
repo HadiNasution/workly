@@ -3,11 +3,14 @@ import { ResponseError } from "../error/response-error.js";
 import {
   employeeLoginValidation,
   employeeGetValidation,
+  employeeResetValidation,
 } from "../validation/employee-validation.js";
 import { validate } from "../validation/validation.js";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
-import { addMinutes } from "date-fns";
+import { addMinutes, format } from "date-fns";
+import { utcToZonedTime } from "date-fns-tz";
+import { generate } from "random-words";
 
 const login = async (request) => {
   const loginRequest = validate(employeeLoginValidation, request);
@@ -35,14 +38,23 @@ const login = async (request) => {
 
   const currentDate = new Date();
   if (!employee.token_expires_at || currentDate > employee.token_expires_at) {
-    const expirationTime = addMinutes(currentDate, 60);
+    const expirationTime = addMinutes(currentDate, 120);
+    const timeZone = "Asia/Jakarta";
+
+    const localizedExpirationTime = utcToZonedTime(expirationTime, timeZone);
+
+    const formattedExpirationTime = format(
+      localizedExpirationTime,
+      "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+      { timeZone }
+    );
 
     const newToken = uuid().toString();
 
     return prismaClient.employee.update({
       data: {
         token: newToken,
-        token_expires_at: expirationTime,
+        token_expires_at: formattedExpirationTime,
       },
       where: {
         email: employee.email,
@@ -82,8 +94,35 @@ const logout = async (email) => {
     },
     data: {
       token: null,
+      token_expires_at: null,
     },
   });
 };
 
-export default { login, logout };
+const reset = async (request) => {
+  const resetRequest = validate(employeeResetValidation, request);
+  const isAccountExist = await prismaClient.admin.count({
+    where: {
+      name: resetRequest.name,
+      nip: resetRequest.nip,
+      email: resetRequest.email,
+    },
+  });
+
+  if (!isAccountExist) throw new ResponseError(400, "Akun tidak terdaftar");
+
+  const dummyPass = generate({ minLength: 6, maxLength: 10 });
+
+  await prismaClient.employee.update({
+    data: {
+      password: await bcrypt.hash(dummyPass, 10),
+    },
+    where: {
+      email: resetRequest.email,
+    },
+  });
+
+  return dummyPass;
+};
+
+export default { login, logout, reset };

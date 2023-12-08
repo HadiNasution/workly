@@ -27,4 +27,13 @@ const logout = async (req, res, next) => {
   }
 };
 
-export default { login, regist, logout };
+const reset = async (req, res, next) => {
+  try {
+    const result = await adminService.reset(req.body);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { login, regist, logout, reset };

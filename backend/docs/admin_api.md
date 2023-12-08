@@ -37,10 +37,6 @@ Response Body Error :
 
 Endpoint : POST /api/admin/regist
 
-Header :
-
-- Authorization : token
-
 Request body :
 
 ```json
@@ -93,6 +89,36 @@ Response Body Error :
 ```json
 {
   "errors": "anauthorized"
+}
+```
+
+## Forgot password
+
+Enpoint : GET /api/admin/forgotpassword
+
+Request body :
+
+```json
+{
+  "name": "admin",
+  "nip": "1111111",
+  "email": "admin@gmail.com"
+}
+```
+
+Response body success :
+
+```json
+{
+  "data": "randomword" // temporary pass
+}
+```
+
+Response body error :
+
+```json
+{
+  "errors": "Email tidak terdaftar"
 }
 ```
 
