@@ -7,6 +7,6 @@ const publicRoute = new express.Router();
 publicRoute.post("/admin/login", adminController.login);
 publicRoute.post("/admin/regist", adminController.regist);
 publicRoute.post("/employee/login", employeeController.login);
-publicRoute.get("/admin/resetpassword", adminController.reset);
-publicRoute.get("/employee/resetpassword", employeeController.reset);
+publicRoute.post("/admin/resetpassword", adminController.reset);
+publicRoute.post("/employee/resetpassword", employeeController.reset);
 export { publicRoute };

@@ -9,8 +9,8 @@ export default function NotFoundPage() {
         <img
           src="../../../public/assets/error-404-animated.gif"
           alt="Illustration"
-          width={200}
-          height={200}
+          width={250}
+          height={250}
           style={styles.illustration}
         />
         <h1 style={styles.heading}>Page Not Found</h1>

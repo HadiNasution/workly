@@ -32,7 +32,7 @@ const login = async (request) => {
   });
 
   // jika email tidak ditemukan didatabase, maka berikan pesan error 401
-  if (!admin) throw new ResponseError(401, "Wrong Email");
+  if (!admin) throw new ResponseError(401, "Email tidak ditemukan");
 
   // lalu validasi password dengan bcrypt.compare
   const isPasswordValid = await bcrypt.compare(
@@ -41,7 +41,7 @@ const login = async (request) => {
   );
 
   // jika validasi password gagal, maka berikan pesan error 401
-  if (!isPasswordValid) throw new ResponseError(401, "Wrong Password");
+  if (!isPasswordValid) throw new ResponseError(401, "Password tidak valid");
 
   // Cek apakah token masih valid, Jika tidak generate token baru. Jika masih valid kembalikan data admin
   const currentDate = new Date();
@@ -134,12 +134,12 @@ const logout = async (email) => {
   if (!isEmailExist) throw new ResponseError(400, "Admin tidak ditemukan");
 
   return prismaClient.admin.update({
-    where: {
-      email: email,
-    },
     data: {
       token: null,
       token_expires_at: null,
+    },
+    where: {
+      email: email,
     },
   });
 };
@@ -162,6 +162,8 @@ const reset = async (request) => {
   await prismaClient.admin.update({
     data: {
       password: await bcrypt.hash(dummyPass, 10),
+      token: null,
+      token_expires_at: null,
     },
     where: {
       email: resetRequest.email,

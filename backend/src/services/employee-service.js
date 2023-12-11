@@ -27,14 +27,14 @@ const login = async (request) => {
     },
   });
 
-  if (!employee) throw new ResponseError(401, "Wrong email");
+  if (!employee) throw new ResponseError(401, "Email tidak ditemukan");
 
   const isPasswordValid = await bcrypt.compare(
     loginRequest.password,
     employee.password
   );
 
-  if (!isPasswordValid) throw new ResponseError(401, "Wrong password");
+  if (!isPasswordValid) throw new ResponseError(401, "Password tidak valid");
 
   const currentDate = new Date();
   if (!employee.token_expires_at || currentDate > employee.token_expires_at) {
@@ -86,7 +86,7 @@ const logout = async (email) => {
     },
   });
 
-  if (!isEmailExist) throw new ResponseError(400, "Employee tidak ditemukan");
+  if (!isEmailExist) throw new ResponseError(400, "Email tidak ditemukan");
 
   return prismaClient.employee.update({
     where: {
@@ -114,11 +114,13 @@ const reset = async (request) => {
   const dummyPass = generate({ minLength: 6, maxLength: 10 });
 
   await prismaClient.employee.update({
-    data: {
-      password: await bcrypt.hash(dummyPass, 10),
-    },
     where: {
       email: resetRequest.email,
+    },
+    data: {
+      password: await bcrypt.hash(dummyPass, 10),
+      token: null,
+      token_expires_at: null,
     },
   });
 

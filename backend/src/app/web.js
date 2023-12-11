@@ -16,6 +16,7 @@ export const web = express();
 
 web.use(express.json()); // body parser + url-encoded
 web.use(cors()); // implementasi CORS
+
 // ADMIN
 web.use("/api", publicRoute);
 web.use("/api", adminRoute);

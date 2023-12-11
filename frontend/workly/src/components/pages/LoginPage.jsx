@@ -5,10 +5,13 @@ import "../../css/LoginPage.css";
 export default function LoginPage() {
   return (
     <div className="position-relative w-100">
-      <div className="position-absolute top-50 start-50 translate-middle">
+      <div
+        className="bg-light-subtle position-absolute top-50 start-50 translate-middle p-5 rounded-4"
+        style={{ boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)" }}
+      >
         <h1
-          style={{ fontSize: 60, fontWeight: "bold" }}
-          className="d-inline mb-5"
+          style={{ fontSize: 60 }}
+          className="d-inline mb-5 fw-bolder text-body-secondary"
         >
           Workly
         </h1>
@@ -16,7 +19,7 @@ export default function LoginPage() {
           src="../../../public/assets/coffee-animated.gif"
           alt="animated coffee"
           className="pb-2"
-          style={{ width: 60, height: 90 }}
+          style={{ width: 70, height: 100 }}
         />
         <ul className="nav nav-tabs mb-3 mt-3" id="myTab" role="tablist">
           <li className="nav-item" role="presentation">

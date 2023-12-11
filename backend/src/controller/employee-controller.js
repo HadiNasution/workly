@@ -12,7 +12,7 @@ const login = async (req, res, next) => {
 const logout = async (req, res, next) => {
   try {
     await employeeService.logout(req.employee.email);
-    res.status(200).json({ data: "Logout Success" });
+    res.status(200).json({ data: "Logout Berhasil" });
   } catch (error) {
     next(error);
   }

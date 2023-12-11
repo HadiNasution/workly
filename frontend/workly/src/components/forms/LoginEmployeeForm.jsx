@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function LoginEmployeeForm() {
   const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState(null);
   async function loginEmployee(event) {
     event.preventDefault();
 
@@ -22,6 +24,7 @@ export default function LoginEmployeeForm() {
           },
         }
       );
+      console.log(data);
       // get response data
       const token = data.data.token;
       const tokenExpiresAt = data.data.token_expires_at;
@@ -29,14 +32,20 @@ export default function LoginEmployeeForm() {
       localStorage.setItem("token", token);
       localStorage.setItem("token-expires-at", tokenExpiresAt);
     } catch (error) {
+      setErrorMsg(error.response.data.errors);
       console.log(error.response);
     }
   }
   return (
     <form onSubmit={loginEmployee} method="post">
       <div className="mb-3">
+        {!errorMsg ? null : (
+          <div className="bg-danger text-white rounded mb-3 p-2 ">
+            ⛔ {errorMsg}
+          </div>
+        )}
         <label for="employee-email" className="form-label">
-          Email address
+          Email
         </label>
         <input
           type="email"
@@ -57,19 +66,15 @@ export default function LoginEmployeeForm() {
           className="form-control"
           aria-describedby="passwordHelpBlock"
         ></input>
-        <div id="passwordHelpBlock" className="form-text">
-          Your password must be 8-20 characters long, contain letters and
-          numbers, and must not contain spaces, special characters, or emoji.
-        </div>
         <button
           type="button"
           className="btn btn-link w-100 text-end"
           style={{ textDecoration: "none" }}
           onClick={() => navigate("/resetpassword/employee")}
         >
-          Forgot password
+          Lupa password
         </button>
-        <button type="button" className="btn btn-primary w-100 mt-3">
+        <button type="submit" className="btn btn-primary w-100 mt-3">
           Login
         </button>
       </div>

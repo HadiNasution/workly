@@ -1,6 +1,10 @@
 import axios from "axios";
+import { useState } from "react";
+import Modal from "../Modal";
 
 export default function ResetPasswordAdmin() {
+  const [modalData, setModalData] = useState(null); // data (password dummy) yg akan dikirim di modal
+  const [error, setError] = useState(null);
   const goBack = () => {
     window.history.back();
   };
@@ -12,12 +16,12 @@ export default function ResetPasswordAdmin() {
       const nip = document.getElementById("admin-nip").value;
       const email = document.getElementById("admin-email").value;
 
-      const { data } = await axios.get(
+      const { data } = await axios.post(
         "http://localhost:3000/api/admin/resetpassword",
         {
-          name: name,
-          nip: nip,
-          email: email,
+          name,
+          nip,
+          email,
         },
         {
           headers: {
@@ -25,20 +29,39 @@ export default function ResetPasswordAdmin() {
           },
         }
       );
+      setModalData(data.data);
+      localStorage.setItem("token", null);
+      localStorage.setItem("is-super-admin", null);
+      localStorage.setItem("token-expires-at", null);
     } catch (error) {
-      console.log(error.response);
+      setError(error.response.data.errors);
+      console.log(error.response.data.errors);
     }
   }
 
   return (
     <div className="position-relative w-100">
-      <div className="position-absolute top-50 start-50 translate-middle">
-        <h2 style={{ fontWeight: "bolder" }}>Reset Password - Admin</h2>
+      <div
+        className="bg-light-subtle position-absolute top-50 start-50 translate-middle pt-2 pb-2 ps-5 pe-5 rounded-4"
+        style={{ boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)" }}
+      >
+        <img
+          src="../../../public/assets/reset-password-animated.gif"
+          alt="animated password ill"
+          width={100}
+          height={100}
+        />
+        <h2 className="fw-bolder">Reset Password - Admin</h2>
         <p>Masukan Nama lengkap, NIP, dan Email untuk Reset password.</p>
-        <form onSubmit={resetPasswordAdmin} method="get">
+        {!error ? null : (
+          <div className="bg-danger text-white rounded mb-3 p-2 ">
+            ⛔ {error}
+          </div>
+        )}
+        <form onSubmit={resetPasswordAdmin} method="post">
           <div className="mb-3">
             <label htmlFor="admin-name" className="form-label">
-              Full Name
+              Nama lengkap
             </label>
             <input
               type="text"
@@ -53,7 +76,7 @@ export default function ResetPasswordAdmin() {
               NIP
             </label>
             <input
-              type="email"
+              type="text"
               className="form-control"
               id="admin-nip"
               name="admin-nip"
@@ -62,7 +85,7 @@ export default function ResetPasswordAdmin() {
           </div>
           <div className="mb-3">
             <label htmlFor="admin-email" className="form-label">
-              Email address
+              Email
             </label>
             <input
               type="email"
@@ -86,6 +109,7 @@ export default function ResetPasswordAdmin() {
           </div>
         </form>
       </div>
+      <Modal data={modalData} />
     </div>
   );
 }
