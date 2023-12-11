@@ -157,7 +157,7 @@ const reset = async (request) => {
   if (!isAccountExist) throw new ResponseError(400, "Akun tidak terdaftar");
 
   // generate kata random untuk password sementara, dengan min 6 digit dan max 10 digit
-  const dummyPass = generate({ minLength: 6, maxLength: 10 });
+  const dummyPass = generate({ minLength: 6, maxLength: 10 }) + "#";
 
   await prismaClient.admin.update({
     data: {

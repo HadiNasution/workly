@@ -4,9 +4,9 @@ import adminController from "../controller/admin-controller.js";
 import employeeController from "../controller/employee-controller.js";
 
 const publicRoute = new express.Router();
-publicRoute.post("/api/admin/login", adminController.login);
-publicRoute.post("/api/admin/regist", adminController.regist);
-publicRoute.post("/api/employee/login", employeeController.login);
-publicRoute.get("/api/admin/resetpassword", adminController.reset);
-publicRoute.get("/api/employee/resetpassword", employeeController.reset);
+publicRoute.post("/admin/login", adminController.login);
+publicRoute.post("/admin/regist", adminController.regist);
+publicRoute.post("/employee/login", employeeController.login);
+publicRoute.get("/admin/resetpassword", adminController.reset);
+publicRoute.get("/employee/resetpassword", employeeController.reset);
 export { publicRoute };

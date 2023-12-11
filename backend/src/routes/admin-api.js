@@ -4,8 +4,8 @@ import adminController from "../controller/admin-controller.js";
 import { adminAuthMiddleware } from "../middleware/admin-auth-middleware.js";
 
 const adminRoute = new express.Router();
-adminRoute.use(adminAuthMiddleware);
+adminRoute.use(adminAuthMiddleware); // auth middleware
 
-adminRoute.delete("/api/admin/logout", adminController.logout);
+adminRoute.delete("/admin/logout", adminController.logout);
 
 export { adminRoute };
