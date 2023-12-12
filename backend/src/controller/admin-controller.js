@@ -36,4 +36,13 @@ const reset = async (req, res, next) => {
   }
 };
 
-export default { login, regist, logout, reset };
+const get = async (req, res, next) => {
+  try {
+    const result = await adminService.get();
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { login, regist, logout, reset, get };

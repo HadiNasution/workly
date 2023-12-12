@@ -122,9 +122,9 @@ Response body error :
 }
 ```
 
-## Get admin
+## Get admins and superadmins
 
-Endpoint : GET /api/admin/:nip
+Endpoint : GET /api/admin
 
 Header :
 
@@ -134,18 +134,33 @@ Response body :
 
 ```json
 {
-  "data": {
-    "name": "hadi",
-    "nip": "123344553322",
-    "email": "hadi@mail.com"
-  }
+  "data": [
+    {
+      "name": "hadi",
+      "nip": "123344553322",
+      "email": "hadi@mail.com",
+      "is_super_admin": "false"
+    },
+    {
+      "name": "hadi",
+      "nip": "123344553322",
+      "email": "hadi@mail.com",
+      "is_super_admin": "false"
+    },
+    {
+      "name": "hadi",
+      "nip": "123344553322",
+      "email": "hadi@mail.com",
+      "is_super_admin": "false"
+    }
+  ]
 }
 ```
 
 Response body error :
 
 ```json
-{ "errors": "email is not valid" }
+{ "errors": "admin is empty" }
 ```
 
 ## Create user

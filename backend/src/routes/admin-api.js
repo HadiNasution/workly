@@ -7,5 +7,6 @@ const adminRoute = new express.Router();
 adminRoute.use(adminAuthMiddleware); // auth middleware
 
 adminRoute.delete("/admin/logout", adminController.logout);
+adminRoute.get("/admin", adminController.get);
 
 export { adminRoute };

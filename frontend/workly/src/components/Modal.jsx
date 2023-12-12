@@ -1,9 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Modal({ data }) {
-  const closeModal = () => {
-    document.getElementById("modal-reset-password").style.display = "none";
-  };
+  const navigate = useNavigate();
 
   // jika data tersedia, modal akan muncul jika tidak modal tidak akan muncul
   return data ? (
@@ -28,7 +27,7 @@ export default function Modal({ data }) {
             <button
               type="button"
               className="btn btn-primary w-100"
-              onClick={closeModal}
+              onClick={() => navigate("/")}
             >
               Ok
             </button>

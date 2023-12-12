@@ -5,6 +5,7 @@ import LoginPage from "./components/pages/LoginPage";
 import NotFoundPage from "./components/pages/NotFoundPage";
 import ResetPasswordAdmin from "./components/pages/ResetPasswordAdmin";
 import ResetPasswordEmployee from "./components/pages/ResetPasswordEmployee";
+import AdminHome from "./components/pages/AdminHome";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -16,6 +17,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           path="/resetpassword/employee"
           element={<ResetPasswordEmployee />}
         />
+        <Route path="/admin/home" element={<AdminHome />} />
+        <Route path="/employee/home" element={<AdminHome />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>

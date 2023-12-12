@@ -33,7 +33,8 @@ const login = async (request) => {
 
   // jika email tidak ditemukan didatabase, maka berikan pesan error 401
   if (!admin) throw new ResponseError(401, "Email tidak ditemukan");
-
+  console.log("req body" + loginRequest.password);
+  console.log("db" + admin.password);
   // lalu validasi password dengan bcrypt.compare
   const isPasswordValid = await bcrypt.compare(
     loginRequest.password,
@@ -146,31 +147,46 @@ const logout = async (email) => {
 
 const reset = async (request) => {
   const resetRequest = validate(adminResetValidation, request);
-  const isAccountExist = await prismaClient.admin.count({
+
+  const admin = await prismaClient.admin.findUnique({
     where: {
-      name: resetRequest.name,
-      nip: resetRequest.nip,
       email: resetRequest.email,
     },
   });
 
-  if (!isAccountExist) throw new ResponseError(400, "Akun tidak terdaftar");
+  if (!admin) {
+    throw new ResponseError(400, "Akun tidak terdaftar");
+  }
 
-  // generate kata random untuk password sementara, dengan min 6 digit dan max 10 digit
-  const dummyPass = generate({ minLength: 6, maxLength: 10 }) + "#";
+  const dummyPass = generate({ minLength: 6, maxLength: 10 });
 
-  await prismaClient.admin.update({
+  const updateAdminPass = await prismaClient.admin.update({
     data: {
-      password: await bcrypt.hash(dummyPass, 10),
-      token: null,
-      token_expires_at: null,
+      password: await bcrypt.hash(dummyPass.toString(), 10),
     },
     where: {
       email: resetRequest.email,
     },
   });
 
-  return dummyPass;
+  if (updateAdminPass) return dummyPass;
 };
 
-export default { login, regist, logout, reset };
+const get = async () => {
+  const admins = await prismaClient.admin.findMany({
+    select: {
+      name: true,
+      nip: true,
+      email: true,
+      is_super_admin: true,
+    },
+    orderBy: {
+      is_super_admin: "asc", // 'desc' untuk descending, 'asc' untuk ascending
+    },
+  });
+
+  if (!admins) throw new ResponseError(404, "Data Admin kosong");
+  return admins;
+};
+
+export default { login, regist, logout, reset, get };

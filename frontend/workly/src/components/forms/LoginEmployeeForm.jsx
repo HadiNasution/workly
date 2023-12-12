@@ -28,12 +28,14 @@ export default function LoginEmployeeForm() {
       // get response data
       const token = data.data.token;
       const tokenExpiresAt = data.data.token_expires_at;
-      // simpan dilokal storage
+      // simpan di local storage
       localStorage.setItem("token", token);
       localStorage.setItem("token-expires-at", tokenExpiresAt);
+      // redirect ke halaman home admin
+      navigate("/employee/home");
     } catch (error) {
       setErrorMsg(error.response.data.errors);
-      console.log(error.response);
+      console.log(error.response.data.errors);
     }
   }
   return (

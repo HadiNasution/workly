@@ -30,12 +30,13 @@ export default function ResetPasswordAdmin() {
         }
       );
       setModalData(data.data);
-      localStorage.setItem("token", null);
-      localStorage.setItem("is-super-admin", null);
-      localStorage.setItem("token-expires-at", null);
+      // hapus local storage
+      localStorage.removeItem("token");
+      localStorage.removeItem("is-super-admin");
+      localStorage.removeItem("token-expires-at");
     } catch (error) {
-      setError(error.response.data.errors);
-      console.log(error.response.data.errors);
+      setError(error.data.errors);
+      console.log(error.data.errors);
     }
   }
 

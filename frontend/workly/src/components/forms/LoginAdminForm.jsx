@@ -33,6 +33,8 @@ export default function LoginAdminform() {
       localStorage.setItem("token", token);
       localStorage.setItem("is-super-admin", isSuperAdmin);
       localStorage.setItem("token-expires-at", tokenExpiresAt);
+      // redirect ke halaman home admin
+      navigate("/admin/home");
     } catch (error) {
       setErrorMsg(error.response.data.errors);
       console.log(error.response.data.errors);
