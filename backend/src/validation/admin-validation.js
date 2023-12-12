@@ -35,9 +35,34 @@ const adminGetValidation = Joi.string()
   .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
   .required();
 
+// validasi create employee
+const createAdminValidation = Joi.object({
+  name: Joi.string().max(100).required(),
+  nip: Joi.string().max(16).required(),
+  email: Joi.string()
+    .max(100)
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .required(),
+  role: Joi.string().max(12),
+  departmen: Joi.string().max(100),
+  join_date: Joi.date().required(),
+  quit_date: Joi.date(),
+});
+
+// validasi untuk update admin
+const adminUpdateValidation = Joi.object({
+  name: Joi.string().max(100),
+  email: Joi.string()
+    .max(100)
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
+  password: Joi.string().max(100),
+});
+
 export {
   adminLoginValidation,
   adminRegistValidation,
   adminGetValidation,
   adminResetValidation,
+  createAdminValidation,
+  adminUpdateValidation,
 };

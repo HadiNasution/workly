@@ -8,5 +8,7 @@ adminRoute.use(adminAuthMiddleware); // auth middleware
 
 adminRoute.delete("/admin/logout", adminController.logout);
 adminRoute.get("/admin", adminController.get);
+adminRoute.put("/admin/update/:adminId", adminController.update);
+adminRoute.post("/admin/create/employee", adminController.create);
 
 export { adminRoute };

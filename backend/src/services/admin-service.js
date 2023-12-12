@@ -5,6 +5,8 @@ import {
   adminLoginValidation,
   adminRegistValidation,
   adminResetValidation,
+  createAdminValidation,
+  adminUpdateValidation,
 } from "../validation/admin-validation.js";
 import { validate } from "../validation/validation.js";
 import bcrypt from "bcrypt";
@@ -13,7 +15,7 @@ import { addMinutes, format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 import { generate } from "random-words";
 
-// service untuk login admin
+// service untuk login admin dan superadmin
 const login = async (request) => {
   // 1. Validasi format request
   const loginRequest = validate(adminLoginValidation, request);
@@ -123,6 +125,7 @@ const regist = async (request) => {
   });
 };
 
+// service untuk admin dan superadmin logout
 const logout = async (email) => {
   email = validate(adminGetValidation, email);
 
@@ -145,6 +148,7 @@ const logout = async (email) => {
   });
 };
 
+// service untuk admin dan superadmin reset password
 const reset = async (request) => {
   const resetRequest = validate(adminResetValidation, request);
 
@@ -172,6 +176,7 @@ const reset = async (request) => {
   if (updateAdminPass) return dummyPass;
 };
 
+// service untuk admin dan superadmin melihat daftar semua admin dan superadmin
 const get = async () => {
   const admins = await prismaClient.admin.findMany({
     select: {
@@ -189,4 +194,92 @@ const get = async () => {
   return admins;
 };
 
-export default { login, regist, logout, reset, get };
+// service untuk admin dan superadmin update data profile
+const update = async (request, adminId) => {
+  const updateRequest = validate(adminUpdateValidation, request);
+  const id = parseInt(adminId);
+  const isEmailDuplicate = await prismaClient.admin.count({
+    where: {
+      email: updateRequest.email,
+    },
+  });
+
+  if (isEmailDuplicate === 1) throw new ResponseError(400, "Email Sudah ada");
+
+  // get data lama
+  const oldData = await prismaClient.admin.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      name: true,
+      email: true,
+      password: true,
+    },
+  });
+
+  if (!oldData) throw new ResponseError(404, "Admin tidak ditemukan");
+
+  // kondisi jika admin hanya update beberapa field
+  // jika name diupdate, pakai data baru jika tidak pakai data lama dari oldData
+  const newName = updateRequest.name ? updateRequest.name : oldData.name;
+  const newEmail = updateRequest.email ? updateRequest.email : oldData.email;
+  const newPass = updateRequest.pas
+    ? await bcrypt.hash(updateRequest.pass, 10)
+    : oldData.pass;
+
+  return prismaClient.admin.update({
+    data: {
+      name: newName,
+      email: newEmail,
+      password: newPass,
+    },
+    where: {
+      id,
+    },
+  });
+};
+
+// service untuk admin menambahkan employee
+const create = async (request, admin) => {
+  const createRequest = validate(createAdminValidation, request);
+
+  const isNipDuplicate = await prismaClient.employee.count({
+    where: {
+      nip: createRequest.nip,
+    },
+  });
+  const isEmailDuplicate = await prismaClient.employee.count({
+    where: {
+      email: createRequest.email,
+    },
+  });
+
+  if (isNipDuplicate === 1) throw new ResponseError(400, "NIP Sudah ada");
+  if (isEmailDuplicate === 1) throw new ResponseError(400, "Email Sudah ada");
+
+  return prismaClient.employee.create({
+    data: {
+      name: createRequest.name,
+      nip: createRequest.nip,
+      email: createRequest.email,
+      password: await bcrypt.hash("#WGSmember", 10), // password default
+      role: createRequest.role,
+      departmen: createRequest.departmen,
+      join_date: createRequest.join_date,
+      quit_date: createRequest.quit_date,
+      admin_id: admin.id,
+    },
+    select: {
+      name: true,
+      nip: true,
+      email: true,
+      role: true,
+      departmen: true,
+      join_date: true,
+      quit_date: true,
+    },
+  });
+};
+
+export default { login, regist, logout, reset, get, create, update };

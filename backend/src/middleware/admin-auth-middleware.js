@@ -26,7 +26,7 @@ export const adminAuthMiddleware = async (req, res, next) => {
         })
         .end();
     } else {
-      req.admin = admin; // jika semua valid, tambahkan data user ke req
+      req.admin = admin; // jika semua valid, tambahkan data admin ke req
       next();
     }
   }

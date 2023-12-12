@@ -33,7 +33,7 @@ Response Body Error :
 }
 ```
 
-## Regist
+## Regist admin by superadmin
 
 Endpoint : POST /api/admin/regist
 
@@ -92,7 +92,7 @@ Response Body Error :
 }
 ```
 
-## Forgot password
+## Reset password
 
 Enpoint : GET /api/admin/forgotpassword
 
@@ -163,9 +163,9 @@ Response body error :
 { "errors": "admin is empty" }
 ```
 
-## Create user
+## Create employee
 
-Endpoint : POST /api/admin/
+Endpoint : POST /api/admin/create/employee
 
 Header :
 
@@ -177,10 +177,11 @@ Request body :
 {
   "name": "hadi",
   "nip": "123344553322",
-  "role": "junior dev",
-  "departmen": "it",
+  "role": "junior dev", //opt
+  "departmen": "it", //opt
   "email": "hadi@mail.com",
-  "password": "rahasia"
+  "join_date": "10/12/12",
+  "quit_date": "10/12/12" //opt
 }
 ```
 
@@ -194,7 +195,8 @@ Response body success :
     "role": "junior dev",
     "departmen": "it",
     "email": "hadi@mail.com",
-    "password": "rahasia"
+    "join_date": "10/12/12",
+    "quit_date": "10/12/12"
   }
 }
 ```
@@ -209,7 +211,7 @@ Response body error :
 
 ## Update admin
 
-Endpoint : PUT /api/admin/:nip
+Endpoint : PUT /api/admin/update/:nip
 
 Header :
 
@@ -229,11 +231,7 @@ Response body success :
 
 ```json
 {
-  "data": {
-    "name": "hadi",
-    "email": "hadi@mail.com",
-    "password": "rahasia"
-  }
+  "data": "Data updated"
 }
 ```
 

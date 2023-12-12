@@ -45,4 +45,26 @@ const get = async (req, res, next) => {
   }
 };
 
-export default { login, regist, logout, reset, get };
+const update = async (req, res, next) => {
+  try {
+    const adminId = req.params.adminId;
+    const employee = req.body;
+    await adminService.update(employee, adminId);
+    res.status(200).json({ data: "Data berhasil di update" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const create = async (req, res, next) => {
+  try {
+    const admin = req.admin;
+    const employee = req.body;
+    const result = await adminService.create(employee, admin);
+    res.status(201).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { login, regist, logout, reset, get, update, create };
