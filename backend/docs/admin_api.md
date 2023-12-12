@@ -245,7 +245,7 @@ Response body error :
 
 ## Delete admin
 
-Endpoint : DELETE /api/admin/:nip
+Endpoint : DELETE /api/admin/delete/:nip
 
 Header :
 
@@ -255,7 +255,7 @@ Response body success :
 
 ```json
 {
-  "data": "Deleted"
+  "data": "Admin hadi berhasil dihapus"
 }
 ```
 
@@ -263,13 +263,13 @@ Response body error :
 
 ```json
 {
-  "errors": "Employee is not found"
+  "errors": "Admin tidak ditemukan"
 }
 ```
 
-## Get user
+## Get all employee
 
-Endpoint : GET /api/admin/:nip
+Endpoint : GET /api/admin/getemployee
 
 Header :
 
@@ -279,12 +279,67 @@ Response body :
 
 ```json
 {
+  "data": [
+    {
+      "name": "hadi",
+      "nip": "123344553322",
+      "email": "hadi@mail.com"
+    },
+    {
+      "name": "hadi",
+      "nip": "123344553322",
+      "email": "hadi@mail.com"
+    },
+    {
+      "name": "hadi",
+      "nip": "123344553322",
+      "email": "hadi@mail.com"
+    }
+  ]
+}
+```
+
+Response body error :
+
+```json
+{
+  "errors": "data pegawai kosong"
+}
+```
+
+## Get Employee details
+
+Endpoint : GET /api/admin/employee/detail
+
+Header :
+
+- Authorization : token
+
+Request params : nip
+
+Response body success :
+
+```json
+{
   "data": {
     "name": "hadi",
     "nip": "123344553322",
+    "email": "hadi@mail.com",
     "role": "junior dev",
-    "departmen": "it",
-    "email": "hadi@mail.com"
+    "department": "it",
+    "picture": "hadi.jpg",
+    "join_date": "10/12/2023",
+    "quit_date": ""
+  },
+  "attendance": {
+    "date": "13/12/2023",
+    "count_sick": "0",
+    "count_permits": "1",
+    "count_leaves": "1",
+    "count_wfh": "2",
+    "count_works": "24",
+    "count_late": "4",
+    "notes": "demam"
   }
 }
 ```
@@ -293,13 +348,13 @@ Response body error :
 
 ```json
 {
-  "errors": "email is not valid"
+  "errors": "Data kosong"
 }
 ```
 
-## Update user
+## Update employee
 
-Endpoint : PUT /api/admin/:nip
+Endpoint : PUT /api/admin/update
 
 Header :
 
@@ -309,11 +364,13 @@ Request body :
 
 ```json
 {
+  "nip": "183040066",
   "name": "hadi", //opt
+  "email": "hadi@mail.com", //opt
   "role": "junior dev", //opt
   "departmen": "it", //opt
-  "email": "hadi@mail.com", //opt
-  "password": "rahasia" //opt
+  "join_date": "10/12/12", //opt
+  "quit_date": "10/12/12" //opt
 }
 ```
 
@@ -321,13 +378,7 @@ Response body success :
 
 ```json
 {
-  "data": {
-    "name": "hadi",
-    "role": "junior dev",
-    "departmen": "it",
-    "email": "hadi@mail.com",
-    "password": "rahasia"
-  }
+  "data": "Data NIP : 183040066 berhasil diupdate"
 }
 ```
 
@@ -335,23 +386,25 @@ Response body error :
 
 ```json
 {
-  "errors": "email is not valid"
+  "errors": "email sudah digunakan"
 }
 ```
 
-## Delete user
+## Delete employee
 
-Endpoint : DELETE /api/admin/:nip
+Endpoint : DELETE /api/admin/delete/employee/:employeeNip
 
 Header :
 
 - Authorization : token
 
+Request params : nip
+
 Response body success :
 
 ```json
 {
-  "data": "Deleted"
+  "data": "Hadi berhasil di hapus"
 }
 ```
 
@@ -359,13 +412,13 @@ Response body error :
 
 ```json
 {
-  "errors": "Employee is not found"
+  "errors": "Pegawai tidak ditemukan"
 }
 ```
 
 ## Attendance Recap by Day
 
-Endpoint : GET /api/admin/recapbyday/
+Endpoint : GET /api/admin/recap/day/
 
 Header :
 
@@ -375,19 +428,34 @@ Response body success :
 
 ```json
 {
-  "data": {
-    "name": "hadi",
-    "date": "13/12/2023",
-    "time_in": "07:00",
-    "time_out": "17:00",
-    "isWorking": "true",
-    "isLate": "false",
-    "isWfh": "true",
-    "isSick": "false",
-    "isLeaves": "false",
-    "isPermits": "false",
-    "notes": ""
-  }
+  "data": [
+    {
+      "name": "hadi",
+      "date": "13/12/2023",
+      "time_in": "09:00",
+      "time_out": "",
+      "is_working": "true",
+      "is_late": "true",
+      "is_wfh": "true",
+      "is_sick": "false",
+      "is_leaves": "false",
+      "is_permits": "false",
+      "notes": ""
+    },
+    {
+      "name": "hadi2",
+      "date": "13/12/2023",
+      "time_in": "08:00",
+      "time_out": "",
+      "is_working": "true",
+      "is_late": "false",
+      "is_wfh": "true",
+      "is_sick": "false",
+      "is_leaves": "false",
+      "is_permits": "false",
+      "notes": ""
+    }
+  ]
 }
 ```
 
@@ -395,7 +463,7 @@ Response body error :
 
 ```json
 {
-  "errors": "Employee is not found"
+  "errors": "Data kosong"
 }
 ```
 
@@ -419,7 +487,7 @@ Response body success :
     "count_leaves": "1",
     "count_wfh": "2",
     "count_works": "24",
-    "count_late": "2",
+    "count_late": "4",
     "notes": "demam"
   }
 }

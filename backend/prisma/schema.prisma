@@ -50,6 +50,7 @@ model Attendance {
   date DateTime
   time_in DateTime?
   time_out DateTime?
+  is_late Boolean? @default(false)
   is_working Boolean? @default(false)
   is_wfh Boolean? @default(false)
   is_sick Boolean? @default(false)
@@ -71,11 +72,12 @@ model Attendance {
 
 model AttendanceRecap {
   id Int @id @default(autoincrement())
-  count_sick Int?
-  count_permits Int?
-  count_leaves Int?
-  count_wfh Int?
-  count_works Int?
+  count_late Int? @default(0)
+  count_sick Int? @default(0)
+  count_permits Int? @default(0)
+  count_leaves Int? @default(0)
+  count_wfh Int? @default(0)
+  count_works Int? @default(0)
   date DateTime
   notes String? @db.VarChar(255)
   employee_id Int?

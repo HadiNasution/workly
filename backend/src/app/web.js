@@ -19,8 +19,8 @@ web.use(cors()); // implementasi CORS
 
 // ADMIN
 web.use("/api", publicRoute);
-web.use("/api", adminRoute);
-web.use("/api", employeeRoute);
+web.use("/api/admin", adminRoute);
+web.use("/api/employee", employeeRoute);
 
 web.use("/", (req, res) => {
   res.status(404).json({ data: "Page not found" });

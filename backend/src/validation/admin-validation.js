@@ -58,6 +58,19 @@ const adminUpdateValidation = Joi.object({
   password: Joi.string().max(100),
 });
 
+// validasi update employee
+const adminUpdateEmployeeValidation = Joi.object({
+  name: Joi.string().max(100),
+  nip: Joi.string().max(16).required(),
+  email: Joi.string()
+    .max(100)
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
+  role: Joi.string().max(12),
+  departmen: Joi.string().max(100),
+  join_date: Joi.date(),
+  quit_date: Joi.date(),
+});
+
 export {
   adminLoginValidation,
   adminRegistValidation,
@@ -65,4 +78,5 @@ export {
   adminResetValidation,
   createAdminValidation,
   adminUpdateValidation,
+  adminUpdateEmployeeValidation,
 };

@@ -7,6 +7,7 @@ import {
   adminResetValidation,
   createAdminValidation,
   adminUpdateValidation,
+  adminUpdateEmployeeValidation,
 } from "../validation/admin-validation.js";
 import { validate } from "../validation/validation.js";
 import bcrypt from "bcrypt";
@@ -240,8 +241,20 @@ const update = async (request, adminId) => {
   });
 };
 
+// service untuk admin dan superadmin delete admin
+const deleteAdmin = async (adminId) => {
+  const id = parseInt(adminId);
+  const admin = await prismaClient.admin.delete({
+    where: {
+      id,
+    },
+  });
+  if (!admin) throw new ResponseError(404, "Admin tidak ditemukan");
+  return admin;
+};
+
 // service untuk admin menambahkan employee
-const create = async (request, admin) => {
+const createEmployee = async (request, admin) => {
   const createRequest = validate(createAdminValidation, request);
 
   const isNipDuplicate = await prismaClient.employee.count({
@@ -282,4 +295,194 @@ const create = async (request, admin) => {
   });
 };
 
-export default { login, regist, logout, reset, get, create, update };
+// service untuk admin melihat daftar semua employee
+const getEmployee = async () => {
+  const employee = await prismaClient.employee.findMany({
+    select: {
+      name: true,
+      nip: true,
+      email: true,
+    },
+    orderBy: {
+      id: "asc",
+    },
+  });
+  if (!employee) throw new ResponseError(404, "Data employee kosong");
+  return employee;
+};
+
+// service untuk admin update data employee
+const updateEmployee = async (request) => {
+  const updateRequest = validate(adminUpdateEmployeeValidation, request);
+  const isEmailDuplicate = await prismaClient.employee.count({
+    where: {
+      email: updateRequest.email,
+    },
+  });
+
+  if (isEmailDuplicate === 1) throw new ResponseError(400, "Email Sudah ada");
+
+  // get data lama
+  const oldData = await prismaClient.employee.findUnique({
+    where: {
+      nip: updateRequest.nip,
+    },
+    select: {
+      name: true,
+      email: true,
+      role: true,
+      departmen: true,
+      join_date: true,
+      quit_date: true,
+    },
+  });
+
+  if (!oldData) throw new ResponseError(404, "employee tidak ditemukan");
+
+  // kondisi jika admin hanya update beberapa field
+  // jika name diupdate, pakai data baru jika tidak pakai data lama dari oldData
+  const newName = updateRequest.name ? updateRequest.name : oldData.name;
+  const newEmail = updateRequest.email ? updateRequest.email : oldData.email;
+  const newRole = updateRequest.role ? updateRequest.role : oldData.role;
+  const newDepartmen = updateRequest.departmen
+    ? updateRequest.departmen
+    : oldData.departmen;
+  const newJoinDate = updateRequest.join_date
+    ? updateRequest.join_date
+    : oldData.join_date;
+  const newQuitDate = updateRequest.quit_date
+    ? updateRequest.quit_date
+    : oldData.quit_date;
+
+  return prismaClient.employee.update({
+    data: {
+      name: newName,
+      email: newEmail,
+      role: newRole,
+      departmen: newDepartmen,
+      join_date: newJoinDate,
+      quit_date: newQuitDate,
+    },
+    where: {
+      nip: updateRequest.nip,
+    },
+  });
+};
+
+// service untuk delete employee
+const deleteEmployee = async (employeeNip) => {
+  const employee = await prismaClient.employee.delete({
+    where: {
+      nip: employeeNip,
+    },
+  });
+  if (!employee) throw new ResponseError(404, "Pegawai tidak ditemukan");
+  return employee;
+};
+
+// service untuk melihat detail employee dan rekap kehadiran employee
+const detailEmployee = async (employeeNip) => {
+  const employee = await prismaClient.employee.findFirst({
+    where: {
+      nip: employeeNip,
+    },
+    select: {
+      name: true,
+      nip: true,
+      email: true,
+      role: true,
+      departmen: true,
+      picture: true,
+      join_date: true,
+      quit_date: true,
+    },
+  });
+
+  if (!employee) throw new ResponseError(404, "Pegawai tidak ditemukan");
+
+  const attendance = await prismaClient.attendanceRecap.findFirst({
+    where: {
+      employee_id: employeeNip,
+    },
+    select: {
+      date: true,
+      count_sick: true,
+      count_permits: true,
+      count_leaves: true,
+      count_wfh: true,
+      count_works: true,
+      count_late: true,
+      notes: true,
+    },
+  });
+  if (!attendance) throw new ResponseError(404, "Data kosong");
+  return { employee, attendance };
+};
+
+// service untuk melihat rekap kehadiran pada hari itu
+const attendanceRecapByDay = async () => {
+  let today = new Date.now();
+  const attendance = await prismaClient.attendance.findMany({
+    select: {
+      name: true,
+      date: true,
+      time_in: true,
+      time_out: true,
+      is_working: true,
+      is_late: true,
+      is_wfh: true,
+      is_sick: true,
+      is_leaves: true,
+      is_permits: true,
+      notes: true,
+    },
+    orderBy: {
+      time_in: "desc", // yang absen terakhir, akan muncul paling atas
+    },
+    where: {
+      date: today, // hanya ambil data kehadiran dihari itu
+    },
+  });
+
+  if (!attendance) throw new ResponseError(404, "Data kosong");
+
+  return attendance;
+};
+
+// service untuk melihat rekap kehadiran perbulan
+const attendanceRecapByMonth = async () => {
+  const attendance = await prismaClient.attendanceRecap.findMany({
+    select: {
+      date: true,
+      count_sick: true,
+      count_permits: true,
+      count_leaves: true,
+      count_wfh: true,
+      count_works: true,
+      count_late: true,
+      notes: true,
+    },
+    orderBy: {
+      date: "asc",
+    },
+  });
+  if (!attendance) throw new ResponseError(404, "Data kosong");
+  return attendance;
+};
+
+export default {
+  login,
+  regist,
+  logout,
+  reset,
+  get,
+  createEmployee,
+  update,
+  deleteAdmin,
+  getEmployee,
+  updateEmployee,
+  deleteEmployee,
+  detailEmployee,
+  attendanceRecapByDay,
+  attendanceRecapByMonth,
+};
