@@ -76,7 +76,6 @@ model AttendanceRecap {
   count_wfh Int? @default(0)
   count_works Int? @default(0)
   date DateTime
-  notes String? @db.VarChar(255)
   employee_id Int?
   employee Employee? @relation(fields: [employee_id], references: [id])
   permission Permission[]

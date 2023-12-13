@@ -16,6 +16,7 @@ import { v4 as uuid } from "uuid";
 import { addMinutes, format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 import { generate } from "random-words";
+import { logger } from "../app/logging.js";
 
 // service untuk login admin dan superadmin
 const login = async (request) => {
@@ -691,22 +692,83 @@ const getPermission = async () => {
 // service untuk approve permission
 const approvePermission = async (permissionId, admin) => {
   const id = parseInt(permissionId);
-  const permission = await prismaClient.permission.update({
-    data: {
-      is_approved: true,
-      admin_id: admin.id,
-    },
-    include: {
-      attendance_recap: {},
-    },
-    where: {
-      id,
-    },
-  });
 
-  if (!permission) throw new ResponseError(404, "Data kosong");
+  try {
+    // Lakukan transaksi untuk approve permission
+    await prismaClient.$transaction(async (prismaClient) => {
+      // Ambil data dari tabel Permission
+      const permissionData = await prismaClient.permission.findUnique({
+        where: {
+          id,
+        },
+        select: {
+          type: true,
+          attendance_recap_id: true,
+        },
+      });
 
-  return permission;
+      // Lakukan perubahan pada data Permission
+      if (permissionData) {
+        await prismaClient.permission.update({
+          where: {
+            id,
+          },
+          data: {
+            is_approved: true,
+            admin_id: admin.id,
+          },
+        });
+      }
+
+      // Ambil data dari tabel AttendanceRecap berdasarkan relasi
+      const attendanceRecapData = await prismaClient.permission
+        .findUnique({
+          where: {
+            id,
+          },
+        })
+        .attendance_recap();
+
+      // logic untuk set field berdasarkan type dari permission
+      let permissionType;
+      if (permissionData.type === "sakit") {
+        permissionType = {
+          count_sick: attendanceRecapData.count_sick + 1,
+        };
+      }
+      if (permissionData.type === "izin") {
+        permissionType = {
+          count_permits: attendanceRecapData.count_permits + 1,
+        };
+      }
+      if (permissionData.type === "wfh") {
+        permissionType = {
+          count_wfh: attendanceRecapData.count_wfh + 1,
+        };
+      }
+      if (permissionData.type === "cuti") {
+        permissionType = {
+          count_leaves: attendanceRecapData.count_leaves + 1,
+        };
+      }
+
+      // Lakukan perubahan pada data AttendanceRecap
+      if (attendanceRecapData) {
+        await prismaClient.attendanceRecap.update({
+          where: {
+            id: permissionData.attendance_recap_id,
+          },
+          data: permissionType,
+        });
+      }
+    });
+
+    logger.info("TRANSAKSI APPROVE PERMISSION BERHASIL");
+    return true;
+  } catch (error) {
+    logger.info("TRANSAKSI APPROVE PERMISSION GAGAL : " + error);
+    return false;
+  }
 };
 
 // service untuk reject permission

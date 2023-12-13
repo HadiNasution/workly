@@ -4,6 +4,7 @@ import {
   employeeLoginValidation,
   employeeGetValidation,
   employeeResetValidation,
+  employeeAbsenInValidation,
 } from "../validation/employee-validation.js";
 import { validate } from "../validation/validation.js";
 import bcrypt from "bcrypt";

@@ -166,8 +166,12 @@ const approvePermission = async (req, res, next) => {
   try {
     const id = req.params.permissionId;
     const admin = req.admin;
-    await adminService.approvePermission(id, admin);
-    res.status(201).json({ data: "Approved" });
+    const result = await adminService.approvePermission(id, admin);
+    if (result) {
+      res.status(201).json({ data: "Approved" });
+    } else {
+      res.status(400).json({ data: "Gagal approve" });
+    }
   } catch (error) {
     next(error);
   }
