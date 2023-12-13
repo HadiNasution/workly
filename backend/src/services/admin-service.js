@@ -614,6 +614,116 @@ const searchEmployee = async (request) => {
   };
 };
 
+// service untuk get semua permission
+const getPermission = async () => {
+  const permission = await prismaClient.permission.findMany({
+    orderBy: {
+      is_approved: "asc", // yang belum di approve akan paling atas
+    },
+    include: {
+      employee: {
+        select: {
+          name: true,
+          nip: true,
+          email: true,
+          role: true,
+          departmen: true,
+        },
+      },
+    },
+  });
+
+  if (!permission) throw new ResponseError(404, "Data kosong");
+
+  // jumlah permission yang belum di approve
+  let totalItemsNeedApproval = await prismaClient.permission.count({
+    where: {
+      is_approved: false,
+    },
+  });
+  if (totalItemsNeedApproval === 0) totalItemsNeedApproval = 0;
+
+  // jumlah permission yang sudah di approve
+  let totalItemsApproved = await prismaClient.permission.count({
+    where: {
+      is_approved: true,
+    },
+  });
+  if (totalItemsApproved === 0) totalItemsApproved = 0;
+
+  // total jumlah permission
+  let totalItems = totalItemsApproved + totalItemsNeedApproval;
+
+  // ekstrak hayan data yang dibutuhkan FE saja
+  const extractedData =
+    (permission &&
+      permission.map((item) => {
+        return {
+          type: item.type,
+          date: item.date ? item.date : null,
+          is_approved: item.is_approved,
+          images: item.images ? item.images : null,
+          start_date: item.start_date ? item.start_date : null,
+          end_date: item.end_date ? item.end_date : null,
+          name: item.employee.name,
+          nip: item.employee.nip,
+          email: item.employee.email,
+          role: item.employee.role ? item.employee.role : null,
+          departmen: item.employee.departmen ? item.employee.departmen : null,
+        };
+      })) ||
+    [];
+
+  if (!extractedData || extractedData.length === 0) {
+    throw new ResponseError(404, "Data kosong");
+  }
+
+  return {
+    result: extractedData,
+    status: {
+      total: totalItems,
+      approve: totalItemsNeedApproval,
+      approved: totalItemsApproved,
+    },
+  };
+};
+
+// service untuk approve permission
+const approvePermission = async (permissionId, admin) => {
+  const id = parseInt(permissionId);
+  const permission = await prismaClient.permission.update({
+    data: {
+      is_approved: true,
+      admin_id: admin.id,
+    },
+    where: {
+      id,
+    },
+  });
+
+  if (!permission) throw new ResponseError(404, "Data kosong");
+
+  return permission;
+};
+
+// service untuk reject permission
+const rejectPermission = async (permissionId, admin) => {
+  const id = parseInt(permissionId);
+  const permission = await prismaClient.permission.update({
+    data: {
+      is_approved: false,
+      admin_id: admin.id,
+    },
+    where: {
+      id,
+    },
+  });
+
+  if (!permission) throw new ResponseError(404, "Data kosong");
+
+  return permission;
+};
+
 export default {
   login,
   regist,
@@ -630,4 +740,7 @@ export default {
   attendanceRecapByDay,
   attendanceRecapByMonth,
   searchEmployee,
+  getPermission,
+  approvePermission,
+  rejectPermission,
 };

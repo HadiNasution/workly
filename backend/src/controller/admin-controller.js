@@ -153,6 +153,37 @@ const searchEmployee = async (req, res, next) => {
   }
 };
 
+const getPermission = async (req, res, next) => {
+  try {
+    const result = await adminService.getPermission();
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const approvePermission = async (req, res, next) => {
+  try {
+    const id = req.params.permissionId;
+    const admin = req.admin;
+    await adminService.approvePermission(id, admin);
+    res.status(201).json({ data: "Approved" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const rejectPermission = async (req, res, next) => {
+  try {
+    const id = req.params.permissionId;
+    const admin = req.admin;
+    await adminService.rejectPermission(id, admin);
+    res.status(201).json({ data: "Rejected" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   login,
   regist,
@@ -169,4 +200,7 @@ export default {
   attendanceRecapByDay,
   attendanceRecapByMonth,
   searchEmployee,
+  getPermission,
+  approvePermission,
+  rejectPermission,
 };

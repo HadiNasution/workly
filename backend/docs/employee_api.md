@@ -194,7 +194,7 @@ Response Body Error :
 }
 ```
 
-## Pengajuan cuti, izin, sakit
+## Create permission cuti, izin, sakit
 
 Endpoint : POST /api/employee/permission/
 
@@ -206,12 +206,11 @@ Request Body :
 
 ```json
 {
-  "name": "hadi",
-  "nip": "1122334445",
-  "isSick": "true", //opt
-  "isPermits": "false", //opt
-  "isLeaves": "false", //opt
-  "notes": "demam"
+  "type": "sick",
+  "date": "13/12/2023",
+  "images": "surat-sakit.png",
+  "start_date": "13/12/2023",
+  "end_date": "18/12/2023"
 }
 ```
 
@@ -228,6 +227,37 @@ Response Body Error :
 ```json
 {
   "errors": "Image format is not supported"
+}
+```
+
+## Get permission cuti, izin, sakit
+
+Endpoint : GET /api/employee/permission/
+
+Headers :
+
+- Authorization : token
+
+Query params : id (permission)
+
+Response Body Success :
+
+```json
+{
+  "type": "sick",
+  "date": "13/12/2023",
+  "is_approved": "false",
+  "images": "surat-sakit.png",
+  "start_date": "13/12/2023",
+  "end_date": "18/12/2023"
+}
+```
+
+Response Body Error :
+
+```json
+{
+  "errors": "Data kosong"
 }
 ```
 

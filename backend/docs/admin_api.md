@@ -631,7 +631,7 @@ Response Body Error :
 }
 ```
 
-## Permission sakit, izin, cuti, wfh
+## Get permission sakit, izin, cuti, wfh
 
 Endpoint : GET /api/admin/permission/
 
@@ -644,12 +644,39 @@ Response body success :
 ```json
 {
   "data": {
-    "name": "hadi",
-    "date": "13/12/2023",
-    "isWfh": "true",
-    "isSick": "false",
-    "isLeaves": "false",
-    "isPermits": "false"
+    "result": [
+      {
+        "type": "sakit",
+        "date": "2023-12-13T06:50:38.377Z",
+        "is_approved": false,
+        "images": "surat-sakit.png",
+        "start_date": "2023-12-13T06:50:38.377Z",
+        "end_date": "2023-12-13T06:50:38.377Z",
+        "name": "hadi",
+        "nip": "183040066",
+        "email": "hadi@mail.com",
+        "role": "junior dev",
+        "departmen": "it"
+      },
+      {
+        "type": "wfh",
+        "date": "2023-12-13T06:50:38.377Z",
+        "is_approved": false,
+        "images": null,
+        "start_date": null,
+        "end_date": null,
+        "name": "yusuf",
+        "nip": "18304055",
+        "email": "ucup@mail.com",
+        "role": "senior dev",
+        "departmen": "Dev"
+      }
+    ],
+    "status": {
+      "total": 3,
+      "approve": 3,
+      "approved": 0
+    }
   }
 }
 ```
@@ -658,6 +685,58 @@ Response body error :
 
 ```json
 {
-  "errors": "Data is empty"
+  "errors": "Data kosong"
+}
+```
+
+## Approve permission sakit, izin, cuti, wfh
+
+Endpoint : PUT /api/admin/permission/
+
+Header :
+
+- Authorization : token
+
+Query params : id (permission)
+
+Response body success :
+
+```json
+{
+  "data": "Approved"
+}
+```
+
+Response body error :
+
+```json
+{
+  "errors": "Gagal approve"
+}
+```
+
+## Reject permission sakit, izin, cuti, wfh
+
+Endpoint : PUT /api/admin/permission/reject
+
+Header :
+
+- Authorization : token
+
+Query params : id (permission)
+
+Response body success :
+
+```json
+{
+  "data": "Rejected"
+}
+```
+
+Response body error :
+
+```json
+{
+  "errors": "Gagal reject"
 }
 ```

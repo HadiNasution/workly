@@ -24,5 +24,11 @@ adminRoute.get(
   adminController.attendanceRecapByMonth
 );
 adminRoute.get("/search", adminController.searchEmployee);
+adminRoute.get("/permission", adminController.getPermission);
+adminRoute.put("/permission/:permissionId", adminController.approvePermission);
+adminRoute.put(
+  "/permission/reject/:permissionId",
+  adminController.rejectPermission
+);
 
 export { adminRoute };

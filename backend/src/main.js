@@ -1,3 +1,4 @@
+// import { prismaClient } from "./app/database.js";
 import { logger } from "./app/logging.js";
 import { web } from "./app/web.js";
 
@@ -120,9 +121,38 @@ const port = 3000;
 //     employee_id: 36,
 //   },
 // ];
+// const dataPermission = [
+//   {
+//     type: "sakit",
+//     note: "demam",
+//     date: date,
+//     is_approved: false,
+//     images: "surat-sakit.png",
+//     start_date: date,
+//     end_date: date,
+//     employee_id: 34,
+//   },
+//   {
+//     type: "wfh",
+//     note: "hujan",
+//     date: date,
+//     is_approved: false,
+//     employee_id: 35,
+//   },
+//   {
+//     type: "cuti",
+//     note: "lebaran",
+//     date: date,
+//     is_approved: false,
+//     images: "surat-sakit.png",
+//     start_date: date,
+//     end_date: date,
+//     employee_id: 34,
+//   },
+// ];
 // const insertData = async () => {
-//   await prismaClient.attendanceRecap.createMany({
-//     data: dataRecap,
+//   await prismaClient.permission.createMany({
+//     data: dataPermission,
 //   });
 // };
 web.listen(port, async () => {

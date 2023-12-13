@@ -90,7 +90,7 @@ model AttendanceRecap {
 
 model Permission {
   id Int @id @default(autoincrement())
-  type String? @db.VarChar(16)
+  type String @db.VarChar(16)
   note String? @db.VarChar(255)
   date DateTime?
   is_approved Boolean @default(false)
