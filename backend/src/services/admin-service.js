@@ -8,6 +8,7 @@ import {
   createAdminValidation,
   adminUpdateValidation,
   adminUpdateEmployeeValidation,
+  adminSearchEmployeeValidation,
 } from "../validation/admin-validation.js";
 import { validate } from "../validation/validation.js";
 import bcrypt from "bcrypt";
@@ -299,6 +300,7 @@ const createEmployee = async (request, admin) => {
 const getEmployee = async () => {
   const employee = await prismaClient.employee.findMany({
     select: {
+      id: true,
       name: true,
       nip: true,
       email: true,
@@ -307,7 +309,8 @@ const getEmployee = async () => {
       id: "asc",
     },
   });
-  if (!employee) throw new ResponseError(404, "Data employee kosong");
+  if (!employee || employee.length === 0)
+    throw new ResponseError(404, "Data employee kosong");
   return employee;
 };
 
@@ -382,92 +385,233 @@ const deleteEmployee = async (employeeNip) => {
 
 // service untuk melihat detail employee dan rekap kehadiran employee
 const detailEmployee = async (employeeNip) => {
-  const employee = await prismaClient.employee.findFirst({
+  const employee = await prismaClient.employee.findMany({
     where: {
-      nip: employeeNip,
+      nip: employeeNip, // ambil semua data di tabel employee dan attendance milik nip tersebut
     },
-    select: {
-      name: true,
-      nip: true,
-      email: true,
-      role: true,
-      departmen: true,
-      picture: true,
-      join_date: true,
-      quit_date: true,
+    include: {
+      attendance: true, // join ke tabel attendance
+      attendance_recap: true, // join ke tabel attendanceRecap
     },
   });
 
-  if (!employee) throw new ResponseError(404, "Pegawai tidak ditemukan");
+  if (!employee || employee.length === 0)
+    throw new ResponseError(404, "Pegawai tidak ditemukan");
 
-  const attendance = await prismaClient.attendanceRecap.findFirst({
-    where: {
-      employee_id: employeeNip,
-    },
-    select: {
-      date: true,
-      count_sick: true,
-      count_permits: true,
-      count_leaves: true,
-      count_wfh: true,
-      count_works: true,
-      count_late: true,
-      notes: true,
-    },
-  });
-  if (!attendance) throw new ResponseError(404, "Data kosong");
-  return { employee, attendance };
+  return employee;
 };
 
 // service untuk melihat rekap kehadiran pada hari itu
 const attendanceRecapByDay = async () => {
-  let today = new Date.now();
+  // logic untuk set waktu hari ini
+  let today = new Date();
+  today.setHours(0, 0, 0, 0); // Set waktu ke 00:00:00.000 (mulai hari)
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1); // tambah 1 untuk date esok hari
+  tomorrow.setMilliseconds(tomorrow.getMilliseconds() - 1); // Set waktu ke 23:59:59.999 (besok sebelum pergantian hari)
+
   const attendance = await prismaClient.attendance.findMany({
-    select: {
-      name: true,
-      date: true,
-      time_in: true,
-      time_out: true,
-      is_working: true,
-      is_late: true,
-      is_wfh: true,
-      is_sick: true,
-      is_leaves: true,
-      is_permits: true,
-      notes: true,
+    where: {
+      date: {
+        gte: today, //greather than
+        lt: tomorrow, // less than
+      },
     },
     orderBy: {
-      time_in: "desc", // yang absen terakhir, akan muncul paling atas
+      time_in: "desc", // paling terakhir absen, akan paling atas (saat di view)
     },
-    where: {
-      date: today, // hanya ambil data kehadiran dihari itu
+    include: {
+      // ambil data di tabel employee juga
+      employee: {
+        select: {
+          id: true,
+          name: true,
+          nip: true,
+        },
+      },
     },
   });
 
-  if (!attendance) throw new ResponseError(404, "Data kosong");
+  if (!attendance || attendance.length === 0) {
+    throw new ResponseError(404, "Data kosong");
+  }
 
-  return attendance;
+  // ekstrak hayan data yang dibutuhkan FE saja
+  const extractedData =
+    (attendance &&
+      attendance.map((item) => {
+        return {
+          date: item.date,
+          time_in: item.time_in,
+          time_out: item.time_out,
+          is_late: item.is_late,
+          is_working: item.is_working,
+          is_wfh: item.is_wfh,
+          is_sick: item.is_sick,
+          is_leaves: item.is_leaves,
+          is_permits: item.is_permits,
+          employee_id: item.employee ? item.employee.id : null,
+          nip: item.employee ? item.employee.nip : null,
+          name: item.employee ? item.employee.name : null,
+        };
+      })) ||
+    [];
+
+  if (!extractedData || extractedData.length === 0) {
+    throw new ResponseError(404, "Data kosong");
+  }
+
+  return extractedData;
 };
 
 // service untuk melihat rekap kehadiran perbulan
-const attendanceRecapByMonth = async () => {
+const attendanceRecapByMonth = async (targetYear, targetMonth) => {
+  // Menghitung tanggal awal dan akhir bulan
+  const firstDayOfMonth = new Date(targetYear, targetMonth - 1, 1); // tahun - bulan (dimulai dari 0-11) - tanggal
+  const lastDayOfMonth = new Date(targetYear, targetMonth, 0);
+
   const attendance = await prismaClient.attendanceRecap.findMany({
-    select: {
-      date: true,
-      count_sick: true,
-      count_permits: true,
-      count_leaves: true,
-      count_wfh: true,
-      count_works: true,
-      count_late: true,
-      notes: true,
+    where: {
+      date: {
+        gte: firstDayOfMonth,
+        lte: lastDayOfMonth,
+      },
     },
-    orderBy: {
-      date: "asc",
+    include: {
+      employee: {
+        select: {
+          id: true,
+          name: true,
+          nip: true,
+        },
+      },
     },
   });
-  if (!attendance) throw new ResponseError(404, "Data kosong");
-  return attendance;
+
+  if (!attendance || attendance.length === 0) {
+    throw new ResponseError(404, "Data kosong");
+  }
+
+  // ekstrak hayan data yang dibutuhkan FE saja
+  const extractedData =
+    (attendance &&
+      attendance.map((item) => {
+        return {
+          count_late: item.count_late,
+          count_sick: item.count_sick,
+          count_permits: item.count_permits,
+          count_leaves: item.count_leaves,
+          count_wfh: item.count_wfh,
+          count_works: item.count_works,
+          employee_id: item.employee ? item.employee.id : null,
+          nip: item.employee ? item.employee.nip : null,
+          name: item.employee ? item.employee.name : null,
+        };
+      })) ||
+    [];
+
+  if (!extractedData || extractedData.length === 0) {
+    throw new ResponseError(404, "Data kosong");
+  }
+
+  return extractedData;
+};
+
+// service untuk mencari data karyawan
+const searchEmployee = async (request) => {
+  const searchRequest = validate(adminSearchEmployeeValidation, request);
+
+  // 1 = (page-1) * 10 = 0
+  // 2 = (page-1) * 10 = 10
+  const skip = (searchRequest.page - 1) * searchRequest.size;
+
+  const filter = []; // akan menampung objek dari query search
+
+  // logic untuk search degan query optional
+  if (searchRequest.nip) {
+    filter.push({
+      OR: [
+        {
+          nip: {
+            contains: searchRequest.nip,
+          },
+        },
+      ],
+    });
+  }
+
+  if (searchRequest.name) {
+    filter.push({
+      OR: [
+        {
+          name: {
+            contains: searchRequest.name,
+          },
+        },
+      ],
+    });
+  }
+
+  if (searchRequest.email) {
+    filter.push({
+      OR: [
+        {
+          email: {
+            contains: searchRequest.email,
+          },
+        },
+      ],
+    });
+  }
+
+  const employee = await prismaClient.employee.findMany({
+    where: {
+      AND: filter,
+    },
+    take: searchRequest.size,
+    skip: skip,
+  });
+
+  if (!employee) throw new ResponseError(404, "Data kosong");
+
+  const totalItems = await prismaClient.employee.count({
+    where: {
+      AND: filter,
+    },
+  });
+
+  if (totalItems === 0) throw new ResponseError(404, "Item kosong");
+
+  // ekstrak hayan data yang dibutuhkan FE saja
+  const extractedData =
+    (employee &&
+      employee.map((item) => {
+        return {
+          id: item.id,
+          name: item.name,
+          nip: item.nip,
+          email: item.email,
+          role: item.role ? item.role : null,
+          departmen: item.departmen ? item.departmen : null,
+          picture: item.picture ? item.picture : null,
+          join_date: item.join_date,
+          quit_date: item.quit_date ? item.quit_date : null,
+        };
+      })) ||
+    [];
+
+  if (!extractedData || extractedData.length === 0) {
+    throw new ResponseError(404, "Data kosong");
+  }
+
+  return {
+    result: extractedData,
+    paging: {
+      page: searchRequest.page,
+      total_item: totalItems,
+      total_page: Math.ceil(totalItems / searchRequest.size),
+    },
+  };
 };
 
 export default {
@@ -485,4 +629,5 @@ export default {
   detailEmployee,
   attendanceRecapByDay,
   attendanceRecapByMonth,
+  searchEmployee,
 };

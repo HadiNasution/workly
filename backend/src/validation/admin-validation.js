@@ -71,6 +71,15 @@ const adminUpdateEmployeeValidation = Joi.object({
   quit_date: Joi.date(),
 });
 
+// validasi untuk search employee
+const adminSearchEmployeeValidation = Joi.object({
+  page: Joi.number().min(1).positive().default(1),
+  size: Joi.number().min(1).positive().max(100).default(10),
+  nip: Joi.string().optional(),
+  name: Joi.string().optional(),
+  email: Joi.string().optional(),
+});
+
 export {
   adminLoginValidation,
   adminRegistValidation,
@@ -79,4 +88,5 @@ export {
   createAdminValidation,
   adminUpdateValidation,
   adminUpdateEmployeeValidation,
+  adminSearchEmployeeValidation,
 };

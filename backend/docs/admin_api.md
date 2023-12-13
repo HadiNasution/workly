@@ -281,16 +281,19 @@ Response body :
 {
   "data": [
     {
+      "id": 1,
       "name": "hadi",
       "nip": "123344553322",
       "email": "hadi@mail.com"
     },
     {
+      "id": 2,
       "name": "hadi",
       "nip": "123344553322",
       "email": "hadi@mail.com"
     },
     {
+      "id": 3,
       "name": "hadi",
       "nip": "123344553322",
       "email": "hadi@mail.com"
@@ -315,32 +318,66 @@ Header :
 
 - Authorization : token
 
-Request params : nip
+Query params : nip
 
 Response body success :
 
 ```json
 {
-  "data": {
-    "name": "hadi",
-    "nip": "123344553322",
-    "email": "hadi@mail.com",
-    "role": "junior dev",
-    "department": "it",
-    "picture": "hadi.jpg",
-    "join_date": "10/12/2023",
-    "quit_date": ""
-  },
-  "attendance": {
-    "date": "13/12/2023",
-    "count_sick": "0",
-    "count_permits": "1",
-    "count_leaves": "1",
-    "count_wfh": "2",
-    "count_works": "24",
-    "count_late": "4",
-    "notes": "demam"
-  }
+  "data": [
+    {
+      "id": 36,
+      "name": "helmi",
+      "nip": "183040433",
+      "email": "miii@mail.com",
+      "password": "$2b$10$vPlneC5ikR85z/Ofe9cNEOB/S535/gZgdVjLQgCHJyv.RVwla6b2m",
+      "role": "senior dev",
+      "departmen": "Dev",
+      "picture": "me.jpg",
+      "token": null,
+      "token_expires_at": null,
+      "join_date": "2023-12-13T01:35:49.258Z",
+      "quit_date": null,
+      "admin_id": 106,
+      "attendance": [
+        {
+          "id": 6,
+          "date": "2023-12-13T01:39:00.815Z",
+          "time_in": "2023-12-13T01:39:00.815Z",
+          "time_out": null,
+          "is_late": false,
+          "is_working": false,
+          "is_wfh": false,
+          "is_sick": true,
+          "is_leaves": false,
+          "is_permits": false,
+          "notes": "demam",
+          "longtitude_in": null,
+          "latitude_in": null,
+          "longtitude_out": null,
+          "latitude_out": null,
+          "created_at": "2023-12-13T01:39:01.357Z",
+          "updated_at": "2023-12-13T01:39:01.357Z",
+          "deleted_at": null,
+          "employee_id": 36
+        }
+      ],
+      "attendance_recap": [
+        {
+          "id": 3,
+          "count_late": 2,
+          "count_sick": 5,
+          "count_permits": 0,
+          "count_leaves": 3,
+          "count_wfh": 2,
+          "count_works": 2,
+          "date": "2023-12-13T01:41:27.513Z",
+          "notes": "",
+          "employee_id": 36
+        }
+      ]
+    }
+  ]
 }
 ```
 
@@ -398,7 +435,7 @@ Header :
 
 - Authorization : token
 
-Request params : nip
+Query params : nip
 
 Response body success :
 
@@ -418,7 +455,7 @@ Response body error :
 
 ## Attendance Recap by Day
 
-Endpoint : GET /api/admin/recap/day/
+Endpoint : GET /api/admin/recap/day
 
 Header :
 
@@ -430,30 +467,46 @@ Response body success :
 {
   "data": [
     {
-      "name": "hadi",
-      "date": "13/12/2023",
-      "time_in": "09:00",
-      "time_out": "",
-      "is_working": "true",
-      "is_late": "true",
-      "is_wfh": "true",
-      "is_sick": "false",
-      "is_leaves": "false",
-      "is_permits": "false",
-      "notes": ""
+      "date": "2023-12-13T01:39:00.815Z",
+      "time_in": "2023-12-13T01:39:00.815Z",
+      "time_out": null,
+      "is_late": false,
+      "is_working": true,
+      "is_wfh": false,
+      "is_sick": false,
+      "is_leaves": false,
+      "is_permits": false,
+      "employee_id": 35,
+      "nip": "18304055",
+      "name": "yusuf"
     },
     {
-      "name": "hadi2",
-      "date": "13/12/2023",
-      "time_in": "08:00",
-      "time_out": "",
-      "is_working": "true",
-      "is_late": "false",
-      "is_wfh": "true",
-      "is_sick": "false",
-      "is_leaves": "false",
-      "is_permits": "false",
-      "notes": ""
+      "date": "2023-12-13T01:38:15.050Z",
+      "time_in": "2023-12-13T01:38:15.050Z",
+      "time_out": "2023-12-13T01:38:15.050Z",
+      "is_late": true,
+      "is_working": true,
+      "is_wfh": true,
+      "is_sick": false,
+      "is_leaves": false,
+      "is_permits": false,
+      "employee_id": null,
+      "nip": null,
+      "name": null
+    },
+    {
+      "date": "2023-12-13T01:38:15.050Z",
+      "time_in": "2023-12-13T01:38:15.050Z",
+      "time_out": null,
+      "is_late": false,
+      "is_working": true,
+      "is_wfh": false,
+      "is_sick": false,
+      "is_leaves": false,
+      "is_permits": false,
+      "employee_id": null,
+      "nip": null,
+      "name": null
     }
   ]
 }
@@ -471,6 +524,8 @@ Response body error :
 
 Endpoint : GET /api/admin/recapbymonth/
 
+Query params : year, month
+
 Header :
 
 - Authorization : token
@@ -479,17 +534,41 @@ Response body success :
 
 ```json
 {
-  "data": {
-    "name": "hadi",
-    "date": "13/12/2023",
-    "count_sick": "0",
-    "count_permits": "1",
-    "count_leaves": "1",
-    "count_wfh": "2",
-    "count_works": "24",
-    "count_late": "4",
-    "notes": "demam"
-  }
+  "data": [
+    {
+      "count_late": 2,
+      "count_sick": 2,
+      "count_permits": 0,
+      "count_leaves": 3,
+      "count_wfh": 2,
+      "count_works": 2,
+      "employee_id": 34,
+      "nip": "183040066",
+      "name": "hadi"
+    },
+    {
+      "count_late": 2,
+      "count_sick": 4,
+      "count_permits": 0,
+      "count_leaves": 3,
+      "count_wfh": 2,
+      "count_works": 2,
+      "employee_id": 35,
+      "nip": "18304055",
+      "name": "yusuf"
+    },
+    {
+      "count_late": 2,
+      "count_sick": 5,
+      "count_permits": 0,
+      "count_leaves": 3,
+      "count_wfh": 2,
+      "count_works": 2,
+      "employee_id": 36,
+      "nip": "183040433",
+      "name": "helmi"
+    }
+  ]
 }
 ```
 
@@ -503,7 +582,7 @@ Response body error :
 
 ## Search Employee
 
-Endpoint : GET /api/admin/
+Endpoint : GET /api/admin/search
 
 Headers :
 
@@ -521,24 +600,25 @@ Response Body Success :
 
 ```json
 {
-  "data": [
-    {
-      "id": 1,
-      "name": "hadi",
-      "email": "hadi@mail.com",
-      "nip": "1122233442211"
-    },
-    {
-      "id": 2,
-      "name": "ncip",
-      "email": "ncip@mail.com",
-      "nip": "1122233442211"
+  "data": {
+    "result": [
+      {
+        "id": 34,
+        "name": "hadi",
+        "nip": "183040066",
+        "email": "hadi@mail.com",
+        "role": "junior dev",
+        "departmen": "it",
+        "picture": null,
+        "join_date": "2012-10-11T17:00:00.000Z",
+        "quit_date": "2012-10-11T17:00:00.000Z"
+      }
+    ],
+    "paging": {
+      "page": 1,
+      "total_item": 1,
+      "total_page": 1
     }
-  ],
-  "Paging": {
-    "page": 1,
-    "total_page": 3,
-    "total_items": 10
   }
 }
 ```

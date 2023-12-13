@@ -111,10 +111,8 @@ const deleteEmployee = async (req, res, next) => {
 const detailEmployee = async (req, res, next) => {
   try {
     const { employeeNip } = req.params;
-    const { employee, attendance } = await adminService.detailEmployee(
-      employeeNip
-    );
-    res.status(200).json({ data: employee, attendance });
+    const result = await adminService.detailEmployee(employeeNip);
+    res.status(200).json({ data: result });
   } catch (error) {
     next(error);
   }
@@ -123,6 +121,32 @@ const detailEmployee = async (req, res, next) => {
 const attendanceRecapByDay = async (req, res, next) => {
   try {
     const result = await adminService.attendanceRecapByDay();
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const attendanceRecapByMonth = async (req, res, next) => {
+  try {
+    const { year, month } = req.params;
+    const result = await adminService.attendanceRecapByMonth(year, month);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const searchEmployee = async (req, res, next) => {
+  try {
+    const request = {
+      name: req.query.name,
+      nip: req.query.nip,
+      email: req.query.email,
+      page: req.query.page,
+      size: req.query.size,
+    };
+    const result = await adminService.searchEmployee(request);
     res.status(200).json({ data: result });
   } catch (error) {
     next(error);
@@ -143,4 +167,6 @@ export default {
   deleteEmployee,
   detailEmployee,
   attendanceRecapByDay,
+  attendanceRecapByMonth,
+  searchEmployee,
 };
