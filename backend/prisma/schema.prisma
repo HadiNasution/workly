@@ -49,19 +49,14 @@ model Employee {
 
 model Attendance {
   id Int @id @default(autoincrement())
-  date DateTime
   time_in DateTime?
   time_out DateTime?
   is_late Boolean? @default(false)
   is_working Boolean? @default(false)
   is_wfh Boolean? @default(false)
-  is_sick Boolean? @default(false)
-  is_leaves Boolean? @default(false)
-  is_permits Boolean? @default(false)
-  notes String? @db.VarChar(255)
-  longtitude_in Int?
+  longitude_in Int?
   latitude_in Int?
-  longtitude_out Int?
+  longitude_out Int?
   latitude_out Int?
   created_at DateTime @default(now())
   updated_at DateTime? @updatedAt
@@ -84,6 +79,7 @@ model AttendanceRecap {
   notes String? @db.VarChar(255)
   employee_id Int?
   employee Employee? @relation(fields: [employee_id], references: [id])
+  permission Permission[]
 
   @@map("AttendanceRecap")
 }
@@ -102,8 +98,10 @@ model Permission {
   deleted_at DateTime?
   employee_id Int?
   admin_id Int?
+  attendance_recap_id Int?
   employee Employee? @relation(fields: [employee_id], references: [id])
   admin Admin? @relation(fields: [admin_id], references: [id])
+  attendance_recap AttendanceRecap? @relation(fields: [attendance_recap_id], references: [id])
 
   @@map("Permission")
 }

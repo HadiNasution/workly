@@ -696,6 +696,9 @@ const approvePermission = async (permissionId, admin) => {
       is_approved: true,
       admin_id: admin.id,
     },
+    include: {
+      attendance_recap: {},
+    },
     where: {
       id,
     },

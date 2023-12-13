@@ -48,6 +48,36 @@ Response Body Error :
 }
 ```
 
+## Reset password
+
+Enpoint : GET /api/employee/forgotpassword
+
+Request body :
+
+```json
+{
+  "name": "hadi",
+  "nip": "1111111",
+  "email": "admin@gmail.com"
+}
+```
+
+Response body success :
+
+```json
+{
+  "data": "randomword" // temporary pass
+}
+```
+
+Response body error :
+
+```json
+{
+  "errors": "Email tidak terdaftar"
+}
+```
+
 ## Absen Time in
 
 Endpoint : POST /api/employee/attendance/
@@ -62,10 +92,8 @@ Request Body :
 {
   "name": "hadi",
   "nip": "1223445533",
-  "date": "03/12/2023",
-  "time_in": "07:00",
   "isWfh": "false",
-  "longtitude_in": "21.212",
+  "longitude_in": "21.212",
   "latitude_in": "2223.11"
 }
 ```
@@ -82,7 +110,7 @@ Response Body Error :
 
 ```json
 {
-  "errors": "anauthorized"
+  "errors": "Absen masuk gagal"
 }
 ```
 
@@ -102,7 +130,7 @@ Request Body :
   "nip": "1223445533",
   "date": "03/12/2023",
   "time_out": "07:00",
-  "longtitude_out": "21.212",
+  "longitude_out": "21.212",
   "latitude_out": "2223.11"
 }
 ```

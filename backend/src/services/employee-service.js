@@ -11,6 +11,7 @@ import { v4 as uuid } from "uuid";
 import { addMinutes, format } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 import { generate } from "random-words";
+import geolib from "geolib";
 
 const login = async (request) => {
   const loginRequest = validate(employeeLoginValidation, request);
@@ -127,4 +128,46 @@ const reset = async (request) => {
   return dummyPass;
 };
 
-export default { login, logout, reset };
+const absenIn = async (request, id) => {
+  const absenRequest = validate(employeeAbsenInValidation, request);
+
+  const latitude = absenRequest.latitude_in;
+  const longitude = absenRequest.longitude_in;
+
+  // koordinat zona geofencing kantor WGS Bandung
+  const geofenceCoordinates = {
+    latitude: -6.93558818718933,
+    longitude: 107.57824313682035,
+  };
+
+  // Jarak maksimal untuk dianggap berada dalam zona geofencing (dalam meter)
+  const geofenceRadius = 50;
+
+  // Memeriksa apakah karyawan berada dalam zona geofencing
+  const isWithinGeofence = geolib.isPointWithinRadius(
+    { latitude, longitude },
+    geofenceCoordinates,
+    geofenceRadius
+  );
+
+  if (!isWithinGeofence)
+    throw new ResponseError(400, "Gagal melakukan absen masuk");
+
+  const currentTime = new Date();
+  const absenTimeLimit = new Date();
+  absenTimeLimit.setHours(8, 0, 0, 0); // Waktu batas absen (08:00)
+
+  // Memeriksa apakah waktu absen melebihi batas waktu yang ditentukan
+  const isLate = currentTime > absenTimeLimit;
+
+  return prismaClient.attendance.create({
+    data: {
+      time_in: currentTime,
+      is_late: isLate,
+      is_working: true,
+      employee_id: id,
+    },
+  });
+};
+
+export default { login, logout, reset, absenIn };

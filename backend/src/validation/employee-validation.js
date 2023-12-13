@@ -22,8 +22,17 @@ const employeeGetValidation = Joi.string()
   .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
   .required();
 
+const employeeAbsenInValidation = Joi.object({
+  name: Joi.string().max(100).required(),
+  nip: Joi.string().max(16).required(),
+  is_wfh: Joi.boolean().required(),
+  longitude_in: Joi.number().required(),
+  latitude_in: Joi.number().required(),
+});
+
 export {
   employeeLoginValidation,
   employeeGetValidation,
   employeeResetValidation,
+  employeeAbsenInValidation,
 };
