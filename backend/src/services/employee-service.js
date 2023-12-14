@@ -9,8 +9,7 @@ import {
 import { validate } from "../validation/validation.js";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
-import { addMinutes, format } from "date-fns";
-import { utcToZonedTime } from "date-fns-tz";
+import { addMinutes } from "date-fns";
 import { generate } from "random-words";
 import geolib from "geolib";
 import { logger } from "../app/logging.js";
@@ -67,6 +66,15 @@ const login = async (request) => {
     });
   }
   logger.info("EMPLOYE LOGIN BERHASIL");
+  // simpan ke tabel log
+  const date = new Date();
+  const note = `Employee ${loginRequest.name} login pada : ${date}`;
+  await prismaClient.log.create({
+    data: {
+      date,
+      note,
+    },
+  });
   return prismaClient.employee.findUnique({
     where: {
       email: employee.email,
@@ -89,6 +97,15 @@ const logout = async (email) => {
 
   if (!isEmailExist) throw new ResponseError(400, "Email tidak ditemukan");
 
+  // simpan ke tabel log
+  const date = new Date();
+  const note = `Employee ${email} logout pada : ${date}`;
+  await prismaClient.log.create({
+    data: {
+      date,
+      note,
+    },
+  });
   return prismaClient.employee.update({
     where: {
       email: email,
@@ -124,7 +141,32 @@ const reset = async (request) => {
     },
   });
   logger.info("RESET PASSWORD ADMIN BERHASIL");
+  // simpan ke tabel log
+  const date = new Date();
+  const note = `Employee ${resetRequest.name} reset password pada : ${date}`;
+  await prismaClient.log.create({
+    data: {
+      date,
+      note,
+    },
+  });
   if (updateEmployeePass) return dummyPass;
+};
+
+const shot = async () => {
+  const generateShot = await prismaClient.shot.update({
+    data: {
+      shot: generate({ minLength: 2, maxLength: 10 }),
+    },
+    where: {
+      id: 1,
+    },
+    select: {
+      shot: true,
+    },
+  });
+  if (!generateShot) throw new ResponseError(404, "Shot belum tersedia");
+  return generateShot;
 };
 
 const absenIn = async (request, employee) => {
@@ -169,6 +211,15 @@ const absenIn = async (request, employee) => {
   }
 
   logger.info("EMPLOYEE ABSEN IN BERHASIL");
+  // simpan ke tabel log
+  const date = new Date();
+  const note = `Employee ${absenRequest.name} absen masuk pada : ${date}`;
+  await prismaClient.log.create({
+    data: {
+      date,
+      note,
+    },
+  });
   return prismaClient.attendance.create({
     data: {
       time_in: currentUTCTime,
@@ -182,4 +233,49 @@ const absenIn = async (request, employee) => {
   });
 };
 
-export default { login, logout, reset, absenIn };
+const detail = async (nip) => {
+  const employee = await prismaClient.employee.findMany({
+    where: {
+      nip, // ambil semua data di tabel employee dan attendance milik nip tersebut
+    },
+    include: {
+      attendance_recap: true, // join ke tabel attendanceRecap
+    },
+  });
+
+  if (!employee || employee.length === 0) {
+    throw new ResponseError(404, "Data kosong");
+  }
+
+  // ekstrak hayan data yang dibutuhkan FE saja
+  const extractedData =
+    (employee &&
+      employee.map((item) => {
+        return {
+          name: item.name,
+          nip: item.nip,
+          email: item.email,
+          role: item.role ?? null,
+          departmen: item.departmen ?? null,
+          picture: item.picture ?? null,
+          join_date: item.join_date,
+          quit_date: item.quit_date ?? null,
+          count_late: item.attendance_recap[0].count_late,
+          count_sick: item.attendance_recap[0].count_sick,
+          count_permits: item.attendance_recap[0].count_permits,
+          count_leaves: item.attendance_recap[0].count_leaves,
+          count_wfh: item.attendance_recap[0].count_wfh,
+          count_works: item.attendance_recap[0].count_works,
+        };
+      })) ||
+    [];
+
+  if (!extractedData || extractedData.length === 0) {
+    throw new ResponseError(404, "Data kosong");
+  }
+
+  logger.info("RESPONSE DETAIL EMPLOYEE BERHASIL");
+  return extractedData;
+};
+
+export default { login, logout, reset, absenIn, detail, shot };

@@ -23,7 +23,8 @@ const employeeGetValidation = Joi.string()
   .required();
 
 const employeeAbsenInValidation = Joi.object({
-  name: Joi.string().max(100).required(),
+  nip: Joi.string().max(16).required(),
+  shot: Joi.string().max(10),
   is_wfh: Joi.boolean().required(),
   latitude_in: Joi.number(),
   longitude_in: Joi.number(),

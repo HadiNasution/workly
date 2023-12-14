@@ -78,6 +78,26 @@ Response body error :
 }
 ```
 
+## get shot
+
+Endpoint : GET /api/shot
+
+Response Body Success :
+
+```json
+{
+  "data": "office" // kata random yg akan berubah setiap 10 menit
+}
+```
+
+Response Body Error :
+
+```json
+{
+  "errors": "Shot belum tersedia"
+}
+```
+
 ## Absen Time in
 
 Endpoint : POST /api/employee/absenIn
@@ -90,8 +110,9 @@ Request Body :
 
 ```json
 {
-  "name": "hadi",
+  "nip": "183040066",
   "is_wfh": "false",
+  "shot": "office",
   "latitude_in": "-6.935730841355272",
   "longitude_in": "107.57839850286285"
 }
@@ -152,7 +173,7 @@ Response Body Error :
 
 ## Profile details
 
-Endpoint : GET /api/employee/profile/
+Endpoint : GET /api/employee/profile
 
 Headers :
 
@@ -162,16 +183,24 @@ Response Body Success :
 
 ```json
 {
-  "data": {
-    "name": "hadi",
-    "nip": "1122334445",
-    "role": "junior dev",
-    "departmen": "it",
-    "picture": "https://hehe.jpg",
-    "email": "hadi@mail.com",
-    "join_date": "01/01/2024",
-    "quit_date": "null"
-  }
+  "data": [
+    {
+      "name": "yusuf",
+      "nip": "18304055",
+      "email": "ucup@mail.com",
+      "role": "senior dev",
+      "departmen": "Dev",
+      "picture": "me.jpg",
+      "join_date": "2023-12-13T01:35:49.258Z",
+      "quit_date": null,
+      "count_late": 2,
+      "count_sick": 4,
+      "count_permits": 0,
+      "count_leaves": 3,
+      "count_wfh": 3,
+      "count_works": 2
+    }
+  ]
 }
 ```
 
@@ -179,7 +208,7 @@ Response Body Error :
 
 ```json
 {
-  "errors": "anauthorized"
+  "errors": "Unauthorized"
 }
 ```
 
