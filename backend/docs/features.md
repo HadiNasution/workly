@@ -25,6 +25,7 @@ Admin :
 - diagram/presentase kehadiran seluruh karyawan perbulan
 - search user
 - permission sakit, izin, cuti
+- view logging
 - rekap kehadiran karyawan perbulan (opt)
 - download report (perbulan) as excel (opt)
 

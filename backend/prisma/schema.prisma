@@ -107,14 +107,11 @@ model Permission {
 
 model Log {
   id Int @id @default(autoincrement())
-  employee_id Int?
-  admin_id Int?
-  attendance_id Int?
+  date DateTime
+  note String @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime? @updatedAt
   deleted_at DateTime?
-  message String? @db.VarChar(255)
-  date DateTime
 
   @@map("Log")
 }

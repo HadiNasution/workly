@@ -124,7 +124,7 @@ Response body error :
 
 ## Get admins and superadmins
 
-Endpoint : GET /api/admin
+Endpoint : GET /api/admin/get
 
 Header :
 
@@ -522,7 +522,7 @@ Response body error :
 
 ## Attendance Recap by Month
 
-Endpoint : GET /api/admin/recapbymonth/
+Endpoint : GET /api/admin/recap/month
 
 Query params : year, month
 
@@ -738,5 +738,30 @@ Response body error :
 ```json
 {
   "errors": "Gagal reject"
+}
+```
+
+## Get log
+
+Endpoint : GET /api/admin/log
+
+Header :
+
+- Authorization : token
+
+Response body success :
+
+```json
+{
+  "date": "12/12/12",
+  "note": "X melakukan Y"
+}
+```
+
+Response body error :
+
+```json
+{
+  "errors": "Data kosong"
 }
 ```

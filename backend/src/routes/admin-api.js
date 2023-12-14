@@ -19,10 +19,7 @@ adminRoute.delete(
 );
 adminRoute.get("/employee/detail/:employeeNip", adminController.detailEmployee);
 adminRoute.get("/recap/day", adminController.attendanceRecapByDay);
-adminRoute.get(
-  "/recap/month/:year/:month",
-  adminController.attendanceRecapByMonth
-);
+adminRoute.get("/recap/month", adminController.attendanceRecapByMonth);
 adminRoute.get("/search", adminController.searchEmployee);
 adminRoute.get("/permission", adminController.getPermission);
 adminRoute.put("/permission/:permissionId", adminController.approvePermission);

@@ -129,7 +129,7 @@ const attendanceRecapByDay = async (req, res, next) => {
 
 const attendanceRecapByMonth = async (req, res, next) => {
   try {
-    const { year, month } = req.params;
+    const { year, month } = req.query;
     const result = await adminService.attendanceRecapByMonth(year, month);
     res.status(200).json({ data: result });
   } catch (error) {

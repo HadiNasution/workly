@@ -47,10 +47,11 @@ const login = async (request) => {
   const localExpires = convertExpires.toLocaleString();
 
   if (!employee.token_expires_at || localCurrentTime > localExpires) {
-    const expiredUTCTime = addMinutes(currentUTCTime, 120);
+    const expiredUTCTime = addMinutes(currentUTCTime, 60); // waktu expired token 1 jam
 
     const newToken = uuid().toString();
 
+    logger.info("LOGIN EMPLOYEE BERHASIL (WITH NEW TOKEN)");
     return prismaClient.employee.update({
       data: {
         token: newToken,
