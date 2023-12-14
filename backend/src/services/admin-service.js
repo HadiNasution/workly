@@ -50,30 +50,24 @@ const login = async (request) => {
   if (!isPasswordValid) throw new ResponseError(401, "Password tidak valid");
 
   // Cek apakah token masih valid, Jika tidak generate token baru. Jika masih valid kembalikan data admin
-  const currentDate = new Date();
-  if (!admin.token_expires_at || currentDate > admin.token_expires_at) {
-    const expirationTime = addMinutes(currentDate, 120);
-    // Menentukan zona waktu lokal (misalnya "Asia/Jakarta")
-    const timeZone = "Asia/Jakarta";
+  const currentUTCTime = new Date();
+  const convertCurrent = new Date(currentUTCTime);
+  const localCurrentTime = convertCurrent.toLocaleString();
 
-    // Mengonversi waktu UTC menjadi waktu di zona waktu lokal
-    const localizedExpirationTime = utcToZonedTime(expirationTime, timeZone);
-
-    // Menampilkan waktu dalam format yang sesuai dengan zona waktu lokal
-    const formattedExpirationTime = format(
-      localizedExpirationTime,
-      "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
-      { timeZone }
-    );
+  const convertExpires = new Date(admin.token_expires_at);
+  const localExpires = convertExpires.toLocaleString();
+  if (!admin.token_expires_at || localCurrentTime > localExpires) {
+    const expiredUTCTime = addMinutes(currentUTCTime, 120);
 
     // Generate token baru
     const newToken = uuid().toString();
 
+    logger.info("ADMIN LOGIN BERHASIL");
     // update data admin dengan token baru yang valid
     return prismaClient.admin.update({
       data: {
         token: newToken,
-        token_expires_at: formattedExpirationTime,
+        token_expires_at: expiredUTCTime,
       },
       where: {
         email: admin.email,
@@ -118,6 +112,7 @@ const regist = async (request) => {
 
   registRequest.password = await bcrypt.hash(registRequest.password, 10);
 
+  logger.info("ADMIN REGIST BERHASIL");
   return prismaClient.admin.create({
     data: registRequest,
     select: {
@@ -139,7 +134,7 @@ const logout = async (email) => {
   });
 
   if (!isEmailExist) throw new ResponseError(400, "Admin tidak ditemukan");
-
+  logger.info("ADMIN LOGOUT BERHASIL");
   return prismaClient.admin.update({
     data: {
       token: null,
@@ -175,7 +170,7 @@ const reset = async (request) => {
       email: resetRequest.email,
     },
   });
-
+  logger.info("RESET PASSWORD ADMIN BERHASIL");
   if (updateAdminPass) return dummyPass;
 };
 
@@ -231,6 +226,7 @@ const update = async (request, adminId) => {
     ? await bcrypt.hash(updateRequest.pass, 10)
     : oldData.pass;
 
+  logger.info("UPDATE EMPLOYEE BERHASIL");
   return prismaClient.admin.update({
     data: {
       name: newName,
@@ -252,6 +248,7 @@ const deleteAdmin = async (adminId) => {
     },
   });
   if (!admin) throw new ResponseError(404, "Admin tidak ditemukan");
+  logger.info("DELETE EMPLOYEE BERHASIL");
   return admin;
 };
 
@@ -272,7 +269,7 @@ const createEmployee = async (request, admin) => {
 
   if (isNipDuplicate === 1) throw new ResponseError(400, "NIP Sudah ada");
   if (isEmailDuplicate === 1) throw new ResponseError(400, "Email Sudah ada");
-
+  logger.info("CREATE EMPLOYEE BERHASIL");
   return prismaClient.employee.create({
     data: {
       name: createRequest.name,
@@ -310,8 +307,10 @@ const getEmployee = async () => {
       id: "asc",
     },
   });
-  if (!employee || employee.length === 0)
+  if (!employee || employee.length === 0) {
     throw new ResponseError(404, "Data employee kosong");
+  }
+  logger.info("RESPONSE GET EMPLOYEE BERHASIL");
   return employee;
 };
 
@@ -358,6 +357,7 @@ const updateEmployee = async (request) => {
     ? updateRequest.quit_date
     : oldData.quit_date;
 
+  logger.info("UPDATE BERHASIL");
   return prismaClient.employee.update({
     data: {
       name: newName,
@@ -381,6 +381,7 @@ const deleteEmployee = async (employeeNip) => {
     },
   });
   if (!employee) throw new ResponseError(404, "Pegawai tidak ditemukan");
+  logger.info("DELETE EMPLOYEE BERHASIL");
   return employee;
 };
 
@@ -398,7 +399,7 @@ const detailEmployee = async (employeeNip) => {
 
   if (!employee || employee.length === 0)
     throw new ResponseError(404, "Pegawai tidak ditemukan");
-
+  logger.info("RESPONSE DETAIL EMPLOYEE BERHASIL");
   return employee;
 };
 
@@ -461,7 +462,7 @@ const attendanceRecapByDay = async () => {
   if (!extractedData || extractedData.length === 0) {
     throw new ResponseError(404, "Data kosong");
   }
-
+  logger.info("RESPONSE ATTENDANCE RECAP DAY BERHASIL");
   return extractedData;
 };
 
@@ -514,7 +515,7 @@ const attendanceRecapByMonth = async (targetYear, targetMonth) => {
   if (!extractedData || extractedData.length === 0) {
     throw new ResponseError(404, "Data kosong");
   }
-
+  logger.info("RESPONSE ATTENDANCE RECAP BERHASIL");
   return extractedData;
 };
 
@@ -604,7 +605,7 @@ const searchEmployee = async (request) => {
   if (!extractedData || extractedData.length === 0) {
     throw new ResponseError(404, "Data kosong");
   }
-
+  logger.info("RESPONSE SEARCH EMPLOYEE BERHASIL");
   return {
     result: extractedData,
     paging: {
@@ -678,7 +679,7 @@ const getPermission = async () => {
   if (!extractedData || extractedData.length === 0) {
     throw new ResponseError(404, "Data kosong");
   }
-
+  logger.info("RESPONSE GET PERMISSION BERHASIL");
   return {
     result: extractedData,
     status: {
@@ -785,7 +786,7 @@ const rejectPermission = async (permissionId, admin) => {
   });
 
   if (!permission) throw new ResponseError(404, "Data kosong");
-
+  logger.info("RESPONSE REJECT PERMISSION BERHASIL");
   return permission;
 };
 

@@ -6,5 +6,6 @@ const employeeRoute = new express.Router();
 employeeRoute.use(employeeAuthMiddleware); // auth middleware
 
 employeeRoute.delete("/logout", employeeController.logout);
+employeeRoute.put("/absenIn", employeeController.absenIn);
 
 export { employeeRoute };

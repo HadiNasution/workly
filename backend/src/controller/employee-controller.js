@@ -27,4 +27,14 @@ const reset = async (req, res, next) => {
   }
 };
 
-export default { login, logout, reset };
+const absenIn = async (req, res, next) => {
+  try {
+    const employee = req.employee;
+    const result = await employeeService.absenIn(req.body, employee);
+    res.status(201).json({ data: "Absen masuk berhasil" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { login, logout, reset, absenIn };

@@ -24,10 +24,9 @@ const employeeGetValidation = Joi.string()
 
 const employeeAbsenInValidation = Joi.object({
   name: Joi.string().max(100).required(),
-  nip: Joi.string().max(16).required(),
   is_wfh: Joi.boolean().required(),
-  longitude_in: Joi.number().required(),
-  latitude_in: Joi.number().required(),
+  latitude_in: Joi.number(),
+  longitude_in: Joi.number(),
 });
 
 export {

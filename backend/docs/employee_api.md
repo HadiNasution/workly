@@ -50,7 +50,7 @@ Response Body Error :
 
 ## Reset password
 
-Enpoint : GET /api/employee/forgotpassword
+Enpoint : GET /api/employee/resetpassword
 
 Request body :
 
@@ -80,7 +80,7 @@ Response body error :
 
 ## Absen Time in
 
-Endpoint : POST /api/employee/attendance/
+Endpoint : POST /api/employee/absenIn
 
 Headers :
 
@@ -91,10 +91,9 @@ Request Body :
 ```json
 {
   "name": "hadi",
-  "nip": "1223445533",
-  "isWfh": "false",
-  "longitude_in": "21.212",
-  "latitude_in": "2223.11"
+  "is_wfh": "false",
+  "latitude_in": "-6.935730841355272",
+  "longitude_in": "107.57839850286285"
 }
 ```
 

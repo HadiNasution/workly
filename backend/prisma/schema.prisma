@@ -54,10 +54,10 @@ model Attendance {
   is_late Boolean? @default(false)
   is_working Boolean? @default(false)
   is_wfh Boolean? @default(false)
-  longitude_in Int?
-  latitude_in Int?
-  longitude_out Int?
-  latitude_out Int?
+  longitude_in Decimal?
+  latitude_in Decimal?
+  longitude_out Decimal?
+  latitude_out Decimal?
   created_at DateTime @default(now())
   updated_at DateTime? @updatedAt
   deleted_at DateTime? 
