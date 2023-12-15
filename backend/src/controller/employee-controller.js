@@ -27,9 +27,10 @@ const reset = async (req, res, next) => {
   }
 };
 
-const shot = async (req, res, next) => {
+const detail = async (req, res, next) => {
   try {
-    const result = await employeeService.shot();
+    const nip = req.employee.nip;
+    const result = await employeeService.detail(nip);
     res.status(200).json({ data: result });
   } catch (error) {
     next(error);
@@ -46,14 +47,25 @@ const absenIn = async (req, res, next) => {
   }
 };
 
-const detail = async (req, res, next) => {
+const absenOut = async (req, res, next) => {
   try {
-    const nip = req.employee.nip;
-    const result = await employeeService.detail(nip);
+    const employee = req.employee;
+    await employeeService.absenOut(req.body, employee);
+    res.status(200).json({ data: "Absen keluar berhasil" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const upload = async (req, res, next) => {
+  try {
+    const employee = req.employee;
+    const filePath = req.file.path;
+    const result = await employeeService.upload(filePath, employee);
     res.status(200).json({ data: result });
   } catch (error) {
     next(error);
   }
 };
 
-export default { login, logout, reset, absenIn, detail, shot };
+export default { login, logout, reset, detail, absenIn, absenOut, upload };

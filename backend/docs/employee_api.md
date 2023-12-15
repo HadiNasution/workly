@@ -78,26 +78,6 @@ Response body error :
 }
 ```
 
-## get shot
-
-Endpoint : GET /api/shot
-
-Response Body Success :
-
-```json
-{
-  "data": "office" // kata random yg akan berubah setiap 10 menit
-}
-```
-
-Response Body Error :
-
-```json
-{
-  "errors": "Shot belum tersedia"
-}
-```
-
 ## Absen Time in
 
 Endpoint : POST /api/employee/absenIn
@@ -110,11 +90,9 @@ Request Body :
 
 ```json
 {
-  "nip": "183040066",
   "is_wfh": "false",
-  "shot": "office",
-  "latitude_in": "-6.935730841355272",
-  "longitude_in": "107.57839850286285"
+  "latitude_in": "-6.935748258656645",
+  "longitude_in": "107.57827118265071"
 }
 ```
 
@@ -146,10 +124,6 @@ Request Body :
 
 ```json
 {
-  "name": "hadi",
-  "nip": "1223445533",
-  "date": "03/12/2023",
-  "time_out": "07:00",
   "longitude_out": "21.212",
   "latitude_out": "2223.11"
 }
@@ -214,7 +188,7 @@ Response Body Error :
 
 ## Update foto profile
 
-Endpoint : POST /api/employee/profile/
+Endpoint : POST /api/employee/upload
 
 Headers :
 
@@ -224,9 +198,7 @@ Request Body :
 
 ```json
 {
-  "name": "hadi",
-  "nip": "1122334445",
-  "picture": "https://hehe.jpg"
+  "profilePhoto": "https://hehe.jpg"
 }
 ```
 
@@ -234,11 +206,7 @@ Response Body Success :
 
 ```json
 {
-  "data": {
-    "name": "hadi",
-    "nip": "1122334445",
-    "picture": "https://hehe2.jpg"
-  }
+  "data": "uploadsprofilePhoto-1702621358788-292841658.png"
 }
 ```
 

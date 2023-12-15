@@ -9,5 +9,4 @@ publicRoute.post("/admin/regist", adminController.regist);
 publicRoute.post("/employee/login", employeeController.login);
 publicRoute.post("/admin/resetpassword", adminController.reset);
 publicRoute.post("/employee/resetpassword", employeeController.reset);
-publicRoute.get("/shot", employeeController.shot);
 export { publicRoute };

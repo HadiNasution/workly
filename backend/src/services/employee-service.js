@@ -5,6 +5,7 @@ import {
   employeeGetValidation,
   employeeResetValidation,
   employeeAbsenInValidation,
+  employeeAbsenOutValidation,
 } from "../validation/employee-validation.js";
 import { validate } from "../validation/validation.js";
 import bcrypt from "bcrypt";
@@ -153,86 +154,6 @@ const reset = async (request) => {
   if (updateEmployeePass) return dummyPass;
 };
 
-const shot = async () => {
-  const generateShot = await prismaClient.shot.update({
-    data: {
-      shot: generate({ minLength: 2, maxLength: 10 }),
-    },
-    where: {
-      id: 1,
-    },
-    select: {
-      shot: true,
-    },
-  });
-  if (!generateShot) throw new ResponseError(404, "Shot belum tersedia");
-  return generateShot;
-};
-
-const absenIn = async (request, employee) => {
-  const absenRequest = validate(employeeAbsenInValidation, request);
-
-  const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
-  const convertCurrent = new Date(currentUTCTime); // convert UTC ke lokal
-  const localTime = convertCurrent.toLocaleString(); // waktu sekarang dalam lokal
-
-  const timeLimitUTC = new Date();
-  timeLimitUTC.setHours(8, 0, 0, 0); // Waktu batas absen (08:00)
-  const convertTimeLimit = new Date(timeLimitUTC);
-  const localTimeLimit = convertTimeLimit.toLocaleString();
-
-  // Memeriksa apakah waktu absen melebihi batas waktu yang ditentukan
-  const isLate = localTime > localTimeLimit;
-
-  // Jika tidak WFH, cek koordinat absen
-  if (absenRequest.is_wfh === false) {
-    const latitude = absenRequest.latitude_in;
-    const longitude = absenRequest.longitude_in;
-
-    // koordinat zona geofencing kantor WGS Bandung
-    const geofenceCoordinates = {
-      latitude: -6.935783427330478,
-      longitude: 107.57826439241717,
-    };
-
-    // Jarak maksimal untuk dianggap berada dalam zona geofencing (dalam meter)
-    const geofenceRadius = 5;
-
-    // Memeriksa apakah karyawan berada dalam zona geofencing
-    const isWithinGeofence = geolib.isPointWithinRadius(
-      { latitude, longitude },
-      geofenceCoordinates,
-      geofenceRadius
-    );
-
-    if (!isWithinGeofence) {
-      throw new ResponseError(400, "Gagal melakukan absen masuk");
-    }
-  }
-
-  logger.info("EMPLOYEE ABSEN IN BERHASIL");
-  // simpan ke tabel log
-  const date = new Date();
-  const note = `Employee ${absenRequest.name} absen masuk pada : ${date}`;
-  await prismaClient.log.create({
-    data: {
-      date,
-      note,
-    },
-  });
-  return prismaClient.attendance.create({
-    data: {
-      time_in: currentUTCTime,
-      is_late: isLate,
-      is_wfh: absenRequest.is_wfh,
-      is_working: true,
-      latitude_in: absenRequest.latitude_in,
-      longitude_in: absenRequest.longitude_in,
-      employee_id: employee.id,
-    },
-  });
-};
-
 const detail = async (nip) => {
   const employee = await prismaClient.employee.findMany({
     where: {
@@ -278,4 +199,191 @@ const detail = async (nip) => {
   return extractedData;
 };
 
-export default { login, logout, reset, absenIn, detail, shot };
+const absenIn = async (request, employee) => {
+  const absenRequest = validate(employeeAbsenInValidation, request);
+
+  const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
+  const convertCurrent = new Date(currentUTCTime); // convert UTC ke lokal
+  const localTime = convertCurrent.toLocaleString(); // waktu sekarang dalam lokal
+
+  const timeLimitUTC = new Date();
+  timeLimitUTC.setHours(8, 0, 0, 0); // Waktu batas absen (08:00)
+  const convertTimeLimit = new Date(timeLimitUTC);
+  const localTimeLimit = convertTimeLimit.toLocaleString();
+
+  // Memeriksa apakah waktu absen melebihi batas waktu yang ditentukan
+  const isLate = localTime > localTimeLimit;
+
+  // Jika tidak WFH, cek koordinat absen
+  if (absenRequest.is_wfh === false) {
+    const latitude = absenRequest.latitude_in;
+    const longitude = absenRequest.longitude_in;
+
+    // koordinat zona geofencing kantor WGS Bandung
+    const geofenceCoordinates = {
+      latitude: -6.935783427330478,
+      longitude: 107.57826439241717,
+    };
+
+    // Jarak maksimal untuk dianggap berada dalam zona geofencing (dalam meter)
+    const geofenceRadius = 5;
+
+    // Memeriksa apakah karyawan berada dalam zona geofencing
+    const isWithinGeofence = geolib.isPointWithinRadius(
+      { latitude, longitude },
+      geofenceCoordinates,
+      geofenceRadius
+    );
+
+    if (!isWithinGeofence) {
+      throw new ResponseError(
+        400,
+        "Diluar lokasi, Gagal melakukan absen masuk"
+      );
+    }
+  }
+
+  logger.info("EMPLOYEE ABSEN IN BERHASIL");
+  // simpan ke tabel log
+  const note = `Employee ${absenRequest.name} absen masuk pada : ${currentUTCTime}`;
+  await prismaClient.log.create({
+    data: {
+      date: currentUTCTime,
+      note,
+    },
+  });
+  return prismaClient.attendance.create({
+    data: {
+      time_in: currentUTCTime,
+      is_late: isLate,
+      is_wfh: absenRequest.is_wfh,
+      latitude_in: absenRequest.latitude_in,
+      longitude_in: absenRequest.longitude_in,
+      employee_id: employee.id,
+    },
+  });
+};
+
+const absenOut = async (request, employee) => {
+  const absenRequest = validate(employeeAbsenOutValidation, request);
+
+  const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
+
+  // logic untuk set waktu hari ini
+  let today = new Date();
+  today.setHours(0, 0, 0, 0); // Set waktu ke 00:00:00.000 (mulai hari)
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1); // tambah 1 untuk date esok hari
+  tomorrow.setMilliseconds(tomorrow.getMilliseconds() - 1); // Set waktu ke 23:59:59.999 (besok sebelum pergantian hari)
+
+  // ambil data attendance (isWFH, Id) dari employee di hari itu
+  const getTodayAttendance = await prismaClient.employee.findMany({
+    where: {
+      id: employee.id,
+    },
+    include: {
+      attendance: {
+        select: {
+          id: true,
+          is_wfh: true,
+        },
+        where: {
+          time_in: {
+            gte: today,
+            lt: tomorrow,
+          },
+        },
+      },
+    },
+  });
+
+  const extractedData =
+    (getTodayAttendance &&
+      getTodayAttendance.map((item) => {
+        return {
+          name: item.name,
+          is_wfh: item.attendance[0].is_wfh,
+          attendance_id: item.attendance[0].id,
+        };
+      })) ||
+    [];
+
+  const id = extractedData[0].attendance_id;
+
+  // Jika tidak WFH, cek koordinat absen
+  if (extractedData[0].is_wfh === false) {
+    const latitude = absenRequest.latitude_out;
+    const longitude = absenRequest.longitude_out;
+
+    // koordinat zona geofencing kantor WGS Bandung
+    const geofenceCoordinates = {
+      latitude: -6.935783427330478,
+      longitude: 107.57826439241717,
+    };
+
+    // Jarak maksimal untuk dianggap berada dalam zona geofencing (dalam meter)
+    const geofenceRadius = 10;
+
+    // Memeriksa apakah karyawan berada dalam zona geofencing
+    const isWithinGeofence = geolib.isPointWithinRadius(
+      { latitude, longitude },
+      geofenceCoordinates,
+      geofenceRadius
+    );
+
+    if (!isWithinGeofence) {
+      throw new ResponseError(
+        400,
+        "Diluar lokasi, Gagal melakukan absen keluar"
+      );
+    }
+  }
+
+  logger.info("EMPLOYEE ABSEN OUT BERHASIL");
+  // simpan ke tabel log
+  const note = `Employee ${extractedData[0].name} absen keluar pada : ${currentUTCTime}`;
+  await prismaClient.log.create({
+    data: {
+      date: currentUTCTime,
+      note,
+    },
+  });
+  return prismaClient.attendance.update({
+    where: {
+      id: id,
+    },
+    data: {
+      time_out: currentUTCTime,
+      is_working: true,
+      latitude_out: absenRequest.latitude_out,
+      longitude_out: absenRequest.longitude_out,
+    },
+  });
+};
+
+const upload = async (filePath, employee) => {
+  logger.info("UPLOAD FOTO BERHASIL");
+  // simpan ke tabel log
+  const date = new Date();
+  const note = `Employee ${employee.id} (id) upload foto profile pada : ${date}`;
+  await prismaClient.log.create({
+    data: {
+      date,
+      note,
+    },
+  });
+  // Simpan path file ke tabel
+  return prismaClient.employee.update({
+    where: {
+      id: employee.id,
+    },
+    data: {
+      picture: filePath,
+    },
+    select: {
+      picture: true,
+    },
+  });
+};
+
+export default { login, logout, reset, detail, absenIn, absenOut, upload };
