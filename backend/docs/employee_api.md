@@ -231,7 +231,7 @@ Request Body :
 ```json
 {
   "type": "sick",
-  "date": "13/12/2023",
+  "note": "demam",
   "images": "surat-sakit.png",
   "start_date": "13/12/2023",
   "end_date": "18/12/2023"
@@ -262,18 +262,45 @@ Headers :
 
 - Authorization : token
 
-Query params : id (permission)
-
 Response Body Success :
 
 ```json
 {
-  "type": "sick",
-  "date": "13/12/2023",
-  "is_approved": "false",
-  "images": "surat-sakit.png",
-  "start_date": "13/12/2023",
-  "end_date": "18/12/2023"
+  "data": [
+    {
+      "id": 4,
+      "type": "sick",
+      "note": "diare",
+      "date": "2023-12-15T07:27:34.608Z",
+      "is_approved": false,
+      "images": "uploads\\surat-1702625254604-356498492.jpg",
+      "start_date": "2023-12-13T06:50:38.377Z",
+      "end_date": "2023-12-13T06:50:38.377Z",
+      "admin_id": null
+    },
+    {
+      "id": 5,
+      "type": "sick",
+      "note": "diare",
+      "date": "2023-12-15T07:36:08.763Z",
+      "is_approved": false,
+      "images": "uploads\\surat-1702625768732-529603503.jpg",
+      "start_date": "2023-12-13T06:50:38.377Z",
+      "end_date": "2023-12-13T06:50:38.377Z",
+      "admin_id": null
+    },
+    {
+      "id": 2,
+      "type": "wfh",
+      "note": "hujan",
+      "date": "2023-12-13T06:50:38.377Z",
+      "is_approved": true,
+      "images": null,
+      "start_date": null,
+      "end_date": null,
+      "admin_id": 106
+    }
+  ]
 }
 ```
 

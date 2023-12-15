@@ -24,13 +24,20 @@ const employeeGetValidation = Joi.string()
 
 const employeeAbsenInValidation = Joi.object({
   is_wfh: Joi.boolean().required(),
-  latitude_in: Joi.number(),
-  longitude_in: Joi.number(),
+  latitude_in: Joi.number().optional(),
+  longitude_in: Joi.number().optional(),
 });
 
 const employeeAbsenOutValidation = Joi.object({
-  latitude_out: Joi.number(),
-  longitude_out: Joi.number(),
+  latitude_out: Joi.number().optional(),
+  longitude_out: Joi.number().optional(),
+});
+
+const employeeCreatePermissionValidation = Joi.object({
+  type: Joi.string().max(7).required(),
+  note: Joi.string().max(255).required(),
+  start_date: Joi.date().required(),
+  end_date: Joi.date().required(),
 });
 
 export {
@@ -39,4 +46,5 @@ export {
   employeeResetValidation,
   employeeAbsenInValidation,
   employeeAbsenOutValidation,
+  employeeCreatePermissionValidation,
 };

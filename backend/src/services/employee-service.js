@@ -6,6 +6,7 @@ import {
   employeeResetValidation,
   employeeAbsenInValidation,
   employeeAbsenOutValidation,
+  employeeCreatePermissionValidation,
 } from "../validation/employee-validation.js";
 import { validate } from "../validation/validation.js";
 import bcrypt from "bcrypt";
@@ -386,4 +387,98 @@ const upload = async (filePath, employee) => {
   });
 };
 
-export default { login, logout, reset, detail, absenIn, absenOut, upload };
+const createPermission = async (request, employee, filePath) => {
+  const createRequest = validate(employeeCreatePermissionValidation, request);
+  // join ke tabel AttendanceRecap untuk mendapatkan id nya
+  const getAttendenceRecap = await prismaClient.employee.findMany({
+    where: {
+      id: employee.id,
+    },
+    include: {
+      attendance_recap: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+  const extractedData =
+    (getAttendenceRecap &&
+      getAttendenceRecap.map((item) => {
+        return {
+          attendance_recap_id: item.attendance_recap[0].id,
+        };
+      })) ||
+    [];
+  const recapId = extractedData[0].attendance_recap_id;
+  const currentDate = new Date();
+  logger.info("CREATE PERMISSION BERHASIL");
+  // simpan ke tabel log
+  const note = `Employee ${employee.name} membuat permission ${createRequest.type} pada : ${currentDate}`;
+  await prismaClient.log.create({
+    data: {
+      date: currentDate,
+      note,
+    },
+  });
+  return prismaClient.permission.create({
+    data: {
+      type: createRequest.type,
+      note: createRequest.note,
+      date: currentDate,
+      images: filePath,
+      start_date: createRequest.start_date,
+      end_date: createRequest.end_date,
+      employee_id: employee.id,
+      attendance_recap_id: recapId,
+    },
+  });
+};
+
+const getPermission = async (employee) => {
+  const permission = await prismaClient.employee.findMany({
+    where: {
+      id: employee.id,
+    },
+    include: {
+      permission: {
+        select: {
+          id: true,
+          type: true,
+          note: true,
+          date: true,
+          is_approved: true,
+          images: true,
+          start_date: true,
+          end_date: true,
+          admin_id: true,
+        },
+        orderBy: {
+          is_approved: "asc",
+        },
+      },
+    },
+  });
+  if (!permission) throw new ResponseError(404, "Data kosong");
+
+  // ekstrak hanya data yang dibutuhkan saja
+  const permissionsOnly = permission.map((employee) => employee.permission);
+  if (!permissionsOnly || permissionsOnly.length === 0) {
+    throw new ResponseError(404, "Data Permission kosong");
+  }
+  const data = permissionsOnly[0];
+  logger.info("GET PERMISSION BERHASIL");
+  return data;
+};
+
+export default {
+  login,
+  logout,
+  reset,
+  detail,
+  absenIn,
+  absenOut,
+  upload,
+  createPermission,
+  getPermission,
+};

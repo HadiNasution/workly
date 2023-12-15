@@ -68,4 +68,36 @@ const upload = async (req, res, next) => {
   }
 };
 
-export default { login, logout, reset, detail, absenIn, absenOut, upload };
+const createPermission = async (req, res, next) => {
+  try {
+    const request = req.body;
+    const employee = req.employee;
+    const filePath = req.file.path;
+    await employeeService.createPermission(request, employee, filePath);
+    res.status(201).json({ data: "Pengajuan berhasil" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getPermission = async (req, res, next) => {
+  try {
+    const employee = req.employee;
+    const result = await employeeService.getPermission(employee);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default {
+  login,
+  logout,
+  reset,
+  detail,
+  absenIn,
+  absenOut,
+  upload,
+  createPermission,
+  getPermission,
+};

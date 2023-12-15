@@ -17,5 +17,11 @@ employeeRoute.post(
   upload.single("profile"),
   employeeController.upload
 );
+employeeRoute.post(
+  "/create/permission",
+  upload.single("surat"),
+  employeeController.createPermission
+);
+employeeRoute.get("/permission", employeeController.getPermission);
 
 export { employeeRoute };
