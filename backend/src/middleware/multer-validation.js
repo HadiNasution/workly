@@ -4,7 +4,7 @@ import path from "path";
 // Konfigurasi Multer untuk menangani upload file
 export const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./uploads/"); // Menyimpan file di folder 'uploads/'
+    cb(null, "./uploads"); // Menyimpan file di folder 'uploads'
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);

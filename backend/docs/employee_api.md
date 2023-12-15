@@ -314,7 +314,7 @@ Response Body Error :
 
 ## Attendance Recap by Day
 
-Endpoint : GET /api/employee/recapbyday/
+Endpoint : GET /api/employee/attendance/day
 
 Header :
 
@@ -325,17 +325,11 @@ Response body success :
 ```json
 {
   "data": {
-    "name": "hadi",
-    "date": "13/12/2023",
-    "time_in": "07:00",
-    "time_out": "17:00",
-    "isWorking": "true",
-    "isLate": "false",
-    "isWfh": "true",
-    "isSick": "false",
-    "isLeaves": "false",
-    "isPermits": "false",
-    "notes": ""
+    "time_in": "2023-12-15T01:27:09.927Z",
+    "time_out": "2023-12-15T02:29:10.730Z",
+    "is_late": true,
+    "is_working": true,
+    "is_wfh": false
   }
 }
 ```
@@ -344,13 +338,13 @@ Response body error :
 
 ```json
 {
-  "errors": "Employee is not found"
+  "errors": "Data kosong"
 }
 ```
 
 ## Attendance Recap by Month
 
-Endpoint : GET /api/employee/recapbymonth/
+Endpoint : GET /api/employee/attendance/month
 
 Header :
 
@@ -360,17 +354,22 @@ Response body success :
 
 ```json
 {
-  "data": {
-    "name": "hadi",
-    "date": "13/12/2023",
-    "count_sick": "0",
-    "count_permits": "1",
-    "count_leaves": "1",
-    "count_wfh": "2",
-    "count_works": "24",
-    "count_late": "2",
-    "notes": "demam"
-  }
+  "data": [
+    {
+      "time_in": "2023-12-13T01:39:00.815Z",
+      "time_out": "2023-12-15T01:50:04.878Z",
+      "is_late": false,
+      "is_working": true,
+      "is_wfh": false
+    },
+    {
+      "time_in": "2023-12-14T04:04:32.876Z",
+      "time_out": null,
+      "is_late": true,
+      "is_working": true,
+      "is_wfh": false
+    }
+  ]
 }
 ```
 
@@ -378,6 +377,6 @@ Response body error :
 
 ```json
 {
-  "errors": "Employee is not found"
+  "errors": "Data kosong"
 }
 ```

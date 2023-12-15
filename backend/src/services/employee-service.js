@@ -16,6 +16,7 @@ import { generate } from "random-words";
 import geolib from "geolib";
 import { logger } from "../app/logging.js";
 
+// Service untuk employee login
 const login = async (request) => {
   const loginRequest = validate(employeeLoginValidation, request);
 
@@ -88,6 +89,7 @@ const login = async (request) => {
   });
 };
 
+// service untuk employee logout
 const logout = async (email) => {
   email = validate(employeeGetValidation, email);
 
@@ -119,6 +121,7 @@ const logout = async (email) => {
   });
 };
 
+// service untuk employee reset password
 const reset = async (request) => {
   const resetRequest = validate(employeeResetValidation, request);
 
@@ -155,6 +158,7 @@ const reset = async (request) => {
   if (updateEmployeePass) return dummyPass;
 };
 
+// service untuk employee melihat detail profile
 const detail = async (nip) => {
   const employee = await prismaClient.employee.findMany({
     where: {
@@ -200,6 +204,7 @@ const detail = async (nip) => {
   return extractedData;
 };
 
+// service untuk employee absen masuk
 const absenIn = async (request, employee) => {
   const absenRequest = validate(employeeAbsenInValidation, request);
 
@@ -265,6 +270,7 @@ const absenIn = async (request, employee) => {
   });
 };
 
+// service untuk employee absen keluar
 const absenOut = async (request, employee) => {
   const absenRequest = validate(employeeAbsenOutValidation, request);
 
@@ -362,8 +368,10 @@ const absenOut = async (request, employee) => {
   });
 };
 
+// service untuk employee upload foto profile
 const upload = async (filePath, employee) => {
   logger.info("UPLOAD FOTO BERHASIL");
+  console.log(filePath);
   // simpan ke tabel log
   const date = new Date();
   const note = `Employee ${employee.id} (id) upload foto profile pada : ${date}`;
@@ -387,6 +395,7 @@ const upload = async (filePath, employee) => {
   });
 };
 
+// service untuk employee create permission
 const createPermission = async (request, employee, filePath) => {
   const createRequest = validate(employeeCreatePermissionValidation, request);
   // join ke tabel AttendanceRecap untuk mendapatkan id nya
@@ -435,6 +444,7 @@ const createPermission = async (request, employee, filePath) => {
   });
 };
 
+// service untuk employee melihat daftar permission
 const getPermission = async (employee) => {
   const permission = await prismaClient.employee.findMany({
     where: {
@@ -471,6 +481,68 @@ const getPermission = async (employee) => {
   return data;
 };
 
+// service untuk employee melihat status hadir hari itu
+const getAttendanceRecapByDay = async (employee) => {
+  // logic untuk set waktu hari ini
+  let today = new Date();
+  today.setHours(0, 0, 0, 0); // Set waktu ke 00:00:00.000 (mulai hari)
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1); // tambah 1 untuk date esok hari
+  tomorrow.setMilliseconds(tomorrow.getMilliseconds() - 1); // Set waktu ke 23:59:59.999 (besok sebelum pergantian hari)
+
+  const attendance = await prismaClient.attendance.findFirst({
+    where: {
+      employee_id: employee.id,
+      time_in: {
+        gte: today,
+        lt: tomorrow,
+      },
+    },
+    select: {
+      time_in: true,
+      time_out: true,
+      is_late: true,
+      is_working: true,
+      is_wfh: true,
+    },
+  });
+
+  if (!attendance) throw new ResponseError(404, "Data kosong");
+  logger.info("GET ATTENDANCE RECAT BY DAY BERHASIL");
+  return attendance;
+};
+
+// service untuk employee melihat daftar hadir perbulan
+const getAttendanceRecapByMonth = async (employee, targetYear, targetMonth) => {
+  // Menghitung tanggal awal dan akhir bulan
+  const firstDayOfMonth = new Date(targetYear, targetMonth - 1, 1); // tahun - bulan (dimulai dari 0-11) - tanggal
+  const lastDayOfMonth = new Date(targetYear, targetMonth, 0); // waktu ke 23:59:59.999 (besok sebelum pergantian hari)
+
+  const attendance = await prismaClient.attendance.findMany({
+    where: {
+      employee_id: employee.id,
+      time_in: {
+        gte: firstDayOfMonth,
+        lte: lastDayOfMonth,
+      },
+    },
+    select: {
+      time_in: true,
+      time_out: true,
+      is_late: true,
+      is_working: true,
+      is_wfh: true,
+    },
+    orderBy: {
+      id: "asc",
+    },
+  });
+
+  if (!attendance) throw new ResponseError(404, "Data kosong");
+  logger.info("GET ATTENDANCE RECAT BY MONTH BERHASIL");
+  return attendance;
+};
+
 export default {
   login,
   logout,
@@ -481,4 +553,6 @@ export default {
   upload,
   createPermission,
   getPermission,
+  getAttendanceRecapByDay,
+  getAttendanceRecapByMonth,
 };
