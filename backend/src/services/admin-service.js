@@ -60,15 +60,15 @@ const login = async (request) => {
     // Generate token baru
     const newToken = uuid().toString();
 
-    logger.info("LOGIN ADMIN BERHASIL (WITH NEW TOKEN)");
-    // simpan ke tabel log
-    const note = `Admin ${admin.name} Login pada : ${localCurrentTime}. Dengan token baru.`;
-    await prismaClient.log.create({
-      data: {
-        date: currentUTCTime,
-        note,
-      },
-    });
+    // logger.info("LOGIN ADMIN BERHASIL (WITH NEW TOKEN)");
+    // // simpan ke tabel log
+    // const note = `Admin ${admin.name} Login pada : ${localCurrentTime}. Dengan token baru.`;
+    // await prismaClient.log.create({
+    //   data: {
+    //     date: currentUTCTime,
+    //     note,
+    //   },
+    // });
     // update data admin dengan token baru yang valid
     return prismaClient.admin.update({
       data: {
@@ -79,26 +79,30 @@ const login = async (request) => {
         email: admin.email,
       },
       select: {
+        name: true,
+        picture: true,
         is_super_admin: true,
         token: true,
         token_expires_at: true,
       },
     });
   }
-  logger.info("LOGIN ADMIN BERHASIL");
-  // simpan ke tabel log
-  const note = `Admin ${admin.name} Login pada : ${localCurrentTime}`;
-  await prismaClient.log.create({
-    data: {
-      date: currentUTCTime,
-      note,
-    },
-  });
+  // logger.info("LOGIN ADMIN BERHASIL");
+  // // simpan ke tabel log
+  // const note = `Admin ${admin.name} Login pada : ${localCurrentTime}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date: currentUTCTime,
+  //     note,
+  //   },
+  // });
   return prismaClient.admin.findUnique({
     where: {
       email: admin.email,
     },
     select: {
+      name: true,
+      picture: true,
       is_super_admin: true,
       token: true,
       token_expires_at: true,
@@ -126,16 +130,16 @@ const regist = async (request) => {
 
   registRequest.password = await bcrypt.hash(registRequest.password, 10);
 
-  logger.info("ADMIN REGIST BERHASIL");
-  // simpan ke tabel log
-  const date = new Date();
-  const note = `${registRequest.name} Registrasi pada : ${date} sebagai Admin`;
-  await prismaClient.log.create({
-    data: {
-      date,
-      note,
-    },
-  });
+  // logger.info("ADMIN REGIST BERHASIL");
+  // // simpan ke tabel log
+  // const date = new Date();
+  // const note = `${registRequest.name} Registrasi pada : ${date} sebagai Admin`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
   return prismaClient.admin.create({
     data: registRequest,
     select: {
@@ -157,16 +161,16 @@ const logout = async (email) => {
   });
 
   if (!isEmailExist) throw new ResponseError(400, "Admin tidak ditemukan");
-  logger.info("ADMIN LOGOUT BERHASIL");
-  // simpan ke tabel log
-  const date = new Date();
-  const note = `Admin ${email} Logout pada : ${date}.`;
-  await prismaClient.log.create({
-    data: {
-      date,
-      note,
-    },
-  });
+  // logger.info("ADMIN LOGOUT BERHASIL");
+  // // simpan ke tabel log
+  // const date = new Date();
+  // const note = `Admin ${email} Logout pada : ${date}.`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
   return prismaClient.admin.update({
     data: {
       token: null,
@@ -203,15 +207,15 @@ const reset = async (request) => {
     },
   });
   logger.info("RESET PASSWORD ADMIN BERHASIL");
-  // simpan ke tabel log
-  const date = new Date();
-  const note = `Admin ${resetRequest.name} Reset password pada : ${date}`;
-  await prismaClient.log.create({
-    data: {
-      date,
-      note,
-    },
-  });
+  // // simpan ke tabel log
+  // const date = new Date();
+  // const note = `Admin ${resetRequest.name} Reset password pada : ${date}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
   if (updateAdminPass) return dummyPass;
 };
 
@@ -267,16 +271,16 @@ const update = async (request, adminId) => {
     ? await bcrypt.hash(updateRequest.pass, 10)
     : oldData.pass;
 
-  logger.info("UPDATE ADMIN BERHASIL");
-  // simpan ke tabel log
-  const date = new Date();
-  const note = `Admin ${updateRequest.name} Update data pada : ${date}`;
-  await prismaClient.log.create({
-    data: {
-      date,
-      note,
-    },
-  });
+  // logger.info("UPDATE ADMIN BERHASIL");
+  // // simpan ke tabel log
+  // const date = new Date();
+  // const note = `Admin ${updateRequest.name} Update data pada : ${date}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
   return prismaClient.admin.update({
     data: {
       name: newName,
@@ -298,16 +302,16 @@ const deleteAdmin = async (adminId) => {
     },
   });
   if (!admin) throw new ResponseError(404, "Admin tidak ditemukan");
-  logger.info("DELETE EMPLOYEE BERHASIL");
-  // simpan ke tabel log
-  const date = new Date();
-  const note = `Admin hapus data admin ${adminId} (id) pada : ${date}`;
-  await prismaClient.log.create({
-    data: {
-      date,
-      note,
-    },
-  });
+  // logger.info("DELETE EMPLOYEE BERHASIL");
+  // // simpan ke tabel log
+  // const date = new Date();
+  // const note = `Admin hapus data admin ${adminId} (id) pada : ${date}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
   return admin;
 };
 
@@ -328,16 +332,16 @@ const createEmployee = async (request, admin) => {
 
   if (isNipDuplicate === 1) throw new ResponseError(400, "NIP Sudah ada");
   if (isEmailDuplicate === 1) throw new ResponseError(400, "Email Sudah ada");
-  logger.info("CREATE EMPLOYEE BERHASIL");
-  // simpan ke tabel log
-  const date = new Date();
-  const note = `Admin ${admin.name} Create employee ${createRequest.name} data pada : ${date}`;
-  await prismaClient.log.create({
-    data: {
-      date,
-      note,
-    },
-  });
+  // logger.info("CREATE EMPLOYEE BERHASIL");
+  // // simpan ke tabel log
+  // const date = new Date();
+  // const note = `Admin ${admin.name} Create employee ${createRequest.name} data pada : ${date}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
   return prismaClient.employee.create({
     data: {
       name: createRequest.name,
@@ -425,16 +429,16 @@ const updateEmployee = async (request) => {
     ? updateRequest.quit_date
     : oldData.quit_date;
 
-  logger.info("UPDATE BERHASIL");
-  // simpan ke tabel log
-  const date = new Date();
-  const note = `Admin update data employee ${oldData.name} data pada : ${date}`;
-  await prismaClient.log.create({
-    data: {
-      date,
-      note,
-    },
-  });
+  // logger.info("UPDATE BERHASIL");
+  // // simpan ke tabel log
+  // const date = new Date();
+  // const note = `Admin update data employee ${oldData.name} data pada : ${date}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
   return prismaClient.employee.update({
     data: {
       name: newName,
@@ -458,16 +462,16 @@ const deleteEmployee = async (employeeNip) => {
     },
   });
   if (!employee) throw new ResponseError(404, "Pegawai tidak ditemukan");
-  logger.info("DELETE EMPLOYEE BERHASIL");
-  // simpan ke tabel log
-  const date = new Date();
-  const note = `Admin Delete data employee ${employeeNip} (nip) data pada : ${date}`;
-  await prismaClient.log.create({
-    data: {
-      date,
-      note,
-    },
-  });
+  // logger.info("DELETE EMPLOYEE BERHASIL");
+  // // simpan ke tabel log
+  // const date = new Date();
+  // const note = `Admin Delete data employee ${employeeNip} (nip) data pada : ${date}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
   return employee;
 };
 
@@ -850,16 +854,16 @@ const approvePermission = async (permissionId, admin) => {
       }
     });
 
-    logger.info("TRANSAKSI APPROVE PERMISSION BERHASIL");
-    // simpan ke tabel log
-    const date = new Date();
-    const note = `Admin ${admin.id} (id) approve permission ${permissionId} (id) data pada : ${date}`;
-    await prismaClient.log.create({
-      data: {
-        date,
-        note,
-      },
-    });
+    // logger.info("TRANSAKSI APPROVE PERMISSION BERHASIL");
+    // // simpan ke tabel log
+    // const date = new Date();
+    // const note = `Admin ${admin.id} (id) approve permission ${permissionId} (id) data pada : ${date}`;
+    // await prismaClient.log.create({
+    //   data: {
+    //     date,
+    //     note,
+    //   },
+    // });
     return true;
   } catch (error) {
     logger.info("TRANSAKSI APPROVE PERMISSION GAGAL : " + error);
@@ -881,16 +885,16 @@ const rejectPermission = async (permissionId, admin) => {
   });
 
   if (!permission) throw new ResponseError(404, "Data kosong");
-  logger.info("RESPONSE REJECT PERMISSION BERHASIL");
-  // simpan ke tabel log
-  const date = new Date();
-  const note = `Admin ${admin.id} (id) reject permission ${permissionId} (id) data pada : ${date}`;
-  await prismaClient.log.create({
-    data: {
-      date,
-      note,
-    },
-  });
+  // logger.info("RESPONSE REJECT PERMISSION BERHASIL");
+  // // simpan ke tabel log
+  // const date = new Date();
+  // const note = `Admin ${admin.id} (id) reject permission ${permissionId} (id) data pada : ${date}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
   return permission;
 };
 

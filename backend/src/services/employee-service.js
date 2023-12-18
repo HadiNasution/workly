@@ -53,7 +53,15 @@ const login = async (request) => {
 
     const newToken = uuid().toString();
 
-    logger.info("LOGIN EMPLOYEE BERHASIL (WITH NEW TOKEN)");
+    // logger.info("LOGIN EMPLOYEE BERHASIL (WITH NEW TOKEN)");
+    // const date = new Date();
+    // const note = `Employee ${loginRequest.email} login pada : ${date} dengan token baru`;
+    // await prismaClient.log.create({
+    //   data: {
+    //     date,
+    //     note,
+    //   },
+    // });
     return prismaClient.employee.update({
       data: {
         token: newToken,
@@ -63,26 +71,30 @@ const login = async (request) => {
         email: employee.email,
       },
       select: {
+        name: true,
+        picture: true,
         token: true,
         token_expires_at: true,
       },
     });
   }
-  logger.info("EMPLOYE LOGIN BERHASIL");
-  // simpan ke tabel log
-  const date = new Date();
-  const note = `Employee ${loginRequest.name} login pada : ${date}`;
-  await prismaClient.log.create({
-    data: {
-      date,
-      note,
-    },
-  });
+  // logger.info("EMPLOYE LOGIN BERHASIL");
+  // // simpan ke tabel log
+  // const date = new Date();
+  // const note = `Employee ${loginRequest.email} login pada : ${date}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
   return prismaClient.employee.findUnique({
     where: {
       email: employee.email,
     },
     select: {
+      name: true,
+      picture: true,
       token: true,
       token_expires_at: true,
     },
@@ -101,15 +113,15 @@ const logout = async (email) => {
 
   if (!isEmailExist) throw new ResponseError(400, "Email tidak ditemukan");
 
-  // simpan ke tabel log
-  const date = new Date();
-  const note = `Employee ${email} logout pada : ${date}`;
-  await prismaClient.log.create({
-    data: {
-      date,
-      note,
-    },
-  });
+  // // simpan ke tabel log
+  // const date = new Date();
+  // const note = `Employee ${email} logout pada : ${date}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
   return prismaClient.employee.update({
     where: {
       email: email,
@@ -145,16 +157,16 @@ const reset = async (request) => {
       email: resetRequest.email,
     },
   });
-  logger.info("RESET PASSWORD ADMIN BERHASIL");
-  // simpan ke tabel log
-  const date = new Date();
-  const note = `Employee ${resetRequest.name} reset password pada : ${date}`;
-  await prismaClient.log.create({
-    data: {
-      date,
-      note,
-    },
-  });
+  // logger.info("RESET PASSWORD ADMIN BERHASIL");
+  // // simpan ke tabel log
+  // const date = new Date();
+  // const note = `Employee ${resetRequest.name} reset password pada : ${date}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
   if (updateEmployeePass) return dummyPass;
 };
 
@@ -249,15 +261,15 @@ const absenIn = async (request, employee) => {
     }
   }
 
-  logger.info("EMPLOYEE ABSEN IN BERHASIL");
-  // simpan ke tabel log
-  const note = `Employee ${absenRequest.name} absen masuk pada : ${currentUTCTime}`;
-  await prismaClient.log.create({
-    data: {
-      date: currentUTCTime,
-      note,
-    },
-  });
+  // logger.info("EMPLOYEE ABSEN IN BERHASIL");
+  // // simpan ke tabel log
+  // const note = `Employee ${absenRequest.name} absen masuk pada : ${currentUTCTime}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date: currentUTCTime,
+  //     note,
+  //   },
+  // });
   return prismaClient.attendance.create({
     data: {
       time_in: currentUTCTime,
@@ -346,15 +358,15 @@ const absenOut = async (request, employee) => {
     }
   }
 
-  logger.info("EMPLOYEE ABSEN OUT BERHASIL");
-  // simpan ke tabel log
-  const note = `Employee ${extractedData[0].name} absen keluar pada : ${currentUTCTime}`;
-  await prismaClient.log.create({
-    data: {
-      date: currentUTCTime,
-      note,
-    },
-  });
+  // logger.info("EMPLOYEE ABSEN OUT BERHASIL");
+  // // simpan ke tabel log
+  // const note = `Employee ${extractedData[0].name} absen keluar pada : ${currentUTCTime}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date: currentUTCTime,
+  //     note,
+  //   },
+  // });
   return prismaClient.attendance.update({
     where: {
       id: id,
@@ -373,14 +385,14 @@ const upload = async (filePath, employee) => {
   logger.info("UPLOAD FOTO BERHASIL");
   console.log(filePath);
   // simpan ke tabel log
-  const date = new Date();
-  const note = `Employee ${employee.id} (id) upload foto profile pada : ${date}`;
-  await prismaClient.log.create({
-    data: {
-      date,
-      note,
-    },
-  });
+  // const date = new Date();
+  // const note = `Employee ${employee.id} (id) upload foto profile pada : ${date}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
   // Simpan path file ke tabel
   return prismaClient.employee.update({
     where: {
@@ -421,15 +433,15 @@ const createPermission = async (request, employee, filePath) => {
     [];
   const recapId = extractedData[0].attendance_recap_id;
   const currentDate = new Date();
-  logger.info("CREATE PERMISSION BERHASIL");
-  // simpan ke tabel log
-  const note = `Employee ${employee.name} membuat permission ${createRequest.type} pada : ${currentDate}`;
-  await prismaClient.log.create({
-    data: {
-      date: currentDate,
-      note,
-    },
-  });
+  // logger.info("CREATE PERMISSION BERHASIL");
+  // // simpan ke tabel log
+  // const note = `Employee ${employee.name} membuat permission ${createRequest.type} pada : ${currentDate}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date: currentDate,
+  //     note,
+  //   },
+  // });
   return prismaClient.permission.create({
     data: {
       type: createRequest.type,

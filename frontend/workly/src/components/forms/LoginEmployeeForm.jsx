@@ -28,9 +28,13 @@ export default function LoginEmployeeForm() {
       // get response data
       const token = data.data.token;
       const tokenExpiresAt = data.data.token_expires_at;
-      // simpan di local storage
-      localStorage.setItem("token", token);
-      localStorage.setItem("token-expires-at", tokenExpiresAt);
+      const name = data.data.name;
+      const avatar = data.data.picture;
+      // simpan di storage
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("token-expires-at", tokenExpiresAt);
+      localStorage.setItem("name", name);
+      localStorage.setItem("avatar", avatar);
       // redirect ke halaman home admin
       navigate("/employee/home");
     } catch (error) {

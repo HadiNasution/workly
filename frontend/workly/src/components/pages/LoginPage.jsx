@@ -7,7 +7,9 @@ export default function LoginPage() {
     <div className="position-relative w-100">
       <div
         className="bg-light-subtle position-absolute top-50 start-50 translate-middle p-5 rounded-4"
-        style={{ boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)" }}
+        style={{
+          boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)",
+        }}
       >
         <h1
           style={{ fontSize: 60 }}

@@ -29,10 +29,14 @@ export default function LoginAdminform() {
       const token = data.data.token;
       const isSuperAdmin = data.data.is_super_admin;
       const tokenExpiresAt = data.data.token_expires_at;
-      // simpan di local storage
-      localStorage.setItem("token", token);
-      localStorage.setItem("is-super-admin", isSuperAdmin);
-      localStorage.setItem("token-expires-at", tokenExpiresAt);
+      const name = data.data.name;
+      const avatar = data.data.picture;
+      // simpan di storage
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("is-super-admin", isSuperAdmin);
+      sessionStorage.setItem("token-expires-at", tokenExpiresAt);
+      localStorage.setItem("name", name);
+      localStorage.setItem("avatar", avatar);
       // redirect ke halaman home admin
       navigate("/admin/home");
     } catch (error) {

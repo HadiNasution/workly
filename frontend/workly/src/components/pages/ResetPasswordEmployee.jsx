@@ -75,7 +75,7 @@ export default function ResetPasswordEmployee() {
               NIP
             </label>
             <input
-              type="email"
+              type="text"
               className="form-control"
               id="employee-nip"
               name="employee-nip"

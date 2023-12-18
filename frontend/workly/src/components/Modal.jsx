@@ -1,8 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { BsClipboard, BsClipboardCheck } from "react-icons/bs";
+import { useState } from "react";
 
 export default function Modal({ data }) {
   const navigate = useNavigate();
+  const [isCopied, setCopied] = useState(false);
 
   // jika data tersedia, modal akan muncul jika tidak modal tidak akan muncul
   return data ? (
@@ -18,8 +22,16 @@ export default function Modal({ data }) {
           </div>
           <div className="modal-body">
             <p>Gunakan password sementara ini untuk login : </p>
-            <h2 className="p-3 mb-2 bg-success text-white rounded text-warning fw-bolder">
+            <h2 className="d-flex justify-content-between p-3 bg-success text-white rounded text-warning fw-bolder">
               {data && <p>{data}</p>}
+              <CopyToClipboard text={data} onCopy={() => setCopied(true)}>
+                <span
+                  style={{ cursor: "pointer" }}
+                  title={isCopied ? "Copied!" : "Copy to Clipboard"}
+                >
+                  {isCopied ? <BsClipboardCheck /> : <BsClipboard />}
+                </span>
+              </CopyToClipboard>
             </h2>
             <p>Segera ganti password anda setelah berhasil login.</p>
           </div>

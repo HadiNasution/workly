@@ -5,8 +5,7 @@ const AdminHome = () => {
   const navigate = useNavigate();
   const logoutAdmin = async () => {
     try {
-      const token = localStorage.getItem("token");
-      console.log(token);
+      const token = sessionStorage.getItem("token");
       // Lakukan permintaan ke API Logout dengan menyertakan token
       const { data } = await axios.delete(
         "http://localhost:3000/api/admin/logout",
@@ -17,12 +16,12 @@ const AdminHome = () => {
           },
         }
       );
-      console.log(data.data);
-      // Jika logout berhasil, hapus token dari local storage
+      // Jika logout berhasil, hapus token dari session storage
       if (data.data) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("token-expires-at");
-        localStorage.removeItem("is-super-admin");
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("token-expires-at");
+        sessionStorage.removeItem("is-super-admin");
+        localStorage.removeItem("avatar");
         // lalu redirect ke halaman login
         navigate("/");
       }
