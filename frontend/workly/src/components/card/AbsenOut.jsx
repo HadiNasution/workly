@@ -27,10 +27,10 @@ export default function AbsenOut({ onLogin }) {
           icon: "success",
           background: "#555555",
           color: "#FFFFFF",
-          timer: 3000, // Durasi dalam milidetik (3 detik)
+          timer: 3000, // Durasi dalam milidetik
           timerProgressBar: true,
-          toast: true, // Menandakan bahwa ini adalah toast
-          position: "center", // Posisi toast (top-end, top-start, bottom-end, atau bottom-start)
+          toast: true,
+          position: "center",
         });
       }
     });
@@ -49,9 +49,17 @@ export default function AbsenOut({ onLogin }) {
         }
       );
       console.log(data);
-      onLogin(false);
+      onLogin(false); // set state login di parent, agar card absen out diganti card absen in
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        title: "Absen keluar gagal!",
+        text: "Pastikan akses lokasi disitus ini sudah diizinkan",
+        icon: "error",
+        background: "#555555",
+        color: "#FFFFFF",
+        position: "center",
+      });
     }
   };
 

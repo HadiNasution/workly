@@ -78,14 +78,22 @@ export default function AbsenIn({ onLogin }) {
         icon: "success",
         background: "#555555",
         color: "#FFFFFF",
-        timer: 3000, // Durasi dalam milidetik (3 detik)
+        timer: 3000, // Durasi dalam milidetik
         timerProgressBar: true,
-        toast: true, // Menandakan bahwa ini adalah toast
-        position: "center", // Posisi toast (top-end, top-start, bottom-end, atau bottom-start)
+        toast: true,
+        position: "center",
       });
-      onLogin(true);
+      onLogin(true); // set state login di parent, agar card absen in diganti card absen out
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        title: "Absen masuk gagal!",
+        text: "Pastikan akses lokasi disitus ini sudah diizinkan",
+        icon: "error",
+        background: "#555555",
+        color: "#FFFFFF",
+        position: "center",
+      });
     }
   };
 
@@ -102,12 +110,13 @@ export default function AbsenIn({ onLogin }) {
         }
       );
     };
-
+    // fungsi untuk cek setiap detik
     const shotInterval = setInterval(() => {
       // Mendapatkan nilai terkini dari local storage
       const currentValue = localStorage.getItem("shot");
       // mendapatkan nilai terkini dari checkbox wfh
       const value = document.getElementById("wfh");
+      // dapatkan nilai wfh
       setWfh(value.checked);
       // apakah nilai berubah sejak update sebelumnya
       if (currentValue !== shot) {
@@ -135,7 +144,6 @@ export default function AbsenIn({ onLogin }) {
     }
 
     getPosition(); // ambil koordinat saat kopmponen pertamakali dirender
-    shuffleLinks(); // acak saat komponen pertama kali di render
 
     return () => {
       clearInterval(shotInterval);
@@ -146,7 +154,7 @@ export default function AbsenIn({ onLogin }) {
   return (
     <div className="card text-center">
       <div className="card-header">
-        Absen Masuk - <span style={{ color: "yellow" }}>Belum absen</span>
+        Absen Masuk
         <div className="form-switch mt-2">
           <input
             className="form-check-input me-2"
@@ -188,7 +196,7 @@ export default function AbsenIn({ onLogin }) {
         </div>
         {warning}
         {wfh ? (
-          <button onClick={absenIn} className="btn btn-secondary w-100 m-1">
+          <button onClick={absenIn} className="btn btn-primary w-100 m-1">
             Absen WFH
           </button>
         ) : null}
