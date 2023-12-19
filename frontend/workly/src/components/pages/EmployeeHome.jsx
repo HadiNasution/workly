@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AbsenIn from "../card/AbsenIn";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { isTokenExpired } from "../../auth/auth-login";
 
 const EmployeeHome = () => {
@@ -36,10 +36,8 @@ const EmployeeHome = () => {
       );
       // Jika logout berhasil, hapus token dari session storage
       if (data.data) {
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("token-expires-at");
-        localStorage.removeItem("name");
-        localStorage.removeItem("avatar");
+        sessionStorage.clear();
+        localStorage.clear();
         // lalu redirect ke halaman login
         navigate("/");
       }

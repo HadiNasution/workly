@@ -18,10 +18,8 @@ const AdminHome = () => {
       );
       // Jika logout berhasil, hapus token dari session storage
       if (data.data) {
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("token-expires-at");
-        sessionStorage.removeItem("is-super-admin");
-        localStorage.removeItem("avatar");
+        sessionStorage.clear();
+        sessionStorage.clear();
         // lalu redirect ke halaman login
         navigate("/");
       }

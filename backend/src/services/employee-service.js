@@ -53,7 +53,7 @@ const login = async (request) => {
 
     const newToken = uuid().toString();
 
-    // logger.info("LOGIN EMPLOYEE BERHASIL (WITH NEW TOKEN)");
+    logger.info("LOGIN EMPLOYEE BERHASIL (WITH NEW TOKEN)");
     // const date = new Date();
     // const note = `Employee ${loginRequest.email} login pada : ${date} dengan token baru`;
     // await prismaClient.log.create({
@@ -78,7 +78,7 @@ const login = async (request) => {
       },
     });
   }
-  // logger.info("EMPLOYE LOGIN BERHASIL");
+  logger.info("EMPLOYE LOGIN BERHASIL");
   // // simpan ke tabel log
   // const date = new Date();
   // const note = `Employee ${loginRequest.email} login pada : ${date}`;

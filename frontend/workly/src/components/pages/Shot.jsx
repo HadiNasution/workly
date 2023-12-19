@@ -1,16 +1,15 @@
 import { generate } from "random-words";
-import { useState, useEffect, useContext } from "react";
-import { EmployeeContext } from "../../context/context-provider.jsx";
+import { useState, useEffect } from "react";
 
 export default function Shot() {
-  const { shot, setShot } = useContext(EmployeeContext);
+  const [shot, setShot] = useState(null);
   const [countdown, setCountdown] = useState(60); // Waktu mundur dalam detik
 
   const generateShot = () => {
     const randomWord = generate({ minLength: 3, maxLength: 10 });
     setShot(randomWord.toUpperCase());
-    // localStorage.setItem("shot", randomWord.toUpperCase());
-    setCountdown(60); // Mengatur ulang waktu mundur setelah generateShot
+    localStorage.setItem("shot", randomWord.toUpperCase());
+    setCountdown(8); // Mengatur ulang waktu mundur setelah generateShot (dalam detik)
   };
 
   useEffect(() => {
@@ -19,10 +18,10 @@ export default function Shot() {
       setCountdown((prevCountdown) => prevCountdown - 1);
     }, 1000);
 
-    // Fungsi untuk menjalankan generateShot setiap 1 menit (60,000 milidetik)
+    // Fungsi untuk menjalankan generateShot setiap 1 menit (dalam milidetik)
     const intervalId = setInterval(() => {
       generateShot();
-    }, 60000);
+    }, 8000);
     generateShot();
     // Membersihkan interval saat komponen di-unmount atau selesai
     return () => {

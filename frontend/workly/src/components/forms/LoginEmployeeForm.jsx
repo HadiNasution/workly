@@ -25,16 +25,11 @@ export default function LoginEmployeeForm() {
         }
       );
       console.log(data);
-      // get response data
-      const token = data.data.token;
-      const tokenExpiresAt = data.data.token_expires_at;
-      const name = data.data.name;
-      const avatar = data.data.picture;
       // simpan di storage
-      sessionStorage.setItem("token", token);
-      sessionStorage.setItem("token-expires-at", tokenExpiresAt);
-      localStorage.setItem("name", name);
-      localStorage.setItem("avatar", avatar);
+      sessionStorage.setItem("token", data.data.token);
+      sessionStorage.setItem("token-expires-at", data.data.token_expires_at);
+      localStorage.setItem("name", data.data.name);
+      localStorage.setItem("avatar", data.data.picture);
       // redirect ke halaman home admin
       navigate("/employee/home");
     } catch (error) {
