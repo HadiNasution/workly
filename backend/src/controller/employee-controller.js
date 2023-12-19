@@ -40,7 +40,10 @@ const detail = async (req, res, next) => {
 const absenIn = async (req, res, next) => {
   try {
     const employee = req.employee;
-    await employeeService.absenIn(req.body, employee);
+    const latitude = req.params.latitude;
+    const longitude = req.params.longitude;
+    const wfh = req.params.wfh;
+    await employeeService.absenIn(latitude, longitude, wfh, employee);
     res.status(201).json({ data: "Absen masuk berhasil" });
   } catch (error) {
     next(error);
@@ -50,7 +53,9 @@ const absenIn = async (req, res, next) => {
 const absenOut = async (req, res, next) => {
   try {
     const employee = req.employee;
-    await employeeService.absenOut(req.body, employee);
+    const latitude = req.params.latitude;
+    const longitude = req.params.longitude;
+    await employeeService.absenOut(latitude, longitude, employee);
     res.status(200).json({ data: "Absen keluar berhasil" });
   } catch (error) {
     next(error);

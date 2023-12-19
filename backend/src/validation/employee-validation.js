@@ -22,17 +22,6 @@ const employeeGetValidation = Joi.string()
   .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
   .required();
 
-const employeeAbsenInValidation = Joi.object({
-  is_wfh: Joi.boolean().required(),
-  latitude_in: Joi.number().optional(),
-  longitude_in: Joi.number().optional(),
-});
-
-const employeeAbsenOutValidation = Joi.object({
-  latitude_out: Joi.number().optional(),
-  longitude_out: Joi.number().optional(),
-});
-
 const employeeCreatePermissionValidation = Joi.object({
   type: Joi.string().max(7).required(),
   note: Joi.string().max(255).required(),
@@ -44,7 +33,5 @@ export {
   employeeLoginValidation,
   employeeGetValidation,
   employeeResetValidation,
-  employeeAbsenInValidation,
-  employeeAbsenOutValidation,
   employeeCreatePermissionValidation,
 };

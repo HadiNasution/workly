@@ -8,7 +8,13 @@ import { errorMiddleware } from "../middleware/error-middleware.js";
 export const web = express();
 
 web.use(express.json()); // body parser + url-encoded
-web.use(cors()); // implementasi CORS
+web.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  })
+);
 web.use("/uploads", express.static("./uploads"));
 
 // ADMIN

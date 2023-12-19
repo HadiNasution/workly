@@ -86,15 +86,7 @@ Headers :
 
 - Authorization : token
 
-Request Body :
-
-```json
-{
-  "is_wfh": "false",
-  "latitude_in": "-6.935748258656645",
-  "longitude_in": "107.57827118265071"
-}
-```
+Request params : latitude, longitude, isWfh
 
 Response Body Success :
 
@@ -120,14 +112,7 @@ Headers :
 
 - Authorization : token
 
-Request Body :
-
-```json
-{
-  "longitude_out": "21.212",
-  "latitude_out": "2223.11"
-}
-```
+Request params : latitude, longitude
 
 Response Body Success :
 

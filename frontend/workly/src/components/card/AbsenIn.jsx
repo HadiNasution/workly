@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { BsGeoAltFill } from "react-icons/bs";
 import { generate } from "random-words";
+import axios from "axios";
 
 export default function AbsenIn() {
   const [latitude, setLatitude] = useState(null);
@@ -8,6 +9,7 @@ export default function AbsenIn() {
   const [shot, setShot] = useState(localStorage.getItem("shot"));
   const [counter, setCounter] = useState(2);
   const [countdown, setCountdown] = useState(null);
+  const [wfh, setWfh] = useState(false);
   let warning;
 
   function shuffleArray(array) {
@@ -57,6 +59,25 @@ export default function AbsenIn() {
     );
   }
 
+  const absenIn = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const { data } = await axios.get(
+        `http://localhost:3000/api/employee/absenIn/${latitude}/${longitude}/${wfh}`,
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(data);
+      // simpan di storage
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     // get koordinat latitude longitude
     const getPosition = () => {
@@ -74,7 +95,9 @@ export default function AbsenIn() {
     const shotInterval = setInterval(() => {
       // Mendapatkan nilai terkini dari local storage
       const currentValue = localStorage.getItem("shot");
-
+      // mendapatkan nilai terkini dari checkbox wfh
+      const value = document.getElementById("wfh");
+      setWfh(value.checked);
       // apakah nilai berubah sejak update sebelumnya
       if (currentValue !== shot) {
         // Mengupdate state jika nilai berubah
@@ -113,34 +136,51 @@ export default function AbsenIn() {
     <div className="card text-center">
       <div className="card-header">
         Absen Masuk - <span style={{ color: "yellow" }}>Belum absen</span>
+        <div className="form-switch mt-2">
+          <input
+            className="form-check-input me-2"
+            type="checkbox"
+            role="switch"
+            id="wfh"
+          ></input>
+          <label className="form-check-label" for="wfh">
+            WFH
+          </label>
+        </div>
       </div>
       <div className="card-body">
-        <h5 className="card-title" hidden={counter === 0}>
+        <h5 className="card-title" hidden={counter === 0 || wfh}>
           Pilih kata yang muncul di layar
         </h5>
         <div className="shot d-flex justify-content-around mt-4">
           <button
+            onClick={absenIn}
             className="btn btn-secondary w-100 m-1"
-            hidden={counter === 0}
+            hidden={counter === 0 || wfh}
           >
             {shot}
           </button>
           <button
             onClick={repeatAbsen}
             className="btn btn-secondary w-100 m-1"
-            hidden={counter === 0}
+            hidden={counter === 0 || wfh}
           >
             {generate({ minLength: 3, maxLength: 10 }).toUpperCase()}
           </button>
           <button
             onClick={repeatAbsen}
             className="btn btn-secondary w-100 m-1"
-            hidden={counter === 0}
+            hidden={counter === 0 || wfh}
           >
             {generate({ minLength: 3, maxLength: 10 }).toUpperCase()}
           </button>
         </div>
         {warning}
+        {wfh ? (
+          <button onClick={absenIn} className="btn btn-secondary w-100 m-1">
+            Absen WFH
+          </button>
+        ) : null}
       </div>
       <div className="card-footer text-body-secondary">
         {latitude && longitude ? (
@@ -149,7 +189,9 @@ export default function AbsenIn() {
             Lokasi aktif
           </p>
         ) : (
-          <p style={{ color: "#e00727" }}>Lokasi tidak aktif</p>
+          <p style={{ color: "#e00727" }}>
+            Lokasi tidak aktif, izinkan akses lokasi dibrowser untuk situs ini
+          </p>
         )}
       </div>
     </div>

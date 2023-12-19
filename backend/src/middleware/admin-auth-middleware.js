@@ -8,7 +8,7 @@ export const adminAuthMiddleware = async (req, res, next) => {
     res
       .status(401)
       .json({
-        errors: "Unauthorized",
+        errors: "Token tidak valid",
       })
       .end();
   } else {
@@ -22,7 +22,7 @@ export const adminAuthMiddleware = async (req, res, next) => {
       res
         .status(401)
         .json({
-          errors: "Unauthorized",
+          errors: "Pengguna tidak ada",
         })
         .end();
     } else {

@@ -4,8 +4,6 @@ import {
   employeeLoginValidation,
   employeeGetValidation,
   employeeResetValidation,
-  employeeAbsenInValidation,
-  employeeAbsenOutValidation,
   employeeCreatePermissionValidation,
 } from "../validation/employee-validation.js";
 import { validate } from "../validation/validation.js";
@@ -217,9 +215,7 @@ const detail = async (nip) => {
 };
 
 // service untuk employee absen masuk
-const absenIn = async (request, employee) => {
-  const absenRequest = validate(employeeAbsenInValidation, request);
-
+const absenIn = async (latitude, longitude, wfh, employee) => {
   const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
   const convertCurrent = new Date(currentUTCTime); // convert UTC ke lokal
   const localTime = convertCurrent.toLocaleString(); // waktu sekarang dalam lokal
@@ -233,10 +229,7 @@ const absenIn = async (request, employee) => {
   const isLate = localTime > localTimeLimit;
 
   // Jika tidak WFH, cek koordinat absen
-  if (absenRequest.is_wfh === false) {
-    const latitude = absenRequest.latitude_in;
-    const longitude = absenRequest.longitude_in;
-
+  if (wfh === false) {
     // koordinat zona geofencing kantor WGS Bandung
     const geofenceCoordinates = {
       latitude: -6.935783427330478,
@@ -261,7 +254,7 @@ const absenIn = async (request, employee) => {
     }
   }
 
-  // logger.info("EMPLOYEE ABSEN IN BERHASIL");
+  logger.info("EMPLOYEE ABSEN IN BERHASIL");
   // // simpan ke tabel log
   // const note = `Employee ${absenRequest.name} absen masuk pada : ${currentUTCTime}`;
   // await prismaClient.log.create({
@@ -274,18 +267,16 @@ const absenIn = async (request, employee) => {
     data: {
       time_in: currentUTCTime,
       is_late: isLate,
-      is_wfh: absenRequest.is_wfh,
-      latitude_in: absenRequest.latitude_in,
-      longitude_in: absenRequest.longitude_in,
+      is_wfh: !!wfh,
+      latitude_in: latitude,
+      longitude_in: longitude,
       employee_id: employee.id,
     },
   });
 };
 
 // service untuk employee absen keluar
-const absenOut = async (request, employee) => {
-  const absenRequest = validate(employeeAbsenOutValidation, request);
-
+const absenOut = async (latitude, longitude, employee) => {
   const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
 
   // logic untuk set waktu hari ini
@@ -331,9 +322,6 @@ const absenOut = async (request, employee) => {
 
   // Jika tidak WFH, cek koordinat absen
   if (extractedData[0].is_wfh === false) {
-    const latitude = absenRequest.latitude_out;
-    const longitude = absenRequest.longitude_out;
-
     // koordinat zona geofencing kantor WGS Bandung
     const geofenceCoordinates = {
       latitude: -6.935783427330478,
@@ -358,7 +346,7 @@ const absenOut = async (request, employee) => {
     }
   }
 
-  // logger.info("EMPLOYEE ABSEN OUT BERHASIL");
+  logger.info("EMPLOYEE ABSEN OUT BERHASIL");
   // // simpan ke tabel log
   // const note = `Employee ${extractedData[0].name} absen keluar pada : ${currentUTCTime}`;
   // await prismaClient.log.create({
@@ -374,8 +362,8 @@ const absenOut = async (request, employee) => {
     data: {
       time_out: currentUTCTime,
       is_working: true,
-      latitude_out: absenRequest.latitude_out,
-      longitude_out: absenRequest.longitude_out,
+      latitude_out: latitude,
+      longitude_out: longitude,
     },
   });
 };

@@ -10,8 +10,14 @@ employeeRoute.use(employeeAuthMiddleware); // auth middleware
 
 employeeRoute.delete("/logout", employeeController.logout);
 employeeRoute.get("/profile", employeeController.detail);
-employeeRoute.put("/absenIn", employeeController.absenIn);
-employeeRoute.put("/absenOut", employeeController.absenOut);
+employeeRoute.get(
+  "/absenIn/:latitude/:longitude/:wfh",
+  employeeController.absenIn
+);
+employeeRoute.get(
+  "/absenOut/:latitude/:longitude",
+  employeeController.absenOut
+);
 employeeRoute.post(
   "/upload",
   upload.single("profile"),
