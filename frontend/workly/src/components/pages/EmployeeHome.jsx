@@ -1,13 +1,15 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AbsenIn from "../card/AbsenIn";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { isTokenExpired } from "../../auth/auth-login";
+import AbsenOut from "../card/AbsenOut";
 
 const EmployeeHome = () => {
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
   const avatar = localStorage.getItem("avatar");
+  const [isLogin, setIsLogin] = useState(false);
   let avatarPath = avatar
     ? `http://localhost:3000/${avatar}`
     : "/assets/avatar-default.svg";
@@ -46,6 +48,10 @@ const EmployeeHome = () => {
     }
   };
 
+  const hanleLoginState = (state) => {
+    setIsLogin(state);
+  };
+
   return (
     <>
       <div className="row g-0">
@@ -67,7 +73,11 @@ const EmployeeHome = () => {
       </div>
       <div className="row mt-3 mb-3">
         <div className="col">
-          <AbsenIn />
+          {isLogin ? (
+            <AbsenOut onLogin={hanleLoginState} />
+          ) : (
+            <AbsenIn onLogin={hanleLoginState} />
+          )}
         </div>
       </div>
       <div className="row">

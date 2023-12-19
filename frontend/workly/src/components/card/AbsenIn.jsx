@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { BsGeoAltFill } from "react-icons/bs";
 import { generate } from "random-words";
 import axios from "axios";
+import Swal from "sweetalert2";
 
-export default function AbsenIn() {
+export default function AbsenIn({ onLogin }) {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [shot, setShot] = useState(localStorage.getItem("shot"));
@@ -72,7 +73,17 @@ export default function AbsenIn() {
         }
       );
       console.log(data);
-      // simpan di storage
+      Swal.fire({
+        title: "Absen masuk berhasil!",
+        icon: "success",
+        background: "#555555",
+        color: "#FFFFFF",
+        timer: 3000, // Durasi dalam milidetik (3 detik)
+        timerProgressBar: true,
+        toast: true, // Menandakan bahwa ini adalah toast
+        position: "center", // Posisi toast (top-end, top-start, bottom-end, atau bottom-start)
+      });
+      onLogin(true);
     } catch (error) {
       console.log(error);
     }
