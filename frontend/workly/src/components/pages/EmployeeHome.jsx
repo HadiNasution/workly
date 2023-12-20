@@ -4,6 +4,7 @@ import AbsenIn from "../card/AbsenIn";
 import { useEffect, useState } from "react";
 import { isTokenExpired } from "../../auth/auth-login";
 import AbsenOut from "../card/AbsenOut";
+import { monthString, year } from "../../utils/date-time";
 
 const EmployeeHome = () => {
   const navigate = useNavigate();
@@ -43,14 +44,13 @@ const EmployeeHome = () => {
           },
         }
       );
-      // Jika logout berhasil, hapus token dari session storage
       if (data.data) {
-        console.log(data.data);
+        // console.log(data.data);
         setProfile(data.data);
-        console.log(profile[0]);
+        // console.log(profile[0]);
       }
     } catch (error) {
-      console.log(error.response.data.errors);
+      console.log(error);
     }
   };
 
@@ -86,7 +86,7 @@ const EmployeeHome = () => {
     <>
       <div className="row g-0">
         <div className="text-start col-sm-6 col-md-8">
-          <h1>Heyoo! {name} 🖐</h1>
+          <h1>Heyoo {name}! 🖐</h1>
         </div>
         <div className="text-end col-6 col-md-4">
           <a
@@ -122,25 +122,79 @@ const EmployeeHome = () => {
               ></button>
             </div>
             <div className="offcanvas-body text-start">
-              <img
-                src={avatarPath}
-                alt="foto-profile"
-                className="rounded-circle m-2 d-flex"
-                width={100}
-                height={100}
-                style={{ cursor: "pointer" }}
-              />
-              <h3>{profile[0].name ?? "Data masih kosong"}</h3>
-              <p>{profile[0].nip ?? "Data masih kosong"}</p>
-              <p>{profile[0].email ?? "Data masih kosong"}</p>
-              <p>{profile[0].role ?? "Data masih kosong"}</p>
-              <p>{profile[0].department ?? "Data masih kosong"}</p>
-              <p>{profile[0].count_late ?? "Data masih kosong"}</p>
-              <p>{profile[0].count_sick ?? "Data masih kosong"}</p>
-              <p>{profile[0].count_permits ?? "Data masih kosong"}</p>
-              <p>{profile[0].count_leaves ?? "Data masih kosong"}</p>
-              <p>{profile[0].count_wfh ?? "Data masih kosong"}</p>
-              <p>{profile[0].count_works ?? "Data masih kosong"}</p>
+              <div className="d-flex align-items-center">
+                <img
+                  src={avatarPath}
+                  alt="foto-profile"
+                  className="rounded-circle me-3"
+                  width={100}
+                  height={100}
+                  style={{ cursor: "pointer" }}
+                />
+                <div className="mb-3">
+                  <label
+                    for="formFile"
+                    className="form-label"
+                    style={{ color: "gray" }}
+                  >
+                    Upload foto profile
+                  </label>
+                  <input
+                    className="form-control"
+                    type="file"
+                    id="formFile"
+                  ></input>
+                </div>
+              </div>
+              {profile ? (
+                <div className="profile">
+                  <h3 style={{ fontWeight: "bolder" }}>
+                    {profile[0].name ?? <i>Data masih kosong</i>}
+                  </h3>
+                  <p>
+                    <b>NIP : </b>
+                    {profile[0].nip ?? <i>Data masih kosong</i>}
+                    <br></br>
+                    <b>Email : </b>
+                    {profile[0].email ?? <i>Data masih kosong</i>}
+                    <br></br>
+                    <b>Role : </b>
+                    {profile[0].role ?? <i>Data masih kosong</i>}
+                    <br></br>
+                    <b>Departmen : </b>{" "}
+                    {profile[0].departmen ?? <i>Data masih kosong</i>}
+                  </p>
+                  <p>
+                    <span
+                      style={{
+                        fontWeight: "bold",
+                        color: "gray",
+                        fontSize: 18,
+                      }}
+                    >
+                      Recap kehadiran bulan {monthString()}/{year}
+                    </span>{" "}
+                    <br></br>
+                    <b>Terlambat : </b>{" "}
+                    {profile[0].count_late ?? <i>Data masih kosong</i>}x
+                    <br></br>
+                    <b>Sakit : </b>{" "}
+                    {profile[0].count_sick ?? <i>Data masih kosong</i>}x
+                    <br></br>
+                    <b>Izin : </b>{" "}
+                    {profile[0].count_permits ?? <i>Data masih kosong</i>}x
+                    <br></br>
+                    <b>Cuti : </b>{" "}
+                    {profile[0].count_leaves ?? <i>Data masih kosong</i>}/12
+                    <br></br>
+                    <b>WFH : </b>{" "}
+                    {profile[0].count_wfh ?? <i>Data masih kosong</i>}/4
+                    <br></br>
+                    <b>Kerja :</b>{" "}
+                    {profile[0].count_works ?? <i>Data masih kosong</i>}
+                  </p>
+                </div>
+              ) : null}
               <button
                 onClick={logoutEmployee}
                 className="btn btn-danger w-100 mt-4"

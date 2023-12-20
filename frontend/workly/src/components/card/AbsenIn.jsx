@@ -1,8 +1,21 @@
 import { useState, useEffect } from "react";
-import { BsGeoAltFill } from "react-icons/bs";
+import {
+  BsGeoAltFill,
+  BsCalendar2Fill,
+  BsClockFill,
+  BsArrowRightSquareFill,
+} from "react-icons/bs";
 import { generate } from "random-words";
 import axios from "axios";
 import Swal from "sweetalert2";
+import {
+  dayString,
+  monthString,
+  date,
+  hours,
+  minutes,
+  year,
+} from "../../utils/date-time";
 
 export default function AbsenIn({ onLogin }) {
   const [latitude, setLatitude] = useState(null);
@@ -154,7 +167,18 @@ export default function AbsenIn({ onLogin }) {
   return (
     <div className="card text-center">
       <div className="card-header">
-        Absen Masuk
+        <div className="d-flex justify-content-center">
+          <div className="d-flex align-items-center me-3">
+            <BsArrowRightSquareFill className="me-1" /> Absen Masuk
+          </div>
+          <div className="d-flex align-items-center me-3 ms-3">
+            <BsClockFill className="me-1" /> {hours}:{minutes}
+          </div>
+          <div className="d-flex align-items-center ms-3">
+            <BsCalendar2Fill className="me-1" /> {dayString()} {date}/
+            {monthString()}/{year}
+          </div>
+        </div>
         <div className="form-switch mt-2">
           <input
             className="form-check-input me-2"

@@ -1,7 +1,20 @@
 import { useState, useEffect } from "react";
-import { BsGeoAltFill } from "react-icons/bs";
+import {
+  BsGeoAltFill,
+  BsCalendar2Fill,
+  BsClockFill,
+  BsArrowLeftSquareFill,
+} from "react-icons/bs";
 import axios from "axios";
 import Swal from "sweetalert2";
+import {
+  dayString,
+  monthString,
+  date,
+  hours,
+  minutes,
+  year,
+} from "../../utils/date-time";
 
 export default function AbsenOut({ onLogin }) {
   const [latitude, setLatitude] = useState(null);
@@ -83,7 +96,18 @@ export default function AbsenOut({ onLogin }) {
   return (
     <div className="card text-center">
       <div className="card-header">
-        Absen Keluar - <span style={{ color: "yellow" }}>Belum absen</span>
+        <div className="d-flex justify-content-center">
+          <div className="d-flex align-items-center me-3">
+            <BsArrowLeftSquareFill className="me-1" /> Absen Keluar
+          </div>
+          <div className="d-flex align-items-center me-3 ms-3">
+            <BsClockFill className="me-1" /> {hours}:{minutes}
+          </div>
+          <div className="d-flex align-items-center ms-3">
+            <BsCalendar2Fill className="me-1" /> {dayString()} {date}/
+            {monthString()}/{year}
+          </div>
+        </div>
       </div>
       <div className="card-body">
         <h5 className="card-title">Pilih kata yang muncul di layar</h5>
