@@ -18,11 +18,12 @@ export default function LoginPage() {
           Workly
         </h1>
         <img
-          src="../../../public/assets/coffee-animated.gif"
-          alt="animated coffee"
-          className="pb-2"
-          style={{ width: 70, height: 100 }}
-        />
+          src="../../../public/assets/coffee.png"
+          className="ms-1"
+          alt="coffee"
+          height={80}
+          width={80}
+        ></img>
         <ul className="nav nav-tabs mb-3 mt-3" id="myTab" role="tablist">
           <li className="nav-item" role="presentation">
             <button

@@ -1,6 +1,7 @@
+import { Navigate } from "react-router-dom";
 export default function NotFoundPage() {
   const goBack = () => {
-    window.history.back();
+    window.history.back() ?? Navigate("/");
   };
 
   return (

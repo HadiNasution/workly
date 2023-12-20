@@ -1,13 +1,16 @@
 import axios from "axios";
 import { useState } from "react";
 import ModalResetPassword from "../modals/ModalResetPassword";
+import Swal from "sweetalert2";
 
 export default function ResetPasswordAdmin() {
   const [modalData, setModalData] = useState(null); // data (password dummy) yg akan dikirim di modal
   const [error, setError] = useState(null);
+
   const goBack = () => {
     window.history.back();
   };
+
   async function resetPasswordAdmin(event) {
     event.preventDefault();
 
@@ -35,18 +38,10 @@ export default function ResetPasswordAdmin() {
       localStorage.removeItem("is-super-admin");
       localStorage.removeItem("token-expires-at");
     } catch (error) {
-      console.log(error);
       if (error.response) {
-        console.error("Server Response:", error.response.data);
+        console.error("Server Response:", error.response.data.errors);
+        setError(error.response.data.errors);
       }
-      Swal.fire({
-        title: "Ops! Masalah teknis",
-        text: "Mohon maaf atas kendala yang terjadi, mohon untuk mencoba kembali lain waktu dan silahkan hubungi admin",
-        icon: "error",
-        background: "#555555",
-        color: "#FFFFFF",
-        position: "center",
-      });
     }
   }
 
@@ -57,11 +52,11 @@ export default function ResetPasswordAdmin() {
         style={{ boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)" }}
       >
         <img
-          src="../../../public/assets/reset-password-animated.gif"
-          alt="animated password ill"
-          width={100}
-          height={100}
-        />
+          src="../../../public/assets/key.png"
+          alt="key"
+          height={80}
+          width={80}
+        ></img>
         <h2 className="fw-bolder">Reset Password - Admin</h2>
         <p>Masukan Nama lengkap, NIP, dan Email untuk Reset password.</p>
         {!error ? null : (
@@ -110,13 +105,13 @@ export default function ResetPasswordAdmin() {
             <button type="submit" className="btn btn-primary w-100 mt-3">
               Reset Password
             </button>
-            <button
-              type="submit"
-              onClick={() => goBack()}
+            <a
+              onClick={goBack}
+              role="button"
               className="btn btn-outline-secondary w-100 mt-3"
             >
               Kembali
-            </button>
+            </a>
           </div>
         </form>
       </div>

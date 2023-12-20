@@ -37,11 +37,19 @@ const EmployeeHome = () => {
   return (
     <>
       <div className="row g-0 mt-5">
-        <div className="text-start col-sm-6 col-md-8">
-          <h1>Heyoo {name}! 🖐</h1>
-        </div>
-        <div className="text-end col-6 col-md-4">
-          <DetailProfileEmployee />
+        <div className="col">
+          <div className="d-flex align-items-end justify-content-between">
+            <h1>
+              <img
+                src="../../../public/assets/hello.png"
+                alt="waving-hand"
+                width={80}
+                height={80}
+              ></img>
+              Heyoo {name}!
+            </h1>
+            <DetailProfileEmployee />
+          </div>
         </div>
       </div>
       <div className="row mt-3 mb-3">
@@ -57,14 +65,32 @@ const EmployeeHome = () => {
         <div className="col-md mt-2">
           <div className="card">
             <div className="card-body">
-              📝<b>Pengajuan Cuti, Sakit, Izin, WFH</b>
+              <div className="d-flex align-items-center justify-content-start"></div>
+              <img
+                src="../../../public/assets/holiday.png"
+                alt="holiday"
+                height={60}
+                width={60}
+              ></img>
+              <p className="d-inline ms-3">
+                <b>Pengajuan Cuti, Sakit, Izin, WFH</b>
+              </p>
             </div>
           </div>
         </div>
         <div className="col-md mt-2">
           <div className="card">
             <div className="card-body">
-              ✅<b>Hasil pengajuan</b>
+              <div className="d-flex align-items-center justify-content-start"></div>
+              <img
+                src="../../../public/assets/mail.png"
+                alt="mail"
+                height={60}
+                width={60}
+              ></img>
+              <p className="d-inline ms-3">
+                <b>Hasil pengajuan</b>
+              </p>
             </div>
           </div>
         </div>
