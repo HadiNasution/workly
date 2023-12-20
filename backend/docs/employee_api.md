@@ -18,7 +18,9 @@ Response Body Success :
 ```json
 {
   "data": {
-    "token": "unique-token",
+    "name": "hadi",
+    "picture": "uploadsprofile-1702632967083-401654369.png",
+    "token": "8e206065-e3a7-4fb7-a243-9c473f1bf23b",
     "token_expires_at": "Dec 07 2023 10:11:57 GMT+0700"
   }
 }

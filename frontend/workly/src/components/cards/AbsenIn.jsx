@@ -96,7 +96,7 @@ export default function AbsenIn({ onLogin }) {
         toast: true,
         position: "center",
       });
-      onLogin(true); // set state login di parent, agar card absen in diganti card absen out
+      onLogin(); // set state login di parent, agar card absen in diganti card absen out
     } catch (error) {
       console.log(error);
       Swal.fire({

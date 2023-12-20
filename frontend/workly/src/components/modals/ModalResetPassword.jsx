@@ -4,7 +4,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { BsClipboard, BsClipboardCheck } from "react-icons/bs";
 import { useState } from "react";
 
-export default function Modal({ data }) {
+export default function ModalResetPassword({ data }) {
   const navigate = useNavigate();
   const [isCopied, setCopied] = useState(false);
 

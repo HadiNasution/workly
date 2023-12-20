@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import Modal from "../Modal";
+import ModalResetPassword from "../modals/ModalResetPassword";
 
 export default function ResetPasswordEmployee() {
   const [modalData, setModalData] = useState(null); // data (password dummy) yg akan dikirim di modal
@@ -108,7 +108,7 @@ export default function ResetPasswordEmployee() {
           </div>
         </form>
       </div>
-      <Modal data={modalData} />
+      <ModalResetPassword data={modalData} />
     </div>
   );
 }

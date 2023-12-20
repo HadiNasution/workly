@@ -62,7 +62,7 @@ export default function AbsenOut({ onLogin }) {
         }
       );
       console.log(data);
-      onLogin(false); // set state login di parent, agar card absen out diganti card absen in
+      onLogin(); // set state login di parent, agar card absen out diganti card absen in
     } catch (error) {
       console.log(error);
       Swal.fire({
@@ -110,12 +110,9 @@ export default function AbsenOut({ onLogin }) {
         </div>
       </div>
       <div className="card-body">
-        <h5 className="card-title">Pilih kata yang muncul di layar</h5>
-        <div className="shot d-flex justify-content-around mt-4">
-          <button onClick={confirmOut} className="btn btn-primary w-100 m-1">
-            Absen keluar
-          </button>
-        </div>
+        <button onClick={confirmOut} className="btn btn-primary w-100 m-1">
+          Absen keluar
+        </button>
       </div>
       <div className="card-footer text-body-secondary">
         {latitude && longitude ? (
