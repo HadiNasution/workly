@@ -36,7 +36,7 @@ const EmployeeHome = () => {
 
   return (
     <>
-      <div className="row g-0">
+      <div className="row g-0 mt-5">
         <div className="text-start col-sm-6 col-md-8">
           <h1>Heyoo {name}! 🖐</h1>
         </div>

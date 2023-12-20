@@ -1,17 +1,20 @@
 import { monthString, year } from "../../utils/date-time";
 import { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 export default function DetailProfileEmployee() {
-  let avatar = localStorage.getItem("avatar") ?? null;
-  if (avatar === "null") avatar = null;
   const [profile, setProfile] = useState(null);
+  const navigate = useNavigate();
+  const [pict, setPict] = useState(localStorage.getItem("avatar"));
 
-  let avatarPath = avatar
-    ? `http://localhost:3000/${avatar}`
-    : "/assets/avatar-default.svg";
+  let isPictNull;
+  if (pict === "null") {
+    isPictNull = true;
+  } else {
+    isPictNull = false;
+  }
 
   const getProfile = async () => {
     try {
@@ -32,6 +35,9 @@ export default function DetailProfileEmployee() {
       }
     } catch (error) {
       console.log(error);
+      if (error.response) {
+        console.error("Server Response:", error.response.data);
+      }
       Swal.fire({
         title: "Ops! Masalah teknis",
         text: "Mohon maaf atas kendala yang terjadi, mohon untuk mencoba kembali lain waktu dan silahkan hubungi admin",
@@ -43,37 +49,48 @@ export default function DetailProfileEmployee() {
     }
   };
 
-  const updateFotoProfile = async () => {
-    const path = document.getElementById("profile-photo");
+  const updateFotoProfile = async (event) => {
+    event.preventDefault();
+    const fileInput = document.getElementById("profile");
+    const file = fileInput.files[0];
+    const token = sessionStorage.getItem("token");
     try {
+      const formData = new FormData();
+      formData.append("profile", file);
       const { data } = await axios.post(
         "http://localhost:3000/api/employee/upload",
-        {
-          profilePhoto: path.values,
-        },
+        formData,
         {
           headers: {
             Authorization: token,
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
       if (data.data) {
-        // console.log(data.data);
-        setProfile(data.data);
-        // console.log(profile[0]);
+        setPict(data.data.picture);
+        Swal.fire({
+          title: "Upload Foto Berhasil!",
+          text: "Dengan foto baru ini,kamu jadi terlihat lebih baik",
+          icon: "success",
+          background: "#555555",
+          color: "#FFFFFF",
+          position: "center",
+        });
       }
     } catch (error) {
       console.log(error);
+      if (error.response) {
+        console.error("Server Response:", error.response.data);
+      }
       Swal.fire({
-        title: "Upload gagal!",
-        text: "Format file tidak didukung, pastikan menggunakan format : JPG, JPEG, PNG",
+        title: "Ops! Masalah teknis",
+        text: "Mohon maaf atas kendala yang terjadi, mohon untuk mencoba kembali lain waktu dan silahkan hubungi admin",
         icon: "error",
         background: "#555555",
         color: "#FFFFFF",
         position: "center",
       });
-      Navigate("/employee/home");
     }
   };
 
@@ -99,7 +116,19 @@ export default function DetailProfileEmployee() {
         navigate("/");
       }
     } catch (error) {
-      console.log(error.response.data.errors);
+      console.log(error);
+      console.log(error);
+      if (error.response) {
+        console.error("Server Response:", error.response.data);
+      }
+      Swal.fire({
+        title: "Ops! Masalah teknis",
+        text: "Mohon maaf atas kendala yang terjadi, mohon untuk mencoba kembali lain waktu dan silahkan hubungi admin",
+        icon: "error",
+        background: "#555555",
+        color: "#FFFFFF",
+        position: "center",
+      });
     }
   };
 
@@ -116,7 +145,11 @@ export default function DetailProfileEmployee() {
         aria-controls="offcanvasProfile"
       >
         <img
-          src={avatarPath}
+          src={
+            isPictNull
+              ? "/assets/avatar-default.svg"
+              : `http://localhost:3000/${pict}`
+          }
           alt="foto-profile"
           className="rounded-circle"
           width={60}
@@ -148,27 +181,29 @@ export default function DetailProfileEmployee() {
         <div className="offcanvas-body text-start">
           <div className="d-flex align-items-center">
             <img
-              src={avatarPath}
+              src={
+                isPictNull
+                  ? "/assets/avatar-default.svg"
+                  : `http://localhost:3000/${pict}`
+              }
               alt="foto-profile"
               className="rounded-circle me-3"
               width={100}
               height={100}
               style={{ cursor: "pointer" }}
             />
-            <form className="mb-3" onSubmit={updateFotoProfile} method="post">
-              <label
-                for="foto-profile"
-                className="form-label"
-                style={{ color: "gray" }}
-              >
-                Upload foto profile
-              </label>
+            <form
+              className="mb-3"
+              onSubmit={updateFotoProfile}
+              encType="multipart/form-data"
+            >
+              <label>Upload foto profile</label>
               <input
                 className="form-control"
                 type="file"
-                name="foto-profile"
-                id="foto-profile"
-              ></input>
+                name="profile"
+                id="profile"
+              />
               <button
                 className="btn btn-secondary btn-sm w-100 mt-1"
                 type="submit"

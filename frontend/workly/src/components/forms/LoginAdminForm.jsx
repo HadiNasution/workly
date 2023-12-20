@@ -40,8 +40,18 @@ export default function LoginAdminform() {
       // redirect ke halaman home admin
       navigate("/admin/home");
     } catch (error) {
-      setErrorMsg(error.response.data.errors);
-      console.log(error.response.data.errors);
+      console.log(error);
+      if (error.response) {
+        console.error("Server Response:", error.response.data);
+      }
+      Swal.fire({
+        title: "Ops! Masalah teknis",
+        text: "Mohon maaf atas kendala yang terjadi, mohon untuk mencoba kembali lain waktu dan silahkan hubungi admin",
+        icon: "error",
+        background: "#555555",
+        color: "#FFFFFF",
+        position: "center",
+      });
     }
   }
 

@@ -35,8 +35,18 @@ export default function ResetPasswordAdmin() {
       localStorage.removeItem("is-super-admin");
       localStorage.removeItem("token-expires-at");
     } catch (error) {
-      setError(error.data.errors);
-      console.log(error.data.errors);
+      console.log(error);
+      if (error.response) {
+        console.error("Server Response:", error.response.data);
+      }
+      Swal.fire({
+        title: "Ops! Masalah teknis",
+        text: "Mohon maaf atas kendala yang terjadi, mohon untuk mencoba kembali lain waktu dan silahkan hubungi admin",
+        icon: "error",
+        background: "#555555",
+        color: "#FFFFFF",
+        position: "center",
+      });
     }
   }
 

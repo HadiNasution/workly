@@ -1,5 +1,17 @@
 import multer from "multer";
 import path from "path";
+import fs from "fs";
+
+// Fungsi untuk menghapus file lama
+const deleteOldFile = (filePath) => {
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error("Error deleting old file:", err);
+    } else {
+      console.log("Old file deleted successfully");
+    }
+  });
+};
 
 // Konfigurasi Multer untuk menangani upload file
 export const storage = multer.diskStorage({
@@ -8,6 +20,13 @@ export const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+
+    // Menghapus file lama sebelum menyimpan yang baru
+    if (req.employee.picture) {
+      const oldFilePath = path.join("./", req.employee.picture);
+      deleteOldFile(oldFilePath);
+    }
+
     cb(
       null,
       file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
