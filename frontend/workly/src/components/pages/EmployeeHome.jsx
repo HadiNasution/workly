@@ -6,6 +6,7 @@ import AbsenOut from "../cards/AbsenOut";
 import RecapEmployeeTab from "../tabs/RecapEmployee";
 import DetailProfileEmployee from "../offcanvas/DetailProfileEmployee";
 import ModalPengajuan from "../modals/ModalPengajuan";
+import ModalDaftarPengajuan from "../modals/ModalDaftarPengajuan";
 
 const EmployeeHome = () => {
   const navigate = useNavigate();
@@ -66,20 +67,7 @@ const EmployeeHome = () => {
           <ModalPengajuan />
         </div>
         <div className="col-md mt-2">
-          <div className="card">
-            <div className="card-body">
-              <div className="d-flex align-items-center justify-content-start"></div>
-              <img
-                src="../../../public/assets/mail.png"
-                alt="mail"
-                height={60}
-                width={60}
-              ></img>
-              <p className="d-inline ms-3">
-                <b>Hasil pengajuan</b>
-              </p>
-            </div>
-          </div>
+          <ModalDaftarPengajuan />
         </div>
       </div>
       <div className="row">
