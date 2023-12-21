@@ -84,3 +84,36 @@ export const monthString = () => {
   }
   return monthFormated;
 };
+
+export const convertDayString = (time) => {
+  const day = time.getDay();
+  let dayFormated;
+  switch (day) {
+    case 1:
+      dayFormated = "Senin";
+      break;
+    case 2:
+      dayFormated = "Selasa";
+      break;
+    case 3:
+      dayFormated = "Rabu";
+      break;
+    case 4:
+      dayFormated = "Kamis";
+      break;
+    case 5:
+      dayFormated = "Jumat";
+      break;
+    case 6:
+      dayFormated = "Sabtu";
+      break;
+    case 7:
+      dayFormated = "Minggu";
+      break;
+
+    default:
+      dayFormated = "";
+      break;
+  }
+  return dayFormated;
+};

@@ -1,4 +1,4 @@
-import "../../css/LoginPage.css";
+import RecapDay from "../cards/RecapDay";
 
 export default function RecapEmployeeTab() {
   return (
@@ -43,16 +43,7 @@ export default function RecapEmployeeTab() {
           aria-labelledby="employee-tab"
           tabIndex="0"
         >
-          <div className="card">
-            <div className="card-body">
-              <p>heheee</p>
-            </div>
-          </div>
-          <div className="card">
-            <div className="card-body">
-              <p>heheee</p>
-            </div>
-          </div>
+          <RecapDay />
         </div>
         <div
           className="tab-pane fade"
