@@ -115,6 +115,7 @@ const getAttendanceRecapByMonth = async (req, res, next) => {
       year,
       month
     );
+    console.log(result);
     res.status(200).json({ data: result });
   } catch (error) {
     next(error);

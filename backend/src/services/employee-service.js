@@ -514,33 +514,45 @@ const getAttendanceRecapByDay = async (employee) => {
 
 // service untuk employee melihat daftar hadir perbulan
 const getAttendanceRecapByMonth = async (employee, targetYear, targetMonth) => {
-  // Menghitung tanggal awal dan akhir bulan
-  const firstDayOfMonth = new Date(targetYear, targetMonth - 1, 1); // tahun - bulan (dimulai dari 0-11) - tanggal
-  const lastDayOfMonth = new Date(targetYear, targetMonth, 0); // waktu ke 23:59:59.999 (besok sebelum pergantian hari)
+  // Calculate first day of the month
+  const firstDayOfMonth = new Date(targetYear, targetMonth - 1, 1);
 
-  const attendance = await prismaClient.attendance.findMany({
-    where: {
-      employee_id: employee.id,
-      time_in: {
-        gte: firstDayOfMonth,
-        lte: lastDayOfMonth,
+  // Calculate last day of the month
+  const lastDayOfMonth = new Date(targetYear, targetMonth, 0);
+
+  try {
+    // Query the database using the date range
+    const attendance = await prismaClient.attendance.findMany({
+      where: {
+        employee_id: employee.id,
+        time_in: {
+          gte: firstDayOfMonth,
+          lte: lastDayOfMonth,
+        },
       },
-    },
-    select: {
-      time_in: true,
-      time_out: true,
-      is_late: true,
-      is_working: true,
-      is_wfh: true,
-    },
-    orderBy: {
-      id: "asc",
-    },
-  });
+      select: {
+        time_in: true,
+        time_out: true,
+        is_late: true,
+        is_working: true,
+        is_wfh: true,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
 
-  if (!attendance) throw new ResponseError(404, "Data kosong");
-  logger.info("GET ATTENDANCE RECAT BY MONTH BERHASIL");
-  return attendance;
+    // Check if there's no data
+    if (!attendance || attendance.length === 0) {
+      throw new ResponseError(404, "Data kosong");
+    }
+
+    logger.info("GET ATTENDANCE RECAT BY MONTH BERHASIL");
+    return attendance;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
 };
 
 export default {

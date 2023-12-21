@@ -60,7 +60,7 @@ export default function RecapDay() {
       } else {
         setTimeOut("Data masih kosong");
       }
-      setLate(data.data.is_late ? "Terlambat" : "Tidak terlambat");
+      setLate(data.data.is_late ? "Terlambat" : "Tepat waktu");
       setWfh(data.data.is_wfh ? "WFH" : "Dikantor");
     } catch (error) {
       if (error.response) {

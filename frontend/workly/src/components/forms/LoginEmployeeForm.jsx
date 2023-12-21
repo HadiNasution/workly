@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function LoginEmployeeForm() {
   const navigate = useNavigate();
@@ -30,6 +31,16 @@ export default function LoginEmployeeForm() {
       sessionStorage.setItem("token-expires-at", data.data.token_expires_at);
       localStorage.setItem("name", data.data.name);
       localStorage.setItem("avatar", data.data.picture);
+      Swal.fire({
+        title: "Login berhasil",
+        icon: "success",
+        background: "#555555",
+        color: "#FFFFFF",
+        timer: 2000, // Durasi dalam milidetik
+        timerProgressBar: true,
+        toast: true,
+        position: "center",
+      });
       // redirect ke halaman home admin
       navigate("/employee/home");
     } catch (error) {

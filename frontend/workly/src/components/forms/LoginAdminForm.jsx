@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function LoginAdminform() {
   const navigate = useNavigate();
@@ -37,6 +38,16 @@ export default function LoginAdminform() {
       sessionStorage.setItem("token-expires-at", tokenExpiresAt);
       localStorage.setItem("name", name);
       localStorage.setItem("avatar", avatar);
+      Swal.fire({
+        title: "Login berhasil",
+        icon: "success",
+        background: "#555555",
+        color: "#FFFFFF",
+        timer: 2000, // Durasi dalam milidetik
+        timerProgressBar: true,
+        toast: true,
+        position: "center",
+      });
       // redirect ke halaman home admin
       navigate("/admin/home");
     } catch (error) {

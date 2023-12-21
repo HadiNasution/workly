@@ -1,21 +1,15 @@
-import {
-  BsHouseFill,
-  BsGeoAltFill,
-  BsClockFill,
-  BsArrowRightSquareFill,
-  BsArrowLeftSquareFill,
-  BsExclamationCircleFill,
-} from "react-icons/bs";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { convertDayString } from "../../utils/date-time";
+import MonthCard from "./MonthCard";
+import Swal from "sweetalert2";
 
 export default function RecapDay() {
   const currentTime = new Date();
   const currentYear = currentTime.getFullYear();
   const currentMonth = currentTime.getMonth();
   const [year, setYear] = useState(currentYear);
-  const [month, setMonth] = useState(currentMonth);
+  const [month, setMonth] = useState(currentMonth + 1);
+  const [result, setResult] = useState(null);
 
   const getRecap = async (event) => {
     event.preventDefault();
@@ -37,19 +31,52 @@ export default function RecapDay() {
         }
       );
 
-      console.log(data.data);
+      //   console.log(data.data);
+      setResult(data.data);
     } catch (error) {
       if (error.response) {
         console.error("Server Response:", error.response.data);
+        Swal.fire({
+          title: "Data kosong",
+          icon: "warning",
+          background: "#555555",
+          color: "#FFFFFF",
+          timer: 2000, // Durasi dalam milidetik
+          timerProgressBar: true,
+          toast: true,
+          position: "center",
+        });
       }
     }
   };
+
+  const showCard = () => {
+    if (result) {
+      return result.map((item, index) => (
+        <div key={index} className="d-flex">
+          <MonthCard data={item} />
+          <MonthCard data={item} />
+          <MonthCard data={item} />
+        </div>
+      ));
+    } else {
+      return "";
+    }
+  };
+
+  useEffect(() => {
+    // console.log(result);
+  }, [result]);
 
   return (
     <div className="row">
       <div className="col">
         <div className="d-block">
-          <form onSubmit={(event) => getRecap(event)} className="d-flex mb-4">
+          <form
+            onSubmit={(event) => getRecap(event)}
+            className="d-flex mb-4"
+            method="get"
+          >
             <select
               className="form-select m-1"
               aria-label="Default select example"
@@ -57,18 +84,18 @@ export default function RecapDay() {
               value={month}
               onChange={(e) => setMonth(e.target.value)}
             >
-              <option value="0">Januari</option>
-              <option value="1">Februari</option>
-              <option value="2">Maret</option>
-              <option value="3">April</option>
-              <option value="4">Mei</option>
-              <option value="5">Juni</option>
-              <option value="6">Juli</option>
-              <option value="7">Agustus</option>
-              <option value="8">September</option>
-              <option value="9">Oktober</option>
-              <option value="10">November</option>
-              <option value="11">Desember</option>
+              <option value="1">Januari</option>
+              <option value="2">Februari</option>
+              <option value="3">Maret</option>
+              <option value="4">April</option>
+              <option value="5">Mei</option>
+              <option value="6">Juni</option>
+              <option value="7">Juli</option>
+              <option value="8">Agustus</option>
+              <option value="9">September</option>
+              <option value="10">Oktober</option>
+              <option value="11">November</option>
+              <option value="12">Desember</option>
             </select>
             <select
               className="form-select m-1"
@@ -77,17 +104,18 @@ export default function RecapDay() {
               value={year}
               onChange={(e) => setYear(e.target.value)}
             >
-              <option value="1">2019</option>
-              <option value="2">2020</option>
-              <option value="3">2021</option>
-              <option value="3">2022</option>
-              <option value="3">2023</option>
+              <option value="2019">2019</option>
+              <option value="2020">2020</option>
+              <option value="2021">2021</option>
+              <option value="2022">2022</option>
+              <option value="2023">2023</option>
             </select>
             <button type="submit" className="btn btn-secondary m-1">
               Tampilkan
             </button>
           </form>
         </div>
+        {showCard()}
       </div>
     </div>
   );
