@@ -6,9 +6,9 @@ import fs from "fs";
 const deleteOldFile = (filePath) => {
   fs.unlink(filePath, (err) => {
     if (err) {
-      console.error("Error deleting old file:", err);
+      console.error("GAGAL MENGHAPUS FOTO PROFILE LAMA:", err);
     } else {
-      console.log("Old file deleted successfully");
+      console.log("FILE FOTO PROFILE LAMA TERHAPUS");
     }
   });
 };
@@ -22,7 +22,7 @@ export const storage = multer.diskStorage({
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
 
     // Menghapus file lama sebelum menyimpan yang baru
-    if (req.employee.picture) {
+    if (req.path === "/upload" && req.employee.picture) {
       const oldFilePath = path.join("./", req.employee.picture);
       deleteOldFile(oldFilePath);
     }
@@ -33,6 +33,7 @@ export const storage = multer.diskStorage({
     );
   },
 });
+
 // Fungsi untuk memfilter format file
 export const fileFilter = (req, file, cb) => {
   const allowedFileTypes = ["jpg", "jpeg", "png"];

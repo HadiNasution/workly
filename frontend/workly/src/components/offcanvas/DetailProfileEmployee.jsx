@@ -29,9 +29,9 @@ export default function DetailProfileEmployee() {
         }
       );
       if (data.data) {
-        // console.log(data.data);
+        // console.log(data.data[0].picture);
         setProfile(data.data);
-        // console.log(profile[0]);
+        localStorage.setItem("avatar", data.data[0].picture);
       }
     } catch (error) {
       console.log(error);
@@ -134,7 +134,7 @@ export default function DetailProfileEmployee() {
 
   useEffect(() => {
     getProfile();
-  }, []);
+  }, [pict]);
 
   return (
     <>

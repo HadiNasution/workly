@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AbsenIn from "../cards/AbsenIn";
 import { useEffect, useState } from "react";
@@ -6,6 +5,7 @@ import { isTokenExpired } from "../../auth/auth-login";
 import AbsenOut from "../cards/AbsenOut";
 import RecapEmployeeTab from "../tabs/RecapEmployee";
 import DetailProfileEmployee from "../offcanvas/DetailProfileEmployee";
+import ModalPengajuan from "../modals/ModalPengajuan";
 
 const EmployeeHome = () => {
   const navigate = useNavigate();
@@ -63,20 +63,7 @@ const EmployeeHome = () => {
       </div>
       <div className="row">
         <div className="col-md mt-2">
-          <div className="card">
-            <div className="card-body">
-              <div className="d-flex align-items-center justify-content-start"></div>
-              <img
-                src="../../../public/assets/holiday.png"
-                alt="holiday"
-                height={60}
-                width={60}
-              ></img>
-              <p className="d-inline ms-3">
-                <b>Pengajuan Cuti, Sakit, Izin, WFH</b>
-              </p>
-            </div>
-          </div>
+          <ModalPengajuan />
         </div>
         <div className="col-md mt-2">
           <div className="card">
@@ -95,7 +82,7 @@ const EmployeeHome = () => {
           </div>
         </div>
       </div>
-      <div className="row mb-5">
+      <div className="row">
         <div className="col">
           <RecapEmployeeTab />
         </div>

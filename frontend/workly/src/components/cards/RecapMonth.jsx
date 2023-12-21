@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import MonthCard from "./MonthCard";
 import Swal from "sweetalert2";
 
-export default function RecapDay() {
+export default function RecapMonth() {
   const currentTime = new Date();
   const currentYear = currentTime.getFullYear();
   const currentMonth = currentTime.getMonth();

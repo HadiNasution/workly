@@ -44,7 +44,7 @@ export default function MonthCard(data) {
                 className="me-2"
                 style={{ color: "cyan" }}
               />{" "}
-              Absen masuk <br></br>
+              <b>Absen masuk</b> <br></br>
               {item.time_in ? timeFormat(item.time_in) : <i>-</i>}
             </p>
             <p className="me-4">
@@ -52,17 +52,18 @@ export default function MonthCard(data) {
                 className="me-2"
                 style={{ color: "yellow" }}
               />{" "}
-              Absen keluar <br></br>
+              <b>Absen keluar</b> <br></br>
               {item.time_out ? timeFormat(item.time_out) : <i>-</i>}
             </p>
           </div>
           <div className="d-flex justify-content-start">
             <p className="me-4">
-              <BsHouseFill className="me-2" /> Lokasi kerja <br></br>
+              <BsHouseFill className="me-2" /> <b>Lokasi kerja</b> <br></br>
               {item.is_wfh ? "Work From Home" : "Di kantor"}
             </p>
             <p>
-              <BsExclamationCircleFill className="me-2" /> Waktu absen <br></br>
+              <BsExclamationCircleFill className="me-2" /> <b>Waktu absen</b>{" "}
+              <br></br>
               {item.is_late ? (
                 <span style={{ color: "red" }}>Terlambat</span>
               ) : (

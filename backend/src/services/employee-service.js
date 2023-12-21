@@ -371,7 +371,7 @@ const absenOut = async (latitude, longitude, employee) => {
 // service untuk employee upload foto profile
 const upload = async (filePath, employee) => {
   logger.info("UPLOAD FOTO BERHASIL");
-  console.log(filePath);
+  // console.log(filePath);
   // simpan ke tabel log
   // const date = new Date();
   // const note = `Employee ${employee.id} (id) upload foto profile pada : ${date}`;
@@ -421,7 +421,7 @@ const createPermission = async (request, employee, filePath) => {
     [];
   const recapId = extractedData[0].attendance_recap_id;
   const currentDate = new Date();
-  // logger.info("CREATE PERMISSION BERHASIL");
+  logger.info("CREATE PERMISSION BERHASIL");
   // // simpan ke tabel log
   // const note = `Employee ${employee.name} membuat permission ${createRequest.type} pada : ${currentDate}`;
   // await prismaClient.log.create({
