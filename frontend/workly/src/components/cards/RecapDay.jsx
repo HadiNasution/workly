@@ -28,7 +28,7 @@ export default function RecapDay() {
           },
         }
       );
-      console.log(data.data);
+      //   console.log(data.data);
       if (data.data.time_in) {
         var dateInString = data.data.time_in;
         var dateInObject = new Date(dateInString);
@@ -46,7 +46,7 @@ export default function RecapDay() {
       }
 
       if (data.data.time_out) {
-        var dateOutString = data.data.time_in;
+        var dateOutString = data.data.time_out;
         var dateOutObject = new Date(dateOutString);
 
         var jam = dateOutObject.getHours();
@@ -55,8 +55,8 @@ export default function RecapDay() {
         var tanggal = dateOutObject.getDate();
         var bulan = dateOutObject.getMonth() + 1;
         var tahun = dateOutObject.getFullYear();
-        const waktuMasuk = `${jam}:${menit} ${hari} ${tanggal}/${bulan}/${tahun}`;
-        setTimeOut(waktuMasuk);
+        const waktuKeluar = `${jam}:${menit} ${hari} ${tanggal}/${bulan}/${tahun}`;
+        setTimeOut(waktuKeluar);
       } else {
         setTimeOut("Data masih kosong");
       }

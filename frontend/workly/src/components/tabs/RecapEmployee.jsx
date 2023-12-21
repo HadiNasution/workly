@@ -1,4 +1,5 @@
 import RecapDay from "../cards/RecapDay";
+import RecapMonth from "../cards/RecapMonth";
 
 export default function RecapEmployeeTab() {
   return (
@@ -31,7 +32,7 @@ export default function RecapEmployeeTab() {
             aria-selected="false"
             style={{ fontWeight: "bold" }}
           >
-            Kehadiran bulan ini
+            Kehadiran perbulan
           </button>
         </li>
       </ul>
@@ -52,26 +53,7 @@ export default function RecapEmployeeTab() {
           aria-labelledby="admin-tab"
           tabIndex="0"
         >
-          <div className="card">
-            <div className="card-body">
-              <p>heheee</p>
-            </div>
-          </div>
-          <div className="card">
-            <div className="card-body">
-              <p>heheee</p>
-            </div>
-          </div>
-          <div className="card">
-            <div className="card-body">
-              <p>heheee</p>
-            </div>
-          </div>
-          <div className="card">
-            <div className="card-body">
-              <p>heheee</p>
-            </div>
-          </div>
+          <RecapMonth />
         </div>
       </div>
     </>
