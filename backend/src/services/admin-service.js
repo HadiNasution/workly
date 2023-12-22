@@ -55,12 +55,12 @@ const login = async (request) => {
   const convertExpires = new Date(admin.token_expires_at);
   const localExpires = convertExpires.toLocaleString();
   if (!admin.token_expires_at || localCurrentTime > localExpires) {
-    const expiredUTCTime = addMinutes(currentUTCTime, 120);
+    const expiredUTCTime = addMinutes(currentUTCTime, 540);
 
     // Generate token baru
     const newToken = uuid().toString();
 
-    // logger.info("LOGIN ADMIN BERHASIL (WITH NEW TOKEN)");
+    logger.info("LOGIN ADMIN BERHASIL (WITH NEW TOKEN)");
     // // simpan ke tabel log
     // const note = `Admin ${admin.name} Login pada : ${localCurrentTime}. Dengan token baru.`;
     // await prismaClient.log.create({
@@ -80,14 +80,13 @@ const login = async (request) => {
       },
       select: {
         name: true,
-        picture: true,
         is_super_admin: true,
         token: true,
         token_expires_at: true,
       },
     });
   }
-  // logger.info("LOGIN ADMIN BERHASIL");
+  logger.info("LOGIN ADMIN BERHASIL");
   // // simpan ke tabel log
   // const note = `Admin ${admin.name} Login pada : ${localCurrentTime}`;
   // await prismaClient.log.create({
@@ -102,7 +101,6 @@ const login = async (request) => {
     },
     select: {
       name: true,
-      picture: true,
       is_super_admin: true,
       token: true,
       token_expires_at: true,

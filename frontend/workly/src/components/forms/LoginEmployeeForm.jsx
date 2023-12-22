@@ -25,7 +25,7 @@ export default function LoginEmployeeForm() {
           },
         }
       );
-      console.log(data);
+      // console.log(data);
       // simpan di storage
       sessionStorage.setItem("token", data.data.token);
       sessionStorage.setItem("token-expires-at", data.data.token_expires_at);
@@ -39,7 +39,7 @@ export default function LoginEmployeeForm() {
         timer: 2000, // Durasi dalam milidetik
         timerProgressBar: true,
         toast: true,
-        position: "center",
+        position: "top",
       });
       // redirect ke halaman home admin
       navigate("/employee/home");

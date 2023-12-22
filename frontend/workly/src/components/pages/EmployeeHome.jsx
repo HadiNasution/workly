@@ -7,33 +7,72 @@ import RecapEmployeeTab from "../tabs/RecapEmployee";
 import DetailProfileEmployee from "../offcanvas/DetailProfileEmployee";
 import ModalPengajuan from "../modals/ModalPengajuan";
 import ModalDaftarPengajuan from "../modals/ModalDaftarPengajuan";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 const EmployeeHome = () => {
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
   const [absent, setAbsent] = useState(null);
   let storedState = localStorage.getItem("has-absent");
-  // console.log(storedState);
 
   const handleAbsentState = () => {
     localStorage.setItem("has-absent", !absent);
     setAbsent(!absent);
   };
 
-  // console.log(absent);
+  const logoutEmployee = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const { data } = await axios.delete(
+        "http://localhost:3000/api/employee/logout",
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      // Jika logout berhasil, hapus token dari session storage
+      if (data.data) {
+        sessionStorage.clear();
+        localStorage.removeItem("name");
+        localStorage.removeItem("avatar");
+        localStorage.removeItem("shot");
+        // lalu redirect ke halaman login
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response) {
+        console.error("Server Response:", error.response.data);
+      }
+    }
+  };
 
   useEffect(() => {
-    // cek apakah token masih berlaku
-    if (isTokenExpired()) {
-      // jika sudah tidak berlaku, maka...
-      sessionStorage.clear();
-      localStorage.removeItem("name");
-      localStorage.removeItem("avatar");
-      localStorage.removeItem("shot");
-      navigate("/");
-    }
+    const checkTokenExpiration = () => {
+      // cek apakah token masih berlaku
+      if (isTokenExpired()) {
+        Swal.fire({
+          title: "Sesi habis",
+          text: "Silahkan untuk login kembali",
+          icon: "warning",
+          background: "#555555",
+          color: "#FFFFFF",
+          position: "center",
+        });
+        logoutEmployee();
+      }
+    };
+
+    checkTokenExpiration();
     setAbsent(storedState);
-  }, [navigate, storedState]);
+
+    const intervalId = setInterval(checkTokenExpiration, 60000);
+
+    return () => clearInterval(intervalId);
+  }, [storedState, absent]);
 
   return (
     <>

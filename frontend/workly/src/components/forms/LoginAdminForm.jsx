@@ -12,7 +12,6 @@ export default function LoginAdminform() {
     try {
       const email = document.getElementById("admin-email").value;
       const password = document.getElementById("admin-password").value;
-      console.log(email, password);
       const { data } = await axios.post(
         "http://localhost:3000/api/admin/login",
         {
@@ -25,19 +24,17 @@ export default function LoginAdminform() {
           },
         }
       );
-      console.log(data);
+      // console.log(data);
       // get response data
       const token = data.data.token;
       const isSuperAdmin = data.data.is_super_admin;
       const tokenExpiresAt = data.data.token_expires_at;
       const name = data.data.name;
-      const avatar = data.data.picture;
       // simpan di storage
       sessionStorage.setItem("token", token);
       sessionStorage.setItem("is-super-admin", isSuperAdmin);
       sessionStorage.setItem("token-expires-at", tokenExpiresAt);
       localStorage.setItem("name", name);
-      localStorage.setItem("avatar", avatar);
       Swal.fire({
         title: "Login berhasil",
         icon: "success",

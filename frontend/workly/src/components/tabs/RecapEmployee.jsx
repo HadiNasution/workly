@@ -1,5 +1,6 @@
 import RecapDay from "../cards/RecapDay";
 import RecapMonth from "../cards/RecapMonth";
+import { BsClockFill, BsCalendar2CheckFill } from "react-icons/bs";
 
 export default function RecapEmployeeTab() {
   return (
@@ -17,6 +18,7 @@ export default function RecapEmployeeTab() {
             aria-selected="true"
             style={{ fontWeight: "bold" }}
           >
+            <BsClockFill className="me-1 mb-1" />
             Kehadiran hari ini
           </button>
         </li>
@@ -32,6 +34,7 @@ export default function RecapEmployeeTab() {
             aria-selected="false"
             style={{ fontWeight: "bold" }}
           >
+            <BsCalendar2CheckFill className="me-1 mb-1" />
             Kehadiran perbulan
           </button>
         </li>

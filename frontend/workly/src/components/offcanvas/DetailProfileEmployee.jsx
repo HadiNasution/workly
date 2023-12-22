@@ -1,4 +1,4 @@
-import { monthString, year } from "../../utils/date-time";
+import { convertDayString, monthString, year } from "../../utils/date-time";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -39,12 +39,14 @@ export default function DetailProfileEmployee() {
         console.error("Server Response:", error.response.data);
       }
       Swal.fire({
-        title: "Ops! Masalah teknis",
-        text: "Mohon maaf atas kendala yang terjadi, mohon untuk mencoba kembali lain waktu dan silahkan hubungi admin",
+        title: "Data profil kosong",
         icon: "error",
+        timer: 5000,
+        timerProgressBar: true,
+        toast: true,
         background: "#555555",
         color: "#FFFFFF",
-        position: "center",
+        position: "top",
       });
     }
   };
@@ -117,19 +119,23 @@ export default function DetailProfileEmployee() {
       }
     } catch (error) {
       console.log(error);
-      console.log(error);
       if (error.response) {
         console.error("Server Response:", error.response.data);
       }
-      Swal.fire({
-        title: "Ops! Masalah teknis",
-        text: "Mohon maaf atas kendala yang terjadi, mohon untuk mencoba kembali lain waktu dan silahkan hubungi admin",
-        icon: "error",
-        background: "#555555",
-        color: "#FFFFFF",
-        position: "center",
-      });
     }
+  };
+
+  const dateFormat = (date) => {
+    let dateString = date;
+    let dateObject = new Date(dateString);
+
+    let hari = convertDayString(dateObject);
+    let tanggal = dateObject.getDate();
+    let bulan = dateObject.getMonth() + 1;
+    let tahun = dateObject.getFullYear();
+
+    let formatWaktu = `${hari} ${tanggal}/${bulan}/${tahun}`;
+    return formatWaktu;
   };
 
   useEffect(() => {
@@ -217,45 +223,96 @@ export default function DetailProfileEmployee() {
               <h3 style={{ fontWeight: "bolder" }}>
                 {profile[0].name ?? <i>Data masih kosong</i>}
               </h3>
-              <p>
-                <b>NIP : </b>
-                {profile[0].nip ?? <i>Data masih kosong</i>}
-                <br></br>
-                <b>Email : </b>
-                {profile[0].email ?? <i>Data masih kosong</i>}
-                <br></br>
-                <b>Role : </b>
-                {profile[0].role ?? <i>Data masih kosong</i>}
-                <br></br>
-                <b>Departmen : </b>{" "}
-                {profile[0].departmen ?? <i>Data masih kosong</i>}
-              </p>
-              <p>
+              <div className="d-flex justify-content-between">
+                <p>
+                  <b>NIP : </b>
+                </p>
+                <p> {profile[0].nip ?? <i>Data masih kosong</i>}</p>
+              </div>
+              <div className="d-flex justify-content-between">
+                <p>
+                  <b>Email : </b>
+                </p>
+                <p>{profile[0].email ?? <i>Data masih kosong</i>}</p>
+              </div>
+              <div className="d-flex justify-content-between">
+                <p>
+                  <b>Role : </b>
+                </p>
+                <p>{profile[0].role ?? <i>Data masih kosong</i>}</p>
+              </div>
+              <div className="d-flex justify-content-between">
+                <p>
+                  <b>Departmen : </b>
+                </p>
+                <p>{profile[0].departmen ?? <i>Data masih kosong</i>}</p>
+              </div>
+              <div className="d-flex justify-content-between">
+                <p>
+                  <b>Tanggal masuk : </b>
+                </p>
+                <p>
+                  {dateFormat(profile[0].join_date) ?? <i>Data masih kosong</i>}
+                </p>
+              </div>
+              <div className="d-flex justify-content-between">
+                <p>
+                  <b>Jatuh tempo kontrak : </b>
+                </p>
+                <p>
+                  {dateFormat(profile[0].quit_date) ?? <i>Data masih kosong</i>}
+                </p>
+              </div>
+              <p className="mt-4">
                 <span
                   style={{
                     fontWeight: "bold",
                     color: "gray",
-                    fontSize: 18,
+                    fontSize: 16,
                   }}
                 >
                   Recap kehadiran bulan {monthString()}/{year}
-                </span>{" "}
-                <br></br>
-                <b>Terlambat : </b>{" "}
-                {profile[0].count_late ?? <i>Data masih kosong</i>}x<br></br>
-                <b>Sakit : </b>{" "}
-                {profile[0].count_sick ?? <i>Data masih kosong</i>}x<br></br>
-                <b>Izin : </b>{" "}
-                {profile[0].count_permits ?? <i>Data masih kosong</i>}x<br></br>
-                <b>Cuti : </b>{" "}
-                {profile[0].count_leaves ?? <i>Data masih kosong</i>}/12
-                <br></br>
-                <b>WFH : </b> {profile[0].count_wfh ?? <i>Data masih kosong</i>}
-                /4
-                <br></br>
-                <b>Kerja :</b>{" "}
-                {profile[0].count_works ?? <i>Data masih kosong</i>}
+                </span>
               </p>
+              <div className="d-flex justify-content-between">
+                <p>
+                  <b>Terlambat : </b>
+                </p>
+                <p>{profile[0].count_late ?? <i>Data masih kosong</i>}x</p>
+              </div>
+              <div className="d-flex justify-content-between">
+                <p>
+                  <b>Sakit : </b>
+                </p>
+                <p>{profile[0].count_sick ?? <i>Data masih kosong</i>}x</p>
+              </div>
+              <div className="d-flex justify-content-between">
+                <p>
+                  <b>Izin : </b>
+                </p>
+                <p> {profile[0].count_permits ?? <i>Data masih kosong</i>}x</p>
+              </div>
+              <div className="d-flex justify-content-between">
+                <p>
+                  <b>Cuti : </b>
+                </p>
+                <p> {profile[0].count_leaves ?? <i>Data masih kosong</i>}/12</p>
+              </div>
+              <div className="d-flex justify-content-between">
+                <p>
+                  <b>WFH : </b>
+                </p>
+                <p> {profile[0].count_wfh ?? <i>Data masih kosong</i>}/4</p>
+              </div>
+              <div className="d-flex justify-content-between">
+                <p>
+                  <b>Total hari kerja : </b>
+                </p>
+                <p>
+                  {" "}
+                  {profile[0].count_works ?? <i>Data masih kosong</i>} hari
+                </p>
+              </div>
             </div>
           ) : null}
           <button

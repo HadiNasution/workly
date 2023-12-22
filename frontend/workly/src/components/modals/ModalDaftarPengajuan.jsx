@@ -21,7 +21,7 @@ export default function ModalDaftarPengajuan() {
       );
 
       if (data.data) {
-        console.log(data.data);
+        // console.log(data.data);
         setRecap(data.data);
       }
     } catch (error) {
@@ -76,7 +76,7 @@ export default function ModalDaftarPengajuan() {
   };
 
   const showRecap = () => {
-    console.log(recap);
+    // console.log(recap);
     if (recap) {
       return recap.map((item) => (
         <div key={item.id}>

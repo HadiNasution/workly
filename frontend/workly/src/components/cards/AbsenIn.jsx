@@ -232,7 +232,7 @@ export default function AbsenIn({ onLogin }) {
             Lokasi aktif
           </p>
         ) : (
-          <p style={{ color: "#e00727" }}>
+          <p style={{ color: "#dc3545" }}>
             Lokasi tidak aktif, izinkan akses lokasi dibrowser untuk situs ini
             atau periksa koneksi internet
           </p>
