@@ -514,10 +514,8 @@ const getAttendanceRecapByDay = async (employee) => {
 
 // service untuk employee melihat daftar hadir perbulan
 const getAttendanceRecapByMonth = async (employee, targetYear, targetMonth) => {
-  // Calculate first day of the month
+  // menentukan awal dan akhir bulan
   const firstDayOfMonth = new Date(targetYear, targetMonth - 1, 1);
-
-  // Calculate last day of the month
   const lastDayOfMonth = new Date(targetYear, targetMonth, 0);
 
   try {

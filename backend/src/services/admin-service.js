@@ -28,6 +28,7 @@ const login = async (request) => {
       email: loginRequest.email,
     },
     select: {
+      nip: true,
       name: true,
       email: true,
       password: true,
@@ -79,7 +80,9 @@ const login = async (request) => {
         email: admin.email,
       },
       select: {
+        nip: true,
         name: true,
+        email: true,
         is_super_admin: true,
         token: true,
         token_expires_at: true,
@@ -100,7 +103,9 @@ const login = async (request) => {
       email: admin.email,
     },
     select: {
+      nip: true,
       name: true,
+      email: true,
       is_super_admin: true,
       token: true,
       token_expires_at: true,
@@ -556,8 +561,8 @@ const attendanceRecapByDay = async () => {
 
 // service untuk melihat rekap kehadiran perbulan
 const attendanceRecapByMonth = async (targetYear, targetMonth) => {
-  // Menghitung tanggal awal dan akhir bulan
-  const firstDayOfMonth = new Date(targetYear, targetMonth - 1, 1); // tahun - bulan (dimulai dari 0-11) - tanggal
+  // Menentukan awal dan akhir bulan
+  const firstDayOfMonth = new Date(targetYear, targetMonth - 1, 1);
   const lastDayOfMonth = new Date(targetYear, targetMonth, 0);
 
   const attendance = await prismaClient.attendanceRecap.findMany({

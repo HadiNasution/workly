@@ -29,12 +29,16 @@ export default function LoginAdminform() {
       const token = data.data.token;
       const isSuperAdmin = data.data.is_super_admin;
       const tokenExpiresAt = data.data.token_expires_at;
+      const nip = data.data.nip;
       const name = data.data.name;
+      const emailResponse = data.data.email;
       // simpan di storage
       sessionStorage.setItem("token", token);
       sessionStorage.setItem("is-super-admin", isSuperAdmin);
       sessionStorage.setItem("token-expires-at", tokenExpiresAt);
       localStorage.setItem("name", name);
+      localStorage.setItem("nip", nip);
+      localStorage.setItem("email", emailResponse);
       Swal.fire({
         title: "Login berhasil",
         icon: "success",

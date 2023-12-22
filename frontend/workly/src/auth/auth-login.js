@@ -8,7 +8,7 @@ export const adminAuth = () => {
 // cek apakah user merupakan employee
 export const employeeAuth = () => {
   const token = sessionStorage.getItem("token");
-  const picture = localStorage.getItem("picture");
+  const picture = localStorage.getItem("avatar");
   return token && picture ? true : false;
 };
 

@@ -8,6 +8,8 @@ import RecapAdminTab from "../tabs/RecapAdmin";
 const AdminHome = () => {
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
+  const email = localStorage.getItem("email");
+  const nip = localStorage.getItem("nip");
   const superAdmin = sessionStorage.getItem("is-super-admin");
   let role = superAdmin === "true" ? "Super admin" : "Administrator";
 
@@ -39,27 +41,50 @@ const AdminHome = () => {
   const showSuperAdminMenu = () => {
     if (superAdmin === "false") {
       return (
-        <div className="col">
-          <div className="card">
-            <div className="card-body">
-              <img
-                src="../../../public/assets/admin.png"
-                alt="admin-icon"
-                height={60}
-                width={60}
-              ></img>
-              <p className="d-inline ms-3">
-                <a
-                  className="stretched-link"
-                  style={{ color: "white", cursor: "pointer" }}
-                  onClick={() => navigate("/admin/manage/admin")}
-                >
-                  Kelola Admin
-                </a>
-              </p>
+        <>
+          <div className="col">
+            <div className="card">
+              <div className="card-body">
+                <img
+                  src="../../../public/assets/admin.png"
+                  alt="admin-icon"
+                  height={60}
+                  width={60}
+                ></img>
+                <p className="d-inline ms-3">
+                  <a
+                    className="stretched-link"
+                    style={{ color: "white", cursor: "pointer" }}
+                    onClick={() => navigate("/admin/manage/admin")}
+                  >
+                    Kelola Admin
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+          <div className="col">
+            <div className="card">
+              <div className="card-body">
+                <img
+                  src="../../../public/assets/setting.png"
+                  alt="admin-icon"
+                  height={60}
+                  width={60}
+                ></img>
+                <p className="d-inline ms-3">
+                  <a
+                    className="stretched-link"
+                    style={{ color: "white", cursor: "pointer" }}
+                    onClick={() => navigate("/admin/setting")}
+                  >
+                    Pengaturan Aplikasi
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </>
       );
     } else {
       return "";
@@ -96,18 +121,30 @@ const AdminHome = () => {
     <>
       <div className="row g-0 mt-5">
         <div className="col">
-          <div className="d-flex align-items-end mb-3 text-start">
-            <img
-              src="../../../public/assets/hello.png"
-              alt="waving-hand"
-              width={80}
-              height={80}
-              className="me-3 mb-3"
-            ></img>
-            <h1>
-              Heyoo {name}! <br></br>
-              <span className="fs-5 text-secondary">{role}</span>
-            </h1>
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-end mb-3 text-start">
+              <img
+                src="../../../public/assets/hello.png"
+                alt="waving-hand"
+                width={80}
+                height={80}
+                className="me-3 mb-3"
+              ></img>
+              <h1>
+                Heyoo {name}! <br></br>
+                <span className="fs-5 text-secondary">
+                  {role} • {email} • {nip}
+                </span>
+              </h1>
+            </div>
+            <button
+              type="button"
+              className="btn btn-danger h-25"
+              style={{ width: 80 }}
+              onClick={() => logoutAdmin()}
+            >
+              Logout
+            </button>
           </div>
         </div>
       </div>

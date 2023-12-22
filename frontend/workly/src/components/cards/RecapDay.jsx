@@ -16,6 +16,19 @@ export default function RecapDay() {
   const [late, setLate] = useState(null);
   const [wfh, setWfh] = useState(null);
 
+  const formatTime = (date) => {
+    var dateString = date;
+    var dateObject = new Date(dateString);
+
+    var jam = dateObject.getHours();
+    var menit = dateObject.getMinutes();
+    var hari = convertDayString(dateObject);
+    var tanggal = dateObject.getDate();
+    var bulan = dateObject.getMonth() + 1;
+    var tahun = dateObject.getFullYear();
+    return `${jam}:${menit} ${hari} ${tanggal}/${bulan}/${tahun}`;
+  };
+
   const getRecap = async () => {
     try {
       const token = sessionStorage.getItem("token");
@@ -29,37 +42,14 @@ export default function RecapDay() {
         }
       );
       //   console.log(data.data);
-      if (data.data.time_in) {
-        var dateInString = data.data.time_in;
-        var dateInObject = new Date(dateInString);
-
-        var jam = dateInObject.getHours();
-        var menit = dateInObject.getMinutes();
-        var hari = convertDayString(dateInObject);
-        var tanggal = dateInObject.getDate();
-        var bulan = dateInObject.getMonth() + 1;
-        var tahun = dateInObject.getFullYear();
-        const waktuMasuk = `${jam}:${menit} ${hari} ${tanggal}/${bulan}/${tahun}`;
-        setTimeIn(waktuMasuk);
-      } else {
-        setTimeIn("Data masih kosong");
-      }
-
-      if (data.data.time_out) {
-        var dateOutString = data.data.time_out;
-        var dateOutObject = new Date(dateOutString);
-
-        var jam = dateOutObject.getHours();
-        var menit = dateOutObject.getMinutes();
-        var hari = convertDayString(dateOutObject);
-        var tanggal = dateOutObject.getDate();
-        var bulan = dateOutObject.getMonth() + 1;
-        var tahun = dateOutObject.getFullYear();
-        const waktuKeluar = `${jam}:${menit} ${hari} ${tanggal}/${bulan}/${tahun}`;
-        setTimeOut(waktuKeluar);
-      } else {
-        setTimeOut("Data masih kosong");
-      }
+      setTimeIn(
+        data.data.time_in ? formatTime(data.data.time_in) : "Data masih kosong"
+      );
+      setTimeOut(
+        data.data.time_out
+          ? formatTime(data.data.time_out)
+          : "Data masih kosong"
+      );
       setLate(data.data.is_late ? "Terlambat" : "Tepat waktu");
       setWfh(data.data.is_wfh ? "WFH" : "Dikantor");
     } catch (error) {
@@ -70,7 +60,13 @@ export default function RecapDay() {
   };
 
   useEffect(() => {
-    getRecap();
+    // reload data recap setiap 1 detik
+    const reloadRecap = () => {
+      getRecap();
+    };
+    reloadRecap();
+    const intervalId = setInterval(reloadRecap, 1000);
+    return () => clearInterval(intervalId);
   }, []);
 
   return (

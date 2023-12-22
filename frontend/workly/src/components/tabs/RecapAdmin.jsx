@@ -1,4 +1,7 @@
 import { BsClockFill, BsCalendar2CheckFill, BsEyeFill } from "react-icons/bs";
+import RecapDayAdmin from "../cards/RecapDayAdmin";
+import RecapMonthAdmin from "../cards/RecapMonthAdmin";
+import Log from "../cards/Log";
 
 export default function RecapAdminTab() {
   return (
@@ -61,7 +64,7 @@ export default function RecapAdminTab() {
           aria-labelledby="recapday-tab"
           tabIndex="0"
         >
-          Recap Day
+          <RecapDayAdmin />
         </div>
         <div
           className="tab-pane fade"
@@ -70,7 +73,7 @@ export default function RecapAdminTab() {
           aria-labelledby="recapmonth-tab"
           tabIndex="0"
         >
-          Recap Month
+          <RecapMonthAdmin />
         </div>
         <div
           className="tab-pane fade"
@@ -79,7 +82,7 @@ export default function RecapAdminTab() {
           aria-labelledby="log-tab"
           tabIndex="0"
         >
-          Log
+          <Log />
         </div>
       </div>
     </>
