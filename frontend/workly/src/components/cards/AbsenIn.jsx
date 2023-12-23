@@ -25,6 +25,8 @@ export default function AbsenIn({ onLogin }) {
   const [countdown, setCountdown] = useState(null);
   const [wfh, setWfh] = useState(false);
   let warning;
+  const isAllowWfh = !!localStorage.getItem("using-wfh");
+  const isUsingShot = !!localStorage.getItem("using-shot");
 
   function shuffleArray(array) {
     const shuffledArray = [...array];
@@ -157,7 +159,6 @@ export default function AbsenIn({ onLogin }) {
     }
 
     getPosition(); // ambil koordinat saat kopmponen pertamakali dirender
-
     return () => {
       clearInterval(shotInterval);
       clearInterval(countDownInterval);
@@ -185,43 +186,56 @@ export default function AbsenIn({ onLogin }) {
             type="checkbox"
             role="switch"
             id="wfh"
+            hidden={!isAllowWfh ?? true}
           ></input>
-          <label className="form-check-label" for="wfh">
+          <label
+            className="form-check-label"
+            for="wfh"
+            hidden={!isAllowWfh ?? true}
+          >
             WFH
           </label>
         </div>
       </div>
       <div className="card-body">
-        <h5 className="card-title" hidden={counter === 0 || wfh}>
-          Pilih kata yang muncul di layar
-        </h5>
-        <div className="shot d-flex justify-content-around mt-4">
-          <button
-            onClick={absenIn}
-            className="btn btn-secondary w-100 m-1"
-            hidden={counter === 0 || wfh}
-          >
-            {shot}
+        {isUsingShot ? (
+          <div className="using-shot">
+            <h5 className="card-title" hidden={counter === 0 || wfh}>
+              Pilih kata yang muncul di layar
+            </h5>
+            <div className="shot d-flex justify-content-around mt-4">
+              <button
+                onClick={absenIn}
+                className="btn btn-secondary w-100 m-1"
+                hidden={counter === 0 || wfh}
+              >
+                {shot}
+              </button>
+              <button
+                onClick={repeatAbsen}
+                className="btn btn-secondary w-100 m-1"
+                hidden={counter === 0 || wfh}
+              >
+                {generate({ minLength: 3, maxLength: 10 }).toUpperCase()}
+              </button>
+              <button
+                onClick={repeatAbsen}
+                className="btn btn-secondary w-100 m-1"
+                hidden={counter === 0 || wfh}
+              >
+                {generate({ minLength: 3, maxLength: 10 }).toUpperCase()}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button onClick={absenIn} className="btn btn-primary w-100 m-1">
+            Absen Masuk
           </button>
-          <button
-            onClick={repeatAbsen}
-            className="btn btn-secondary w-100 m-1"
-            hidden={counter === 0 || wfh}
-          >
-            {generate({ minLength: 3, maxLength: 10 }).toUpperCase()}
-          </button>
-          <button
-            onClick={repeatAbsen}
-            className="btn btn-secondary w-100 m-1"
-            hidden={counter === 0 || wfh}
-          >
-            {generate({ minLength: 3, maxLength: 10 }).toUpperCase()}
-          </button>
-        </div>
+        )}
         {warning}
         {wfh ? (
           <button onClick={absenIn} className="btn btn-primary w-100 m-1">
-            Absen WFH
+            Absen Masuk WFH
           </button>
         ) : null}
       </div>

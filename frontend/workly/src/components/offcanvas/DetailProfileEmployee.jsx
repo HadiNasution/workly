@@ -8,6 +8,8 @@ export default function DetailProfileEmployee() {
   const [profile, setProfile] = useState(null);
   const navigate = useNavigate();
   const [pict, setPict] = useState(localStorage.getItem("avatar"));
+  const batasWfh = localStorage.getItem("wfh-limit");
+  const batasCuti = localStorage.getItem("leaves-limit");
 
   let isPictNull;
   if (pict === "null") {
@@ -114,6 +116,12 @@ export default function DetailProfileEmployee() {
         localStorage.removeItem("name");
         localStorage.removeItem("avatar");
         localStorage.removeItem("shot");
+        localStorage.removeItem("using-wfh");
+        localStorage.removeItem("role");
+        localStorage.removeItem("wfh-limit");
+        localStorage.removeItem("leaves-limit");
+        localStorage.removeItem("using-shot");
+        localStorage.removeItem("office-name");
         // lalu redirect ke halaman login
         navigate("/");
       }
@@ -296,13 +304,21 @@ export default function DetailProfileEmployee() {
                 <p>
                   <b>Cuti : </b>
                 </p>
-                <p> {profile[0].count_leaves ?? <i>Data masih kosong</i>}/12</p>
+                <p>
+                  {" "}
+                  {profile[0].count_leaves ?? <i>Data masih kosong</i>}/
+                  {batasCuti ?? ""}
+                </p>
               </div>
               <div className="d-flex justify-content-between">
                 <p>
                   <b>WFH : </b>
                 </p>
-                <p> {profile[0].count_wfh ?? <i>Data masih kosong</i>}/4</p>
+                <p>
+                  {" "}
+                  {profile[0].count_wfh ?? <i>Data masih kosong</i>}/
+                  {batasWfh ?? ""}
+                </p>
               </div>
               <div className="d-flex justify-content-between">
                 <p>

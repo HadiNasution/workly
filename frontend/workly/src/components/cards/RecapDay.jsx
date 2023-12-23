@@ -61,12 +61,13 @@ export default function RecapDay() {
 
   useEffect(() => {
     // reload data recap setiap 1 detik
-    const reloadRecap = () => {
-      getRecap();
-    };
-    reloadRecap();
-    const intervalId = setInterval(reloadRecap, 1000);
-    return () => clearInterval(intervalId);
+    // const reloadRecap = () => {
+    //   getRecap();
+    // };
+    // reloadRecap();
+    // const intervalId = setInterval(reloadRecap, 1000);
+    // return () => clearInterval(intervalId);
+    getRecap();
   }, []);
 
   return (

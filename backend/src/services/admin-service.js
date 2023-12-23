@@ -930,6 +930,7 @@ const log = async (targetYear, targetMonth) => {
 };
 
 const getSetting = async () => {
+  logger.info("GET SETTING SUKSES");
   return prismaClient.setting.findFirst({
     select: {
       office_radius: true,

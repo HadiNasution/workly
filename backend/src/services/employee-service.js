@@ -216,7 +216,7 @@ const detail = async (nip) => {
   }
 
   logger.info("RESPONSE DETAIL EMPLOYEE BERHASIL");
-  return employee;
+  return extractedData;
 };
 
 // service untuk employee absen masuk
@@ -582,6 +582,7 @@ const getAttendanceRecapByMonth = async (employee, targetYear, targetMonth) => {
 };
 
 const getSetting = async () => {
+  logger.info("GET SETTING SUKSES");
   return prismaClient.setting.findFirst({
     select: {
       office_radius: true,

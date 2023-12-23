@@ -17,6 +17,7 @@ const EmployeeHome = () => {
   const role = localStorage.getItem("role");
   const [absent, setAbsent] = useState(null);
   let storedState = localStorage.getItem("has-absent");
+  const officeName = localStorage.getItem("office-name");
 
   const handleAbsentState = () => {
     localStorage.setItem("has-absent", !absent);
@@ -41,6 +42,12 @@ const EmployeeHome = () => {
         localStorage.removeItem("name");
         localStorage.removeItem("avatar");
         localStorage.removeItem("shot");
+        localStorage.removeItem("using-wfh");
+        localStorage.removeItem("role");
+        localStorage.removeItem("wfh-limit");
+        localStorage.removeItem("leaves-limit");
+        localStorage.removeItem("using-shot");
+        localStorage.removeItem("office-name");
         // lalu redirect ke halaman login
         navigate("/");
       }
@@ -49,6 +56,30 @@ const EmployeeHome = () => {
       if (error.response) {
         console.error("Server Response:", error.response.data);
       }
+    }
+  };
+
+  const getSetting = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const { data } = await axios.get(
+        "http://localhost:3000/api/employee/setting",
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (data.data) {
+        localStorage.setItem("using-wfh", data.data.enable_wfh);
+        localStorage.setItem("using-shot", data.data.using_shot);
+        localStorage.setItem("leaves-limit", data.data.leaves_limit);
+        localStorage.setItem("wfh-limit", data.data.wfh_limit);
+        localStorage.setItem("office-name", data.data.office_name);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -68,14 +99,13 @@ const EmployeeHome = () => {
       }
     };
 
+    getSetting();
     checkTokenExpiration();
     setAbsent(storedState);
-
     const intervalId = setInterval(checkTokenExpiration, 60000);
 
     return () => clearInterval(intervalId);
   }, [storedState, absent]);
-
   return (
     <>
       <div className="row g-0 mt-5">
@@ -92,7 +122,7 @@ const EmployeeHome = () => {
               <h1>
                 Heyoo {name}! <br></br>
                 <span className="fs-5 text-secondary">
-                  {role} • {email}
+                  {officeName} • {role} • {email}
                 </span>
               </h1>
             </div>

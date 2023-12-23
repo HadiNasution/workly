@@ -121,8 +121,8 @@ model Setting {
   office_radius Decimal?
   office_latitude Decimal? 
   office_longitude Decimal? 
-  office_address String @db.Char(255)
-  office_name String @db.Char(255)
+  office_address String @db.VarChar(255)
+  office_name String @db.VarChar(255)
   minute_late_limit Int? @default(10)
   wfh_limit Int? @default(4)
   leaves_limit Int? @default(12)

@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Setting" ALTER COLUMN "office_address" SET DATA TYPE VARCHAR(255),
+ALTER COLUMN "office_name" SET DATA TYPE VARCHAR(255);
