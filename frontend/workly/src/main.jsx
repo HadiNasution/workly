@@ -17,7 +17,6 @@ import { adminAuth, employeeAuth } from "./auth/auth-login";
 import ManageEmployee from "./components/pages/ManageEmployee";
 import ManageAdmin from "./components/pages/ManageAdmin";
 import ManagePermission from "./components/pages/ManagePermission";
-import Setting from "./components/pages/Setting";
 
 const ProtectedEmployeeRoute = ({ element, path }) => {
   return employeeAuth() ? (
@@ -76,12 +75,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               element={<ManagePermission />}
               path="/admin/manage/permission"
             />
-          }
-        />
-        <Route
-          path="/admin/setting"
-          element={
-            <ProtectedAdminRoute element={<Setting />} path="/admin/setting" />
           }
         />
         <Route

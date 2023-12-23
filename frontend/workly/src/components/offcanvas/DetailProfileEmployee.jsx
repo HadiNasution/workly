@@ -122,6 +122,7 @@ export default function DetailProfileEmployee() {
         localStorage.removeItem("leaves-limit");
         localStorage.removeItem("using-shot");
         localStorage.removeItem("office-name");
+        localStorage.removeItem("email");
         // lalu redirect ke halaman login
         navigate("/");
       }

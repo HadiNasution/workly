@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { isTokenExpired } from "../../auth/auth-login";
 import Swal from "sweetalert2";
 import RecapAdminTab from "../tabs/RecapAdmin";
+import ModalSetting from "../modals/ModalSetting";
 
 const AdminHome = () => {
   const navigate = useNavigate();
@@ -72,15 +73,7 @@ const AdminHome = () => {
                   height={60}
                   width={60}
                 ></img>
-                <p className="d-inline ms-3">
-                  <a
-                    className="stretched-link"
-                    style={{ color: "white", cursor: "pointer" }}
-                    onClick={() => navigate("/admin/setting")}
-                  >
-                    Pengaturan Aplikasi
-                  </a>
-                </p>
+                <ModalSetting />
               </div>
             </div>
           </div>

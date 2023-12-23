@@ -40,6 +40,9 @@ export default function ModalPengajuan() {
           icon: "success",
           background: "#555555",
           color: "#FFFFFF",
+          timer: 2000,
+          timerProgressBar: true,
+          toast: true,
           position: "center",
         });
       }
