@@ -17,15 +17,15 @@ export default function RecapDay() {
   const [wfh, setWfh] = useState(null);
 
   const formatTime = (date) => {
-    var dateString = date;
-    var dateObject = new Date(dateString);
+    const dateString = date;
+    const dateObject = new Date(dateString);
 
-    var jam = dateObject.getHours();
-    var menit = dateObject.getMinutes();
-    var hari = convertDayString(dateObject);
-    var tanggal = dateObject.getDate();
-    var bulan = dateObject.getMonth() + 1;
-    var tahun = dateObject.getFullYear();
+    const jam = dateObject.getHours();
+    const menit = dateObject.getMinutes();
+    const hari = convertDayString(dateObject);
+    const tanggal = dateObject.getDate();
+    const bulan = dateObject.getMonth() + 1;
+    const tahun = dateObject.getFullYear();
     return `${jam}:${menit} ${hari} ${tanggal}/${bulan}/${tahun}`;
   };
 
@@ -53,9 +53,9 @@ export default function RecapDay() {
       setLate(data.data.is_late ? "Terlambat" : "Tepat waktu");
       setWfh(data.data.is_wfh ? "WFH" : "Dikantor");
     } catch (error) {
-      if (error.response) {
-        console.error("Server Response:", error.response.data);
-      }
+      // if (error.response) {
+      //   console.error("Server Response:", error.response.data);
+      // }
     }
   };
 

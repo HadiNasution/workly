@@ -27,5 +27,6 @@ adminRoute.put(
   "/permission/reject/:permissionId",
   adminController.rejectPermission
 );
+adminRoute.get("/log", adminController.log);
 
 export { adminRoute };

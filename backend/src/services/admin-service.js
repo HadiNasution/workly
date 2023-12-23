@@ -572,6 +572,9 @@ const attendanceRecapByMonth = async (targetYear, targetMonth) => {
         lte: lastDayOfMonth,
       },
     },
+    orderBy: {
+      count_works: "desc", // yang paling sedikit total kerja paling ataas
+    },
     include: {
       employee: {
         select: {
@@ -608,7 +611,7 @@ const attendanceRecapByMonth = async (targetYear, targetMonth) => {
   if (!extractedData || extractedData.length === 0) {
     throw new ResponseError(404, "Data kosong");
   }
-  logger.info("RESPONSE ATTENDANCE RECAP BERHASIL");
+  logger.info("RESPONSE ATTENDANCE RECAP MONTH BERHASIL");
   return extractedData;
 };
 
@@ -901,6 +904,30 @@ const rejectPermission = async (permissionId, admin) => {
   return permission;
 };
 
+const log = async (targetYear, targetMonth) => {
+  // Menentukan awal dan akhir bulan
+  const firstDayOfMonth = new Date(targetYear, targetMonth - 1, 1);
+  const lastDayOfMonth = new Date(targetYear, targetMonth, 0);
+  const result = await prismaClient.log.findMany({
+    where: {
+      date: {
+        gte: firstDayOfMonth,
+        lte: lastDayOfMonth,
+      },
+    },
+    select: {
+      date: true,
+      note: true,
+    },
+  });
+
+  if (!result || result.length === 0)
+    throw new ResponseError(404, "Data kosong");
+
+  logger.info("RESPONSE LOG BERHASIL");
+  return result;
+};
+
 export default {
   login,
   regist,
@@ -920,4 +947,5 @@ export default {
   getPermission,
   approvePermission,
   rejectPermission,
+  log,
 };

@@ -31,6 +31,8 @@ export default function LoginEmployeeForm() {
       sessionStorage.setItem("token-expires-at", data.data.token_expires_at);
       localStorage.setItem("name", data.data.name);
       localStorage.setItem("avatar", data.data.picture);
+      localStorage.setItem("email", data.data.email);
+      localStorage.setItem("role", data.data.role);
       Swal.fire({
         title: "Login berhasil",
         icon: "success",

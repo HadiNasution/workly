@@ -24,6 +24,7 @@ const login = async (request) => {
     },
     select: {
       email: true,
+      role: true,
       password: true,
       token: true,
       token_expires_at: true,
@@ -71,6 +72,8 @@ const login = async (request) => {
       select: {
         name: true,
         picture: true,
+        email: true,
+        role: true,
         token: true,
         token_expires_at: true,
       },
@@ -92,6 +95,8 @@ const login = async (request) => {
     },
     select: {
       name: true,
+      email: true,
+      role: true,
       picture: true,
       token: true,
       token_expires_at: true,

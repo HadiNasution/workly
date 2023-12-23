@@ -188,6 +188,16 @@ const rejectPermission = async (req, res, next) => {
   }
 };
 
+const log = async (req, res, next) => {
+  try {
+    const { year, month } = req.query;
+    const result = await adminService.log(year, month);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   login,
   regist,
@@ -207,4 +217,5 @@ export default {
   getPermission,
   approvePermission,
   rejectPermission,
+  log,
 };

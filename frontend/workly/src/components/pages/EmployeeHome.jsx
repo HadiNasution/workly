@@ -13,6 +13,8 @@ import axios from "axios";
 const EmployeeHome = () => {
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
+  const email = localStorage.getItem("email");
+  const role = localStorage.getItem("role");
   const [absent, setAbsent] = useState(null);
   let storedState = localStorage.getItem("has-absent");
 
@@ -78,16 +80,22 @@ const EmployeeHome = () => {
     <>
       <div className="row g-0 mt-5">
         <div className="col">
-          <div className="d-flex align-items-end justify-content-between">
-            <h1>
+          <div className="d-flex align-items-center justify-content-between">
+            <div className="d-flex align-items-end mb-3 text-start">
               <img
                 src="../../../public/assets/hello.png"
                 alt="waving-hand"
                 width={80}
                 height={80}
+                className="me-3 mb-3"
               ></img>
-              Heyoo {name}!
-            </h1>
+              <h1>
+                Heyoo {name}! <br></br>
+                <span className="fs-5 text-secondary">
+                  {role} • {email}
+                </span>
+              </h1>
+            </div>
             <DetailProfileEmployee />
           </div>
         </div>
