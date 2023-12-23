@@ -198,6 +198,24 @@ const log = async (req, res, next) => {
   }
 };
 
+const getSetting = async (req, res, next) => {
+  try {
+    const result = await adminService.getSetting();
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateSetting = async (req, res, next) => {
+  try {
+    await adminService.updateSetting(req.body);
+    res.status(200).json({ data: "Setting berhasil di update" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   login,
   regist,
@@ -218,4 +236,6 @@ export default {
   approvePermission,
   rejectPermission,
   log,
+  updateSetting,
+  getSetting,
 };

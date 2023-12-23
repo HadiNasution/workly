@@ -28,5 +28,7 @@ adminRoute.put(
   adminController.rejectPermission
 );
 adminRoute.get("/log", adminController.log);
+adminRoute.get("/setting", adminController.getSetting);
+adminRoute.post("/setting", adminController.updateSetting);
 
 export { adminRoute };

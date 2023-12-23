@@ -122,6 +122,15 @@ const getAttendanceRecapByMonth = async (req, res, next) => {
   }
 };
 
+const getSetting = async (req, res, next) => {
+  try {
+    const result = await employeeService.getSetting();
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   login,
   logout,
@@ -134,4 +143,5 @@ export default {
   getPermission,
   getAttendanceRecapByDay,
   getAttendanceRecapByMonth,
+  getSetting,
 };

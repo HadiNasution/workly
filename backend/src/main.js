@@ -1,4 +1,3 @@
-// import { prismaClient } from "./app/database.js";
 import { logger } from "./app/logging.js";
 import { web } from "./app/web.js";
 

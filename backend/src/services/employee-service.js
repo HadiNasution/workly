@@ -216,17 +216,30 @@ const detail = async (nip) => {
   }
 
   logger.info("RESPONSE DETAIL EMPLOYEE BERHASIL");
-  return extractedData;
+  return employee;
 };
 
 // service untuk employee absen masuk
 const absenIn = async (latitude, longitude, wfh, employee) => {
+  // ambil data settingan geolokasi
+  const setting = await prismaClient.setting.findFirst({
+    select: {
+      office_radius: true,
+      office_latitude: true,
+      office_longitude: true,
+      minute_late_limit: true,
+    },
+    where: {
+      id: 1,
+    },
+  });
+
   const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
   const convertCurrent = new Date(currentUTCTime); // convert UTC ke lokal
   const localTime = convertCurrent.toLocaleString(); // waktu sekarang dalam lokal
 
   const timeLimitUTC = new Date();
-  timeLimitUTC.setHours(8, 0, 0, 0); // Waktu batas absen (08:00)
+  timeLimitUTC.setHours(8, setting.minute_late_limit, 0, 0); // Waktu batas absen (08:00)
   const convertTimeLimit = new Date(timeLimitUTC);
   const localTimeLimit = convertTimeLimit.toLocaleString();
 
@@ -237,12 +250,12 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
   if (wfh === false) {
     // koordinat zona geofencing kantor WGS Bandung
     const geofenceCoordinates = {
-      latitude: -6.935783427330478,
-      longitude: 107.57826439241717,
+      latitude: setting.office_latitude,
+      longitude: setting.office_longitude,
     };
 
     // Jarak maksimal untuk dianggap berada dalam zona geofencing (dalam meter)
-    const geofenceRadius = 5;
+    const geofenceRadius = setting.office_radius;
 
     // Memeriksa apakah karyawan berada dalam zona geofencing
     const isWithinGeofence = geolib.isPointWithinRadius(
@@ -282,6 +295,16 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
 
 // service untuk employee absen keluar
 const absenOut = async (latitude, longitude, employee) => {
+  const setting = await prismaClient.setting.findFirst({
+    select: {
+      office_radius: true,
+      office_latitude: true,
+      office_longitude: true,
+    },
+    where: {
+      id: 1,
+    },
+  });
   const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
 
   // logic untuk set waktu hari ini
@@ -329,12 +352,12 @@ const absenOut = async (latitude, longitude, employee) => {
   if (extractedData[0].is_wfh === false) {
     // koordinat zona geofencing kantor WGS Bandung
     const geofenceCoordinates = {
-      latitude: -6.935783427330478,
-      longitude: 107.57826439241717,
+      latitude: setting.office_latitude,
+      longitude: setting.office_longitude,
     };
 
     // Jarak maksimal untuk dianggap berada dalam zona geofencing (dalam meter)
-    const geofenceRadius = 10;
+    const geofenceRadius = setting.office_radius;
 
     // Memeriksa apakah karyawan berada dalam zona geofencing
     const isWithinGeofence = geolib.isPointWithinRadius(
@@ -558,6 +581,26 @@ const getAttendanceRecapByMonth = async (employee, targetYear, targetMonth) => {
   }
 };
 
+const getSetting = async () => {
+  return prismaClient.setting.findFirst({
+    select: {
+      office_radius: true,
+      office_latitude: true,
+      office_longitude: true,
+      office_address: true,
+      office_name: true,
+      minute_late_limit: true,
+      wfh_limit: true,
+      leaves_limit: true,
+      enable_wfh: true,
+      using_shot: true,
+    },
+    where: {
+      id: 1,
+    },
+  });
+};
+
 export default {
   login,
   logout,
@@ -570,4 +613,5 @@ export default {
   getPermission,
   getAttendanceRecapByDay,
   getAttendanceRecapByMonth,
+  getSetting,
 };

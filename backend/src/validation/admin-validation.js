@@ -19,6 +19,7 @@ const adminRegistValidation = Joi.object({
     .required(),
   password: Joi.string().max(100).required(),
 });
+
 // validasi untuk reset password
 const adminResetValidation = Joi.object({
   name: Joi.string().max(100).required(),
@@ -80,6 +81,20 @@ const adminSearchEmployeeValidation = Joi.object({
   email: Joi.string().optional(),
 });
 
+// validasi untuk setting
+const adminUpdateSetting = Joi.object({
+  office_radius: Joi.number().min(1).optional(),
+  office_latitude: Joi.number().optional(),
+  office_longitude: Joi.number().optional(),
+  office_address: Joi.string().max(255).required(),
+  office_name: Joi.string().max(255).required(),
+  minute_late_limit: Joi.number().min(1).optional(),
+  wfh_limit: Joi.number().optional(),
+  leaves_limit: Joi.number().optional(),
+  enable_wfh: Joi.boolean().optional(),
+  using_shot: Joi.boolean().optional(),
+});
+
 export {
   adminLoginValidation,
   adminRegistValidation,
@@ -89,4 +104,5 @@ export {
   adminUpdateValidation,
   adminUpdateEmployeeValidation,
   adminSearchEmployeeValidation,
+  adminUpdateSetting,
 };

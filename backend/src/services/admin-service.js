@@ -9,6 +9,7 @@ import {
   adminUpdateValidation,
   adminUpdateEmployeeValidation,
   adminSearchEmployeeValidation,
+  adminUpdateSetting,
 } from "../validation/admin-validation.js";
 import { validate } from "../validation/validation.js";
 import bcrypt from "bcrypt";
@@ -928,6 +929,95 @@ const log = async (targetYear, targetMonth) => {
   return result;
 };
 
+const getSetting = async () => {
+  return prismaClient.setting.findFirst({
+    select: {
+      office_radius: true,
+      office_latitude: true,
+      office_longitude: true,
+      office_address: true,
+      office_name: true,
+      minute_late_limit: true,
+      wfh_limit: true,
+      leaves_limit: true,
+      enable_wfh: true,
+      using_shot: true,
+    },
+    where: {
+      id: 1,
+    },
+  });
+};
+
+const updateSetting = async (request) => {
+  const settingUpdateRequest = validate(adminUpdateSetting, request);
+
+  // get data lama
+  const oldData = await prismaClient.setting.findFirst({
+    where: {
+      id: 1,
+    },
+    select: {
+      office_radius: true,
+      office_latitude: true,
+      office_longitude: true,
+      office_address: true,
+      office_name: true,
+      minute_late_limit: true,
+      wfh_limit: true,
+      leaves_limit: true,
+      enable_wfh: true,
+      using_shot: true,
+    },
+  });
+
+  if (!oldData) throw new ResponseError(404, "Data kosong");
+
+  const newRadius = settingUpdateRequest.office_radius ?? oldData.office_radius;
+  const newLatitude =
+    settingUpdateRequest.office_latitude ?? oldData.office_latitude;
+  const newLongitude =
+    settingUpdateRequest.office_longitude ?? oldData.office_longitude;
+  const newAddress =
+    settingUpdateRequest.office_address ?? oldData.office_address;
+  const newName = settingUpdateRequest.office_name ?? oldData.office_name;
+  const newLateLimit =
+    settingUpdateRequest.minute_late_limit ?? oldData.minute_late_limit;
+  const newWfhLimit = settingUpdateRequest.wfh_limit ?? oldData.wfh_limit;
+  const newLeavesLimit =
+    settingUpdateRequest.leaves_limit ?? oldData.leaves_limit;
+  const newEnableWfh = settingUpdateRequest.enable_wfh ?? oldData.enable_wfh;
+  const newUsingShow = settingUpdateRequest.using_shot ?? oldData.using_shot;
+
+  logger.info("UPDATE SETTING BERHASIL");
+  // // simpan ke tabel log
+  // const date = new Date();
+  // const note = `Admin update setting aplikasi data pada : ${date}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
+  return prismaClient.setting.update({
+    data: {
+      office_radius: newRadius,
+      office_latitude: newLatitude,
+      office_longitude: newLongitude,
+      office_address: newAddress,
+      office_name: newName,
+      minute_late_limit: newLateLimit,
+      wfh_limit: newWfhLimit,
+      leaves_limit: newLeavesLimit,
+      enable_wfh: newEnableWfh,
+      using_shot: newUsingShow,
+    },
+    where: {
+      id: 1,
+    },
+  });
+};
+
 export default {
   login,
   regist,
@@ -948,4 +1038,6 @@ export default {
   approvePermission,
   rejectPermission,
   log,
+  updateSetting,
+  getSetting,
 };

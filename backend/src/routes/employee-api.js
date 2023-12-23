@@ -37,5 +37,6 @@ employeeRoute.get(
   "/attendance/month",
   employeeController.getAttendanceRecapByMonth
 );
+employeeRoute.get("/setting", employeeController.getSetting);
 
 export { employeeRoute };
