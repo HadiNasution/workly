@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { convertDayString } from "../../utils/date-time";
-import { BsImageFill, BsClockFill } from "react-icons/bs";
+import { BsImageFill, BsClockFill, BsCheckCircleFill } from "react-icons/bs";
 
 export default function ModalDaftarPengajuan() {
   const [recap, setRecap] = useState(null);
@@ -52,40 +52,22 @@ export default function ModalDaftarPengajuan() {
     return formatWaktu;
   };
 
-  const typeFormated = (type) => {
-    let formatedType;
-    switch (type) {
-      case "sakit":
-        formatedType = "Sakit";
-        break;
-      case "leaves":
-        formatedType = "Izin";
-        break;
-      case "cuti":
-        formatedType = "Cuti";
-        break;
-      case "wfh":
-        formatedType = "WFH";
-        break;
-
-      default:
-        formatedType = "";
-        break;
-    }
-    return formatedType;
-  };
-
   const showRecap = () => {
-    // console.log(recap);
     if (recap) {
       return recap.map((item) => (
         <div key={item.id}>
           <div className="card w-100 m-2">
             <div className="card-header">
               <div className="d-flex justify-content-between">
-                <h5>{typeFormated(item.type)}</h5>
+                <h5>{item.type}</h5>
                 {item.is_approved ? (
-                  <h5 style={{ color: "lime" }}>Disetujui</h5>
+                  <h5 style={{ color: "lime" }}>
+                    <BsCheckCircleFill
+                      className="me-2"
+                      style={{ color: "lime" }}
+                    />
+                    Disetujui
+                  </h5>
                 ) : (
                   <div className="d-flex justify-content-start align-items-center">
                     <BsClockFill

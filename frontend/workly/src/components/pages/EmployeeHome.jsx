@@ -16,8 +16,8 @@ const EmployeeHome = () => {
   const email = localStorage.getItem("email");
   const role = localStorage.getItem("role");
   const [absent, setAbsent] = useState(null);
+  const [officeName, setOfficeName] = useState("");
   let storedState = localStorage.getItem("has-absent");
-  const officeName = localStorage.getItem("office-name");
 
   const handleAbsentState = () => {
     localStorage.setItem("has-absent", !absent);
@@ -42,13 +42,8 @@ const EmployeeHome = () => {
         localStorage.removeItem("name");
         localStorage.removeItem("avatar");
         localStorage.removeItem("shot");
-        localStorage.removeItem("using-wfh");
-        localStorage.removeItem("role");
-        localStorage.removeItem("wfh-limit");
-        localStorage.removeItem("leaves-limit");
-        localStorage.removeItem("using-shot");
-        localStorage.removeItem("office-name");
         localStorage.removeItem("email");
+        localStorage.removeItem("role");
         // lalu redirect ke halaman login
         navigate("/");
       }
@@ -73,11 +68,7 @@ const EmployeeHome = () => {
         }
       );
       if (data.data) {
-        localStorage.setItem("using-wfh", data.data.enable_wfh);
-        localStorage.setItem("using-shot", data.data.using_shot);
-        localStorage.setItem("leaves-limit", data.data.leaves_limit);
-        localStorage.setItem("wfh-limit", data.data.wfh_limit);
-        localStorage.setItem("office-name", data.data.office_name);
+        setOfficeName(data.data.office_name);
       }
     } catch (error) {
       console.log(error);

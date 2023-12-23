@@ -118,10 +118,10 @@ export default function ModalPengajuan() {
                     id="tipe-pengajuan"
                     required
                   >
-                    <option value="sick">Sakit</option>
-                    <option value="leaves">Cuti</option>
-                    <option value="permits">Izin</option>
-                    <option value="wfh">WFH</option>
+                    <option value="Sakit">Sakit</option>
+                    <option value="Cuti">Cuti</option>
+                    <option value="Izin">Izin</option>
+                    <option value="WFH">WFH</option>
                   </select>
                 </div>
                 <div className="mb-3">

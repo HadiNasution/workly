@@ -8,8 +8,8 @@ export default function DetailProfileEmployee() {
   const [profile, setProfile] = useState(null);
   const navigate = useNavigate();
   const [pict, setPict] = useState(localStorage.getItem("avatar"));
-  const batasWfh = localStorage.getItem("wfh-limit");
-  const batasCuti = localStorage.getItem("leaves-limit");
+  const [wfhLimit, setWfhLimit] = useState(0);
+  const [leavesLimit, setLeavesLimit] = useState(0);
 
   let isPictNull;
   if (pict === "null") {
@@ -17,6 +17,27 @@ export default function DetailProfileEmployee() {
   } else {
     isPictNull = false;
   }
+
+  const getSetting = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const { data } = await axios.get(
+        "http://localhost:3000/api/employee/setting",
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (data.data) {
+        setWfhLimit(data.data.wfh_limit);
+        setLeavesLimit(data.data.leaves_limit);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getProfile = async () => {
     try {
@@ -116,12 +137,7 @@ export default function DetailProfileEmployee() {
         localStorage.removeItem("name");
         localStorage.removeItem("avatar");
         localStorage.removeItem("shot");
-        localStorage.removeItem("using-wfh");
         localStorage.removeItem("role");
-        localStorage.removeItem("wfh-limit");
-        localStorage.removeItem("leaves-limit");
-        localStorage.removeItem("using-shot");
-        localStorage.removeItem("office-name");
         localStorage.removeItem("email");
         // lalu redirect ke halaman login
         navigate("/");
@@ -149,6 +165,7 @@ export default function DetailProfileEmployee() {
 
   useEffect(() => {
     getProfile();
+    getSetting();
   }, [pict]);
 
   return (
@@ -308,7 +325,7 @@ export default function DetailProfileEmployee() {
                 <p>
                   {" "}
                   {profile[0].count_leaves ?? <i>Data masih kosong</i>}/
-                  {batasCuti ?? ""}
+                  {leavesLimit}
                 </p>
               </div>
               <div className="d-flex justify-content-between">
@@ -317,8 +334,7 @@ export default function DetailProfileEmployee() {
                 </p>
                 <p>
                   {" "}
-                  {profile[0].count_wfh ?? <i>Data masih kosong</i>}/
-                  {batasWfh ?? ""}
+                  {profile[0].count_wfh ?? <i>Data masih kosong</i>}/{wfhLimit}
                 </p>
               </div>
               <div className="d-flex justify-content-between">

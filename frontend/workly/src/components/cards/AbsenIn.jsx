@@ -24,9 +24,10 @@ export default function AbsenIn({ onLogin }) {
   const [counter, setCounter] = useState(2);
   const [countdown, setCountdown] = useState(null);
   const [wfh, setWfh] = useState(false);
+  const [enableWfh, setEnableWfh] = useState(true);
+  const [usingShot, setUsingShot] = useState(true);
   let warning;
-  const isAllowWfh = !!localStorage.getItem("using-wfh");
-  const isUsingShot = !!localStorage.getItem("using-shot");
+  let countDownInterval;
 
   function shuffleArray(array) {
     const shuffledArray = [...array];
@@ -51,8 +52,25 @@ export default function AbsenIn({ onLogin }) {
     });
   }
 
-  const repeatAbsen = () => {
-    setCounter(counter - 1);
+  const getSetting = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const { data } = await axios.get(
+        "http://localhost:3000/api/employee/setting",
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (data.data) {
+        setEnableWfh(data.data.enable_wfh);
+        setUsingShot(data.data.using_shot);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // logic untuk set warning jika absen salah
@@ -87,7 +105,6 @@ export default function AbsenIn({ onLogin }) {
           },
         }
       );
-      console.log(data);
       Swal.fire({
         title: "Absen masuk berhasil!",
         icon: "success",
@@ -112,19 +129,20 @@ export default function AbsenIn({ onLogin }) {
     }
   };
 
+  // get koordinat latitude longitude
+  const getPosition = () => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLatitude(position.coords.latitude);
+        setLongitude(position.coords.longitude);
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+      }
+    );
+  };
+
   useEffect(() => {
-    // get koordinat latitude longitude
-    const getPosition = () => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLatitude(position.coords.latitude);
-          setLongitude(position.coords.longitude);
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-        }
-      );
-    };
     // fungsi untuk cek setiap detik
     const shotInterval = setInterval(() => {
       // Mendapatkan nilai terkini dari local storage
@@ -142,11 +160,8 @@ export default function AbsenIn({ onLogin }) {
       }
     }, 1000); // Setiap detik
 
-    let countDownInterval;
-
     if (counter === 0) {
       setCountdown(5); // Hitungan mundur selama 10 menit (dalam detik)
-
       countDownInterval = setInterval(() => {
         setCountdown((prevCountdown) => {
           if (prevCountdown === 0) {
@@ -159,6 +174,8 @@ export default function AbsenIn({ onLogin }) {
     }
 
     getPosition(); // ambil koordinat saat kopmponen pertamakali dirender
+    getSetting();
+
     return () => {
       clearInterval(shotInterval);
       clearInterval(countDownInterval);
@@ -186,19 +203,15 @@ export default function AbsenIn({ onLogin }) {
             type="checkbox"
             role="switch"
             id="wfh"
-            hidden={!isAllowWfh ?? true}
+            hidden={!enableWfh}
           ></input>
-          <label
-            className="form-check-label"
-            for="wfh"
-            hidden={!isAllowWfh ?? true}
-          >
+          <label className="form-check-label" for="wfh" hidden={!enableWfh}>
             WFH
           </label>
         </div>
       </div>
       <div className="card-body">
-        {isUsingShot ? (
+        {usingShot ? (
           <div className="using-shot">
             <h5 className="card-title" hidden={counter === 0 || wfh}>
               Pilih kata yang muncul di layar
@@ -212,14 +225,14 @@ export default function AbsenIn({ onLogin }) {
                 {shot}
               </button>
               <button
-                onClick={repeatAbsen}
+                onClick={() => setCounter(counter - 1)}
                 className="btn btn-secondary w-100 m-1"
                 hidden={counter === 0 || wfh}
               >
                 {generate({ minLength: 3, maxLength: 10 }).toUpperCase()}
               </button>
               <button
-                onClick={repeatAbsen}
+                onClick={() => setCounter(counter - 1)}
                 className="btn btn-secondary w-100 m-1"
                 hidden={counter === 0 || wfh}
               >
