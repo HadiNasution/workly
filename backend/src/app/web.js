@@ -6,11 +6,14 @@ import { employeeRoute } from "../routes/employee-api.js";
 import { errorMiddleware } from "../middleware/error-middleware.js";
 
 export const web = express();
-
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://8v1mp609-5173.asse.devtunnels.ms",
+];
 web.use(express.json()); // body parser + url-encoded
 web.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })

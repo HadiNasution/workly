@@ -106,7 +106,7 @@ export default function AbsenIn({ onLogin }) {
         }
       );
       Swal.fire({
-        title: "Absen masuk berhasil!",
+        title: data.data,
         icon: "success",
         background: "#555555",
         color: "#FFFFFF",
@@ -131,15 +131,19 @@ export default function AbsenIn({ onLogin }) {
 
   // get koordinat latitude longitude
   const getPosition = () => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-      },
-      (error) => {
-        console.error("Error getting location:", error);
-      }
-    );
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLatitude(position.coords.latitude);
+          setLongitude(position.coords.longitude);
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
   };
 
   useEffect(() => {
@@ -181,7 +185,8 @@ export default function AbsenIn({ onLogin }) {
       clearInterval(countDownInterval);
     };
   }, [counter, shot]);
-
+  console.log("lat user from client : " + latitude);
+  console.log("long user from client : " + longitude);
   return (
     <div className="card text-center">
       <div className="card-header">

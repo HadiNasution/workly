@@ -142,6 +142,8 @@ const reset = async (request) => {
 
   const employee = await prismaClient.employee.findUnique({
     where: {
+      name: resetRequest.name,
+      nip: resetRequest.nip,
       email: resetRequest.email,
     },
   });
@@ -233,7 +235,9 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
       id: 1,
     },
   });
-
+  console.log("lat  from table : " + setting.office_latitude);
+  console.log("long server from table : " + setting.office_longitude);
+  console.log("radius server from table : " + setting.office_radius);
   const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
   const convertCurrent = new Date(currentUTCTime); // convert UTC ke lokal
   const localTime = convertCurrent.toLocaleString(); // waktu sekarang dalam lokal
@@ -271,7 +275,8 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
       );
     }
   }
-
+  console.log("lat  from client : " + latitude);
+  console.log("long server from client : " + longitude);
   logger.info("EMPLOYEE ABSEN IN BERHASIL");
   // // simpan ke tabel log
   // const note = `Employee ${absenRequest.name} absen masuk pada : ${currentUTCTime}`;
@@ -536,7 +541,7 @@ const getAttendanceRecapByDay = async (employee) => {
   });
 
   if (!attendance) throw new ResponseError(404, "Data kosong");
-  logger.info("GET ATTENDANCE RECAT BY DAY BERHASIL");
+  logger.info("GET ATTENDANCE RECAP BY DAY BERHASIL");
   return attendance;
 };
 
@@ -573,7 +578,7 @@ const getAttendanceRecapByMonth = async (employee, targetYear, targetMonth) => {
       throw new ResponseError(404, "Data kosong");
     }
 
-    logger.info("GET ATTENDANCE RECAT BY MONTH BERHASIL");
+    logger.info("GET ATTENDANCE RECAP BY MONTH BERHASIL");
     return attendance;
   } catch (error) {
     console.error("Error:", error);

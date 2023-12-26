@@ -33,19 +33,7 @@ export default function AbsenOut({ onLogin }) {
       confirmButtonText: "Ya",
       cancelButtonText: "Batal",
     }).then((result) => {
-      if (result.isConfirmed) {
-        absenOut();
-        Swal.fire({
-          title: "Absen keluar berhasil!",
-          icon: "success",
-          background: "#555555",
-          color: "#FFFFFF",
-          timer: 3000, // Durasi dalam milidetik
-          timerProgressBar: true,
-          toast: true,
-          position: "center",
-        });
-      }
+      if (result.isConfirmed) absenOut();
     });
   };
 
@@ -61,7 +49,16 @@ export default function AbsenOut({ onLogin }) {
           },
         }
       );
-      console.log(data);
+      Swal.fire({
+        title: data.data,
+        icon: "success",
+        background: "#555555",
+        color: "#FFFFFF",
+        timer: 3000, // Durasi dalam milidetik
+        timerProgressBar: true,
+        toast: true,
+        position: "center",
+      });
       onLogin(); // set state login di parent, agar card absen out diganti card absen in
     } catch (error) {
       console.log(error);
@@ -76,9 +73,9 @@ export default function AbsenOut({ onLogin }) {
     }
   };
 
-  useEffect(() => {
-    // get koordinat latitude longitude
-    const getPosition = () => {
+  // get koordinat latitude longitude
+  const getPosition = () => {
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setLatitude(position.coords.latitude);
@@ -88,8 +85,12 @@ export default function AbsenOut({ onLogin }) {
           console.error("Error getting location:", error);
         }
       );
-    };
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  };
 
+  useEffect(() => {
     getPosition(); // ambil koordinat saat kopmponen pertamakali dirender
   }, []);
 

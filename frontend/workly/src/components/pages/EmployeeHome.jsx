@@ -15,12 +15,12 @@ const EmployeeHome = () => {
   const name = localStorage.getItem("name");
   const email = localStorage.getItem("email");
   const role = localStorage.getItem("role");
-  const [absent, setAbsent] = useState(null);
+  const [absent, setAbsent] = useState(false);
   const [officeName, setOfficeName] = useState("");
-  let storedState = localStorage.getItem("has-absent");
+  let storedState = localStorage.getItem("isWorking");
 
   const handleAbsentState = () => {
-    localStorage.setItem("has-absent", !absent);
+    localStorage.setItem("isWorking", !absent);
     setAbsent(!absent);
   };
 
@@ -124,7 +124,7 @@ const EmployeeHome = () => {
       </div>
       <div className="row mt-3 mb-3">
         <div className="col">
-          {absent === "true" ? (
+          {storedState === "true" ? (
             <AbsenOut onLogin={handleAbsentState} />
           ) : (
             <AbsenIn onLogin={handleAbsentState} />
