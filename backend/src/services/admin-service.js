@@ -336,6 +336,17 @@ const createEmployee = async (request, admin) => {
 
   if (isNipDuplicate === 1) throw new ResponseError(400, "NIP Sudah ada");
   if (isEmailDuplicate === 1) throw new ResponseError(400, "Email Sudah ada");
+
+  // ambil password default dari table setting
+  const defaultPass = await prismaClient.setting.findFirst({
+    where: {
+      id: 1,
+    },
+    select: {
+      default_password: true,
+    },
+  });
+
   // logger.info("CREATE EMPLOYEE BERHASIL");
   // // simpan ke tabel log
   // const date = new Date();
@@ -351,7 +362,7 @@ const createEmployee = async (request, admin) => {
       name: createRequest.name,
       nip: createRequest.nip,
       email: createRequest.email,
-      password: await bcrypt.hash("#WGSmember", 10), // password default
+      password: await bcrypt.hash(defaultPass, 10), // password default
       role: createRequest.role,
       departmen: createRequest.departmen,
       join_date: createRequest.join_date,
@@ -523,6 +534,9 @@ const attendanceRecapByDay = async () => {
           id: true,
           name: true,
           nip: true,
+          picture: true,
+          role: true,
+          departmen: true,
         },
       },
     },
@@ -549,6 +563,9 @@ const attendanceRecapByDay = async () => {
           employee_id: item.employee ? item.employee.id : null,
           nip: item.employee ? item.employee.nip : null,
           name: item.employee ? item.employee.name : null,
+          picture: item.employee ? item.employee.picture : null,
+          role: item.employee ? item.employee.role : null,
+          departmen: item.employee ? item.employee.departmen : null,
         };
       })) ||
     [];
@@ -582,6 +599,8 @@ const attendanceRecapByMonth = async (targetYear, targetMonth) => {
           id: true,
           name: true,
           nip: true,
+          email: true,
+          picture: true,
         },
       },
     },
@@ -605,6 +624,8 @@ const attendanceRecapByMonth = async (targetYear, targetMonth) => {
           employee_id: item.employee ? item.employee.id : null,
           nip: item.employee ? item.employee.nip : null,
           name: item.employee ? item.employee.name : null,
+          email: item.employee ? item.employee.email : null,
+          picture: item.employee ? item.employee.picture : null,
         };
       })) ||
     [];
@@ -938,6 +959,7 @@ const getSetting = async () => {
       office_longitude: true,
       office_address: true,
       office_name: true,
+      default_password: true,
       minute_late_limit: true,
       wfh_limit: true,
       leaves_limit: true,
@@ -964,6 +986,7 @@ const updateSetting = async (request) => {
       office_longitude: true,
       office_address: true,
       office_name: true,
+      default_password: true,
       minute_late_limit: true,
       wfh_limit: true,
       leaves_limit: true,
@@ -982,6 +1005,8 @@ const updateSetting = async (request) => {
   const newAddress =
     settingUpdateRequest.office_address ?? oldData.office_address;
   const newName = settingUpdateRequest.office_name ?? oldData.office_name;
+  const newDefaultPass =
+    settingUpdateRequest.default_password ?? oldData.default_password;
   const newLateLimit =
     settingUpdateRequest.minute_late_limit ?? oldData.minute_late_limit;
   const newWfhLimit = settingUpdateRequest.wfh_limit ?? oldData.wfh_limit;
@@ -1007,6 +1032,7 @@ const updateSetting = async (request) => {
       office_longitude: newLongitude,
       office_address: newAddress,
       office_name: newName,
+      default_password: newDefaultPass,
       minute_late_limit: newLateLimit,
       wfh_limit: newWfhLimit,
       leaves_limit: newLeavesLimit,

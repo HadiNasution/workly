@@ -123,6 +123,7 @@ model Setting {
   office_longitude Decimal? 
   office_address String @db.VarChar(255)
   office_name String @db.VarChar(255)
+  default_password String @db.VarChar(255) @default("workly")
   minute_late_limit Int? @default(10)
   wfh_limit Int? @default(4)
   leaves_limit Int? @default(12)

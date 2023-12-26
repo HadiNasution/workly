@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 export default function ModalSetting() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
+  const [defaultPass, setDefaultPass] = useState("");
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [radius, setRadius] = useState(0);
@@ -32,6 +33,7 @@ export default function ModalSetting() {
         setLongitude(data.data.office_longitude);
         setAddress(data.data.office_address);
         setName(data.data.office_name);
+        setDefaultPass(data.data.default_password);
         setLateLimit(data.data.minute_late_limit);
         setLeavesLimit(data.data.leaves_limit);
         setWfhLimit(data.data.wfh_limit);
@@ -55,6 +57,7 @@ export default function ModalSetting() {
           office_longitude: longitude,
           office_address: address,
           office_name: name,
+          default_password: defaultPass,
           minute_late_limit: lateLimit,
           wfh_limit: wfhLimit,
           leaves_limit: leavesLimit,
@@ -159,42 +162,16 @@ export default function ModalSetting() {
                       <textarea
                         className="form-control"
                         id="office-address"
-                        rows="3"
+                        rows="9"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                       ></textarea>
-                    </div>
-                    <div className="form-check form-switch">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        role="switch"
-                        id="using-shot"
-                        checked={usingShot}
-                        onChange={(e) => setUsingShot(e.target.checked)}
-                      ></input>
-                      <label className="form-check-label" for="using-shot">
-                        Gunakan Shot (2 langkah validasi absensi)
-                      </label>
-                    </div>
-                    <div className="form-check form-switch">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        role="switch"
-                        id="enable-wfh"
-                        checked={enableWfh}
-                        onChange={(e) => setEnableWfh(e.target.checked)}
-                      ></input>
-                      <label className="form-check-label" for="enable-wfh">
-                        Izinkan Work From Home
-                      </label>
                     </div>
                   </div>
                   <div className="col">
                     <div className="mb-3">
                       <label for="office-latitude" className="form-label">
-                        Koordinat Latitude
+                        Koordinat Latitude kantor
                       </label>
                       <input
                         type="number"
@@ -206,7 +183,7 @@ export default function ModalSetting() {
                     </div>
                     <div className="mb-3">
                       <label for="office-longitude" className="form-label">
-                        Koordinat Longitude
+                        Koordinat Longitude kantor
                       </label>
                       <input
                         type="number"
@@ -226,6 +203,18 @@ export default function ModalSetting() {
                         id="office-radius"
                         value={radius}
                         onChange={(e) => setRadius(e.target.value)}
+                      ></input>
+                    </div>
+                    <div className="mb-3">
+                      <label for="default-password" className="form-label">
+                        Password default (untuk pengguna baru)
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="default-password"
+                        value={defaultPass}
+                        onChange={(e) => setDefaultPass(e.target.value)}
                       ></input>
                     </div>
                   </div>
@@ -265,6 +254,32 @@ export default function ModalSetting() {
                         value={leavesLimit}
                         onChange={(e) => setLeavesLimit(e.target.value)}
                       ></input>
+                    </div>
+                    <div className="form-check form-switch">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="using-shot"
+                        checked={usingShot}
+                        onChange={(e) => setUsingShot(e.target.checked)}
+                      ></input>
+                      <label className="form-check-label" for="using-shot">
+                        Gunakan Shot (2 langkah validasi absensi)
+                      </label>
+                    </div>
+                    <div className="form-check form-switch">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="enable-wfh"
+                        checked={enableWfh}
+                        onChange={(e) => setEnableWfh(e.target.checked)}
+                      ></input>
+                      <label className="form-check-label" for="enable-wfh">
+                        Izinkan Work From Home
+                      </label>
                     </div>
                   </div>
                 </div>

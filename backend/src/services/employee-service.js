@@ -286,6 +286,7 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
       time_in: currentUTCTime,
       is_late: isLate,
       is_wfh: !!wfh,
+      is_working: true,
       latitude_in: latitude,
       longitude_in: longitude,
       employee_id: employee.id,
@@ -389,7 +390,6 @@ const absenOut = async (latitude, longitude, employee) => {
     },
     data: {
       time_out: currentUTCTime,
-      is_working: true,
       latitude_out: latitude,
       longitude_out: longitude,
     },
@@ -590,6 +590,7 @@ const getSetting = async () => {
       office_longitude: true,
       office_address: true,
       office_name: true,
+      default_password: true,
       minute_late_limit: true,
       wfh_limit: true,
       leaves_limit: true,

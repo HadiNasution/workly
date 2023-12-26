@@ -7,10 +7,21 @@ export default function MonthCardAdmin(data) {
       <div className="card-header">
         <div className="d-flex justify-content-between align-items-center">
           <h5>
-            <BsPersonFill className="me-2" />
+            <img
+              src={
+                item.picture
+                  ? `http://localhost:3000/${item.picture}`
+                  : "/assets/avatar-default.svg"
+              }
+              height={50}
+              width={50}
+              className="rounded-circle me-3"
+            ></img>
             {item.name}
           </h5>
-          <p>{item.nip}</p>
+          <p>
+            {item.nip} • {item.email}
+          </p>
         </div>
       </div>
       <div className="card-body">

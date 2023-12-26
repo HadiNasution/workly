@@ -38,19 +38,37 @@ export default function RecapDayAdmin() {
   const showRecap = () => {
     return dataRecap.map((item) => (
       <div className="card mt-2" key={item.employee_id}>
-        <div className="card-header">
-          <div className="d-flex justify-content-between align-items-end">
-            <p>
-              <b>
-                <BsPersonFill className="me-1 mb-1" />
-                {item.name}
-              </b>{" "}
-              <BsGeoAltFill className="me-1 ms-3 mb-1" />
-              {item.wfh ? "WFH" : "Dikantor"}
-              <BsClockFill className="me-1 ms-3 mb-1" />
-              in {timeFormat(item.time_in)} • out{" "}
-              {item.time_out ? timeFormat(item.time_out) : "..."}
-            </p>
+        <div
+          className="card-header"
+          style={{ paddingBottom: 0, paddingTop: 14 }}
+        >
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex">
+              <div>
+                <img
+                  src={
+                    item.picture
+                      ? `http://localhost:3000/${item.picture}`
+                      : "/assets/avatar-default.svg"
+                  }
+                  height={50}
+                  width={50}
+                  className="rounded-circle me-3"
+                ></img>
+              </div>
+              <div className="d-inline align-items-center">
+                <p>
+                  <b>{item.name}</b> <br></br>
+                  <BsGeoAltFill className="me-1 mb-1" />
+                  {item.wfh ? "WFH" : "Dikantor"}
+                  <BsClockFill className="me-1 ms-3 mb-1" />
+                  in {timeFormat(item.time_in)} • out{" "}
+                  {item.time_out ? timeFormat(item.time_out) : "..."}
+                  <BsPersonFill className="me-1 ms-3 mb-1" /> {item.role} •{" "}
+                  {item.departmen}
+                </p>
+              </div>
+            </div>
             <p>
               {item.is_late ? (
                 <span style={{ color: "#ff4d52" }}>Terlambat</span>
