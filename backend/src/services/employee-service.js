@@ -235,9 +235,7 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
       id: 1,
     },
   });
-  console.log("lat  from table : " + setting.office_latitude);
-  console.log("long server from table : " + setting.office_longitude);
-  console.log("radius server from table : " + setting.office_radius);
+
   const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
   const convertCurrent = new Date(currentUTCTime); // convert UTC ke lokal
   const localTime = convertCurrent.toLocaleString(); // waktu sekarang dalam lokal
@@ -249,9 +247,8 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
 
   // Memeriksa apakah waktu absen melebihi batas waktu yang ditentukan
   const isLate = localTime > localTimeLimit;
-
   // Jika tidak WFH, cek koordinat absen
-  if (wfh === false) {
+  if (wfh === "false") {
     // koordinat zona geofencing kantor WGS Bandung
     const geofenceCoordinates = {
       latitude: setting.office_latitude,
@@ -275,8 +272,6 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
       );
     }
   }
-  console.log("lat  from client : " + latitude);
-  console.log("long server from client : " + longitude);
   logger.info("EMPLOYEE ABSEN IN BERHASIL");
   // // simpan ke tabel log
   // const note = `Employee ${absenRequest.name} absen masuk pada : ${currentUTCTime}`;

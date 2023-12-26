@@ -126,7 +126,7 @@ export default function ModalPengajuan() {
                 </div>
                 <div className="mb-3">
                   <label
-                    for="exampleFormControlTextarea1"
+                    htmlFor="exampleFormControlTextarea1"
                     className="form-label"
                   >
                     Catatan
@@ -150,7 +150,7 @@ export default function ModalPengajuan() {
                   />
                 </div>
                 <div className="mb-3">
-                  <label for="datepicker" className="form-label">
+                  <label htmlFor="datepicker" className="form-label">
                     Waktu mulai:
                   </label>
                   <input
@@ -162,7 +162,7 @@ export default function ModalPengajuan() {
                   ></input>
                 </div>
                 <div className="mb-3">
-                  <label for="datepicker" className="form-label">
+                  <label htmlFor="datepicker" className="form-label">
                     Waktu selesai:
                   </label>
                   <input

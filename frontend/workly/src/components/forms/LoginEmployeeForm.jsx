@@ -61,7 +61,7 @@ export default function LoginEmployeeForm() {
             ⛔ {errorMsg}
           </div>
         )}
-        <label for="employee-email" className="form-label">
+        <label htmlFor="employee-email" className="form-label">
           Email
         </label>
         <input
@@ -73,7 +73,7 @@ export default function LoginEmployeeForm() {
         ></input>
       </div>
       <div className="mb-3">
-        <label for="employee-password" className="form-label">
+        <label htmlFor="employee-password" className="form-label">
           Password
         </label>
         <input

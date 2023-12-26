@@ -33,8 +33,6 @@ export default function ResetPasswordEmployee() {
         }
       );
       setModalData(data.data);
-      localStorage.setItem("token", null);
-      localStorage.setItem("token-expires-at", null);
     } catch (error) {
       // console.log(error);
       if (error.response) {

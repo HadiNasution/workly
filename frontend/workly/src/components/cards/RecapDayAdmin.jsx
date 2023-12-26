@@ -36,8 +36,8 @@ export default function RecapDayAdmin() {
   };
 
   const showRecap = () => {
-    return dataRecap.map((item) => (
-      <div className="card mt-2" key={item.employee_id}>
+    return dataRecap.map((item, index) => (
+      <div className="card mt-2" key={index}>
         <div
           className="card-header"
           style={{ paddingBottom: 0, paddingTop: 14 }}

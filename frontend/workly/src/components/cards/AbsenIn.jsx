@@ -120,7 +120,7 @@ export default function AbsenIn({ onLogin }) {
       console.log(error);
       Swal.fire({
         title: "Absen masuk gagal!",
-        text: "Pastikan akses lokasi disitus ini sudah diizinkan",
+        text: error.response.data.errors,
         icon: "error",
         background: "#555555",
         color: "#FFFFFF",
@@ -139,7 +139,8 @@ export default function AbsenIn({ onLogin }) {
         },
         (error) => {
           console.error("Error getting location:", error);
-        }
+        },
+        { enableHighAccuracy: true }
       );
     } else {
       console.error("Geolocation is not supported by this browser.");
@@ -185,8 +186,6 @@ export default function AbsenIn({ onLogin }) {
       clearInterval(countDownInterval);
     };
   }, [counter, shot]);
-  console.log("lat user from client : " + latitude);
-  console.log("long user from client : " + longitude);
   return (
     <div className="card text-center">
       <div className="card-header">
@@ -210,7 +209,7 @@ export default function AbsenIn({ onLogin }) {
             id="wfh"
             hidden={!enableWfh}
           ></input>
-          <label className="form-check-label" for="wfh" hidden={!enableWfh}>
+          <label className="form-check-label" htmlFor="wfh" hidden={!enableWfh}>
             WFH
           </label>
         </div>

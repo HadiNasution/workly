@@ -1,6 +1,6 @@
 import LoginAdminForm from "../forms/LoginAdminForm";
 import LoginEmployeeForm from "../forms/LoginEmployeeForm";
-import "../../css/LoginPage.css";
+import "../../css/main.css";
 
 export default function LoginPage() {
   return (

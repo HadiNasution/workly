@@ -33,10 +33,6 @@ export default function ResetPasswordAdmin() {
         }
       );
       setModalData(data.data);
-      // hapus local storage
-      localStorage.removeItem("token");
-      localStorage.removeItem("is-super-admin");
-      localStorage.removeItem("token-expires-at");
     } catch (error) {
       if (error.response) {
         console.error("Server Response:", error.response.data.errors);

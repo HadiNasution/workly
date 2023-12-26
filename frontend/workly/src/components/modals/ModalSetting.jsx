@@ -142,7 +142,7 @@ export default function ModalSetting() {
                   <div className="col">
                     <div className="mb-3">
                       <label
-                        for="exampleFormControlInput1"
+                        htmlFor="exampleFormControlInput1"
                         className="form-label"
                       >
                         Nama perusahaan
@@ -156,7 +156,7 @@ export default function ModalSetting() {
                       ></input>
                     </div>
                     <div className="mb-3">
-                      <label for="office-address" className="form-label">
+                      <label htmlFor="office-address" className="form-label">
                         Alamat perusahaan
                       </label>
                       <textarea
@@ -170,7 +170,7 @@ export default function ModalSetting() {
                   </div>
                   <div className="col">
                     <div className="mb-3">
-                      <label for="office-latitude" className="form-label">
+                      <label htmlFor="office-latitude" className="form-label">
                         Koordinat Latitude kantor
                       </label>
                       <input
@@ -182,7 +182,7 @@ export default function ModalSetting() {
                       ></input>
                     </div>
                     <div className="mb-3">
-                      <label for="office-longitude" className="form-label">
+                      <label htmlFor="office-longitude" className="form-label">
                         Koordinat Longitude kantor
                       </label>
                       <input
@@ -194,7 +194,7 @@ export default function ModalSetting() {
                       ></input>
                     </div>
                     <div className="mb-3">
-                      <label for="office-radius" className="form-label">
+                      <label htmlFor="office-radius" className="form-label">
                         Zona absensi (Radius dalam meter)
                       </label>
                       <input
@@ -206,7 +206,7 @@ export default function ModalSetting() {
                       ></input>
                     </div>
                     <div className="mb-3">
-                      <label for="default-password" className="form-label">
+                      <label htmlFor="default-password" className="form-label">
                         Password default (untuk pengguna baru)
                       </label>
                       <input
@@ -220,7 +220,7 @@ export default function ModalSetting() {
                   </div>
                   <div className="col">
                     <div className="mb-3">
-                      <label for="minute-late-limit" className="form-label">
+                      <label htmlFor="minute-late-limit" className="form-label">
                         Toleransi waktu terlambat (menit)
                       </label>
                       <input
@@ -232,7 +232,7 @@ export default function ModalSetting() {
                       ></input>
                     </div>
                     <div className="mb-3">
-                      <label for="wfh-limit" className="form-label">
+                      <label htmlFor="wfh-limit" className="form-label">
                         Batas WFH dalam 1 bulan
                       </label>
                       <input
@@ -244,7 +244,7 @@ export default function ModalSetting() {
                       ></input>
                     </div>
                     <div className="mb-3">
-                      <label for="leaves-limit" className="form-label">
+                      <label htmlFor="leaves-limit" className="form-label">
                         Batas Cuti dalam 1 tahun
                       </label>
                       <input
@@ -264,7 +264,7 @@ export default function ModalSetting() {
                         checked={usingShot}
                         onChange={(e) => setUsingShot(e.target.checked)}
                       ></input>
-                      <label className="form-check-label" for="using-shot">
+                      <label className="form-check-label" htmlFor="using-shot">
                         Gunakan Shot (2 langkah validasi absensi)
                       </label>
                     </div>
@@ -277,7 +277,7 @@ export default function ModalSetting() {
                         checked={enableWfh}
                         onChange={(e) => setEnableWfh(e.target.checked)}
                       ></input>
-                      <label className="form-check-label" for="enable-wfh">
+                      <label className="form-check-label" htmlFor="enable-wfh">
                         Izinkan Work From Home
                       </label>
                     </div>

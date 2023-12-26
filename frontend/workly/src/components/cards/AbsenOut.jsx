@@ -64,7 +64,7 @@ export default function AbsenOut({ onLogin }) {
       console.log(error);
       Swal.fire({
         title: "Absen keluar gagal!",
-        text: "Pastikan akses lokasi disitus ini sudah diizinkan",
+        text: error.response.data.errors,
         icon: "error",
         background: "#555555",
         color: "#FFFFFF",
@@ -83,7 +83,8 @@ export default function AbsenOut({ onLogin }) {
         },
         (error) => {
           console.error("Error getting location:", error);
-        }
+        },
+        { enableHighAccuracy: true }
       );
     } else {
       console.error("Geolocation is not supported by this browser.");
