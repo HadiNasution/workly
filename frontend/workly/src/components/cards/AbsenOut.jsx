@@ -17,9 +17,10 @@ import {
   year,
 } from "../../utils/date-time";
 
-export default function AbsenOut({ onLogin }) {
+export default function AbsenOut({ isWorked }) {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
+  const [disable, setDisable] = useState(isWorked);
 
   const confirmOut = () => {
     Swal.fire({
@@ -34,7 +35,10 @@ export default function AbsenOut({ onLogin }) {
       confirmButtonText: "Ya",
       cancelButtonText: "Batal",
     }).then((result) => {
-      if (result.isConfirmed) absenOut();
+      if (result.isConfirmed) {
+        setDisable(true);
+        absenOut();
+      }
     });
   };
 
@@ -51,7 +55,6 @@ export default function AbsenOut({ onLogin }) {
         }
       );
       toastSuccess(data.data, "See you!");
-      onLogin(); // set state login di parent, agar card absen out diganti card absen in
     } catch (error) {
       console.log(error);
       alertError("Oops! Absen keluar gagal", error.response.data.errors);
@@ -83,7 +86,7 @@ export default function AbsenOut({ onLogin }) {
     };
     getPosition();
   }, []);
-
+  console.log(disable);
   return (
     <div className="card text-center">
       <div className="card-header">
@@ -101,7 +104,11 @@ export default function AbsenOut({ onLogin }) {
         </div>
       </div>
       <div className="card-body">
-        <button onClick={confirmOut} className="btn btn-primary w-100 m-1">
+        <button
+          onClick={confirmOut}
+          className="btn btn-primary w-100 m-1"
+          disabled={disable}
+        >
           Absen keluar
         </button>
       </div>

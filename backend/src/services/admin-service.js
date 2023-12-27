@@ -347,22 +347,15 @@ const createEmployee = async (request, admin) => {
     },
   });
 
-  // logger.info("CREATE EMPLOYEE BERHASIL");
-  // // simpan ke tabel log
-  // const date = new Date();
-  // const note = `Admin ${admin.name} Create employee ${createRequest.name} data pada : ${date}`;
-  // await prismaClient.log.create({
-  //   data: {
-  //     date,
-  //     note,
-  //   },
-  // });
-  return prismaClient.employee.create({
+  const pass = defaultPass.default_password.toString();
+
+  // create user
+  await prismaClient.employee.create({
     data: {
       name: createRequest.name,
       nip: createRequest.nip,
       email: createRequest.email,
-      password: await bcrypt.hash(defaultPass, 10), // password default
+      password: await bcrypt.hash(pass, 10), // password default
       role: createRequest.role,
       departmen: createRequest.departmen,
       join_date: createRequest.join_date,
@@ -377,6 +370,36 @@ const createEmployee = async (request, admin) => {
       departmen: true,
       join_date: true,
       quit_date: true,
+    },
+  });
+
+  // ambil id user yang baru ditambahkan
+  const newEmployeeId = await prismaClient.employee.findUnique({
+    where: {
+      nip: createRequest.nip,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  logger.info("CREATE EMPLOYEE BERHASIL");
+  // // simpan ke tabel log
+  // const date = new Date();
+  // const note = `Admin ${admin.name} Create employee ${createRequest.name} data pada : ${date}`;
+  // await prismaClient.log.create({
+  //   data: {
+  //     date,
+  //     note,
+  //   },
+  // });
+
+  // create recap untuk user baru
+  const currentDate = new Date();
+  return prismaClient.attendanceRecap.create({
+    data: {
+      date: currentDate,
+      employee_id: newEmployeeId.id,
     },
   });
 };
@@ -960,6 +983,8 @@ const getSetting = async () => {
       office_address: true,
       office_name: true,
       default_password: true,
+      time_in: true,
+      time_out: true,
       minute_late_limit: true,
       wfh_limit: true,
       leaves_limit: true,
@@ -987,6 +1012,8 @@ const updateSetting = async (request) => {
       office_address: true,
       office_name: true,
       default_password: true,
+      time_in: true,
+      time_out: true,
       minute_late_limit: true,
       wfh_limit: true,
       leaves_limit: true,
@@ -1007,6 +1034,8 @@ const updateSetting = async (request) => {
   const newName = settingUpdateRequest.office_name ?? oldData.office_name;
   const newDefaultPass =
     settingUpdateRequest.default_password ?? oldData.default_password;
+  const newTimeIn = settingUpdateRequest.time_in ?? oldData.time_in;
+  const newTimeOut = settingUpdateRequest.time_out ?? oldData.time_out;
   const newLateLimit =
     settingUpdateRequest.minute_late_limit ?? oldData.minute_late_limit;
   const newWfhLimit = settingUpdateRequest.wfh_limit ?? oldData.wfh_limit;
@@ -1033,6 +1062,8 @@ const updateSetting = async (request) => {
       office_address: newAddress,
       office_name: newName,
       default_password: newDefaultPass,
+      time_in: newTimeIn,
+      time_out: newTimeOut,
       minute_late_limit: newLateLimit,
       wfh_limit: newWfhLimit,
       leaves_limit: newLeavesLimit,

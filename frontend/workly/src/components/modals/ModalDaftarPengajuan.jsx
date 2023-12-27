@@ -44,7 +44,7 @@ export default function ModalDaftarPengajuan() {
   };
 
   const showRecap = () => {
-    if (recap) {
+    if (recap.length !== 0) {
       return recap.map((item) => (
         <div key={item.id}>
           <div className="card w-100 m-2">
@@ -100,7 +100,17 @@ export default function ModalDaftarPengajuan() {
         </div>
       ));
     } else {
-      return <i>Anda belum mengajukan apapun...</i>;
+      return (
+        <div className="text-center">
+          <img
+            src="../../../public/assets/horse-glass.gif"
+            alt="sleep illustration"
+            width={200}
+            height={200}
+          />
+          <h6 className="text-secondary">Anda belum mengajukan apapun...</h6>
+        </div>
+      );
     }
   };
 

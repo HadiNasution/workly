@@ -6,6 +6,8 @@ export default function ModalSetting() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [defaultPass, setDefaultPass] = useState("");
+  const [timeIn, setTimeIn] = useState(0);
+  const [timeOut, setTimeOut] = useState(0);
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [radius, setRadius] = useState(0);
@@ -34,6 +36,8 @@ export default function ModalSetting() {
         setAddress(data.data.office_address);
         setName(data.data.office_name);
         setDefaultPass(data.data.default_password);
+        setTimeIn(data.data.time_in);
+        setTimeOut(data.data.time_out);
         setLateLimit(data.data.minute_late_limit);
         setLeavesLimit(data.data.leaves_limit);
         setWfhLimit(data.data.wfh_limit);
@@ -58,6 +62,8 @@ export default function ModalSetting() {
           office_address: address,
           office_name: name,
           default_password: defaultPass,
+          time_in: timeIn,
+          time_out: timeOut,
           minute_late_limit: lateLimit,
           wfh_limit: wfhLimit,
           leaves_limit: leavesLimit,
@@ -146,10 +152,36 @@ export default function ModalSetting() {
                       <textarea
                         className="form-control"
                         id="office-address"
-                        rows="9"
+                        rows="6"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                       ></textarea>
+                    </div>
+                    <div className="form-check form-switch">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="using-shot"
+                        checked={usingShot}
+                        onChange={(e) => setUsingShot(e.target.checked)}
+                      ></input>
+                      <label className="form-check-label" htmlFor="using-shot">
+                        Gunakan Shot (2 langkah validasi absensi)
+                      </label>
+                    </div>
+                    <div className="form-check form-switch">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="enable-wfh"
+                        checked={enableWfh}
+                        onChange={(e) => setEnableWfh(e.target.checked)}
+                      ></input>
+                      <label className="form-check-label" htmlFor="enable-wfh">
+                        Izinkan Work From Home
+                      </label>
                     </div>
                   </div>
                   <div className="col">
@@ -239,31 +271,35 @@ export default function ModalSetting() {
                         onChange={(e) => setLeavesLimit(e.target.value)}
                       ></input>
                     </div>
-                    <div className="form-check form-switch">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        role="switch"
-                        id="using-shot"
-                        checked={usingShot}
-                        onChange={(e) => setUsingShot(e.target.checked)}
-                      ></input>
-                      <label className="form-check-label" htmlFor="using-shot">
-                        Gunakan Shot (2 langkah validasi absensi)
+                    <div className="mb-3">
+                      <label
+                        htmlFor="exampleFormControlInput1"
+                        className="form-label"
+                      >
+                        Jam masuk
                       </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="time-in"
+                        value={timeIn}
+                        onChange={(e) => setTimeIn(e.target.value)}
+                      ></input>
                     </div>
-                    <div className="form-check form-switch">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        role="switch"
-                        id="enable-wfh"
-                        checked={enableWfh}
-                        onChange={(e) => setEnableWfh(e.target.checked)}
-                      ></input>
-                      <label className="form-check-label" htmlFor="enable-wfh">
-                        Izinkan Work From Home
+                    <div className="mb-3">
+                      <label
+                        htmlFor="exampleFormControlInput1"
+                        className="form-label"
+                      >
+                        Jam keluar
                       </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="time-out"
+                        value={timeOut}
+                        onChange={(e) => setTimeOut(e.target.value)}
+                      ></input>
                     </div>
                   </div>
                 </div>

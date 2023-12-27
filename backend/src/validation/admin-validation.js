@@ -89,6 +89,8 @@ const adminUpdateSetting = Joi.object({
   office_address: Joi.string().max(255).optional(),
   office_name: Joi.string().max(255).optional(),
   default_password: Joi.string().max(255).optional(),
+  time_in: Joi.number().optional(),
+  time_out: Joi.number().optional(),
   minute_late_limit: Joi.number().min(1).optional(),
   wfh_limit: Joi.number().optional(),
   leaves_limit: Joi.number().optional(),

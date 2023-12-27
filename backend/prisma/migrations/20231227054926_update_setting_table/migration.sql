@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Setting" ADD COLUMN     "time_in" INTEGER NOT NULL DEFAULT 8,
+ADD COLUMN     "time_out" INTEGER NOT NULL DEFAULT 17;

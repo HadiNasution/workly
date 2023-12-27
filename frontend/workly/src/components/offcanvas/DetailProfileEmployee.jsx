@@ -52,17 +52,11 @@ export default function DetailProfileEmployee() {
         }
       );
       if (data.data) {
-        // console.log(data.data[0].picture);
+        console.log(data.data);
         setProfile(data.data);
         localStorage.setItem("avatar", data.data[0].picture);
       }
-    } catch (error) {
-      console.log(error);
-      if (error.response) {
-        console.error("Server Response:", error.response.data);
-      }
-      alertError("Data profil kosong", error.response.data.errors);
-    }
+    } catch (error) {}
   };
 
   const updateFotoProfile = async (event) => {

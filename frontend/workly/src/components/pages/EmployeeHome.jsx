@@ -15,13 +15,33 @@ const EmployeeHome = () => {
   const name = localStorage.getItem("name");
   const email = localStorage.getItem("email");
   const role = localStorage.getItem("role");
-  const [absent, setAbsent] = useState(false);
+  const [worked, setWorked] = useState(false);
+  const [isWorked, setIsWorked] = useState(false);
   const [officeName, setOfficeName] = useState("");
-  let storedState = localStorage.getItem("isWorking");
 
   const handleAbsentState = () => {
-    localStorage.setItem("isWorking", !absent);
-    setAbsent(!absent);
+    setIsWorked(!worked);
+  };
+
+  const getAttendance = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const { data } = await axios.get(
+        `http://localhost:3000/api/employee/attendance/day`,
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setWorked(data.data.is_working);
+      setIsWorked(data.data.is_working);
+    } catch (error) {
+      // if (error.response) {
+      //   console.error("Server Response:", error.response.data);
+      // }
+    }
   };
 
   const logoutEmployee = async () => {
@@ -85,12 +105,13 @@ const EmployeeHome = () => {
     };
 
     getSetting();
+    getAttendance();
     checkTokenExpiration();
-    setAbsent(storedState);
     const intervalId = setInterval(checkTokenExpiration, 60000);
 
     return () => clearInterval(intervalId);
-  }, [storedState, absent]);
+  }, [worked]);
+
   return (
     <>
       <div className="row g-0 mt-5">
@@ -117,8 +138,8 @@ const EmployeeHome = () => {
       </div>
       <div className="row mt-3 mb-3">
         <div className="col">
-          {storedState === "true" ? (
-            <AbsenOut onLogin={handleAbsentState} />
+          {isWorked ? (
+            <AbsenOut isWorked={worked} />
           ) : (
             <AbsenIn onLogin={handleAbsentState} />
           )}

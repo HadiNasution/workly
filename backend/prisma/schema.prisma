@@ -125,6 +125,8 @@ model Setting {
   office_name String @db.VarChar(255)
   default_password String @db.VarChar(255) @default("workly")
   minute_late_limit Int? @default(10)
+  time_in Int @default(8)
+  time_out Int @default(17)
   wfh_limit Int? @default(4)
   leaves_limit Int? @default(12)
   enable_wfh Boolean @default(true)

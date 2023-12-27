@@ -230,6 +230,7 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
       office_latitude: true,
       office_longitude: true,
       minute_late_limit: true,
+      time_in: true,
     },
     where: {
       id: 1,
@@ -244,7 +245,7 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
   const localTime = convertCurrent.toLocaleString(); // waktu sekarang dalam lokal
 
   const timeLimitUTC = new Date();
-  timeLimitUTC.setHours(8, setting.minute_late_limit, 0, 0); // Waktu batas absen (08:00)
+  timeLimitUTC.setHours(setting.time_in, setting.minute_late_limit, 0, 0); // Waktu batas absen (08:00)
   const convertTimeLimit = new Date(timeLimitUTC);
   const localTimeLimit = convertTimeLimit.toLocaleString();
 
@@ -289,7 +290,7 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
       time_in: currentUTCTime,
       is_late: isLate,
       is_wfh: isWfh,
-      is_working: true,
+      is_working: false,
       latitude_in: latitude,
       longitude_in: longitude,
       employee_id: employee.id,
@@ -376,6 +377,7 @@ const absenOut = async (latitude, longitude, employee) => {
       );
     }
   }
+
   const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
   logger.info("EMPLOYEE ABSEN OUT BERHASIL");
   // // simpan ke tabel log
@@ -394,6 +396,7 @@ const absenOut = async (latitude, longitude, employee) => {
       time_out: currentUTCTime,
       latitude_out: latitude,
       longitude_out: longitude,
+      is_working: true,
     },
   });
 };
@@ -593,6 +596,8 @@ const getSetting = async () => {
       office_address: true,
       office_name: true,
       default_password: true,
+      time_in: true,
+      time_out: true,
       minute_late_limit: true,
       wfh_limit: true,
       leaves_limit: true,
