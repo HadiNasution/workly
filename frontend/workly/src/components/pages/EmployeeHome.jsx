@@ -59,11 +59,7 @@ const EmployeeHome = () => {
       // Jika logout berhasil, hapus token dari session storage
       if (data.data) {
         sessionStorage.clear();
-        localStorage.removeItem("name");
-        localStorage.removeItem("avatar");
-        localStorage.removeItem("shot");
-        localStorage.removeItem("email");
-        localStorage.removeItem("role");
+        localStorage.clear();
         toastSuccess("Logout berhasil", "See you!");
         // lalu redirect ke halaman login
         navigate("/");

@@ -964,6 +964,9 @@ const log = async (targetYear, targetMonth) => {
       date: true,
       note: true,
     },
+    orderBy: {
+      date: "desc",
+    },
   });
 
   if (!result || result.length === 0)

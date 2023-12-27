@@ -42,7 +42,7 @@ const AdminHome = () => {
   };
 
   const showSuperAdminMenu = () => {
-    if (superAdmin === "false") {
+    if (superAdmin === "true") {
       return (
         <>
           <div className="col">
@@ -188,7 +188,7 @@ const AdminHome = () => {
           </div>
         </div>
       </div>
-      <div className="row">
+      <div className="row mt-4">
         <div className="col">
           <RecapAdminTab />
         </div>

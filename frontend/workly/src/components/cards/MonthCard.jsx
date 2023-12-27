@@ -16,7 +16,7 @@ export default function MonthCard(data) {
     let jam = dateObject.getHours();
     let menit = dateObject.getMinutes();
 
-    let formatWaktu = `${jam}:${menit}`;
+    let formatWaktu = `${jam}:${menit < 10 ? "0" : ""}${menit}`;
     return formatWaktu;
   };
 

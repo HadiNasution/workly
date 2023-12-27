@@ -1,7 +1,31 @@
 import axios from "axios";
 import { toastSuccess, alertError } from "../alert/SweetAlert";
+import { useEffect, useState } from "react";
 
 export default function ModalPengajuan() {
+  const [wfh, setWfh] = useState(true);
+
+  const getSetting = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const { data } = await axios.get(
+        "http://localhost:3000/api/employee/setting",
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (data.data) {
+        setWfh(data.data.enable_wfh);
+      }
+    } catch (error) {
+      console.log(error);
+      toastWarning("Data setting kosong");
+    }
+  };
+
   const kirimPengajuan = async (event) => {
     event.preventDefault();
 
@@ -44,6 +68,10 @@ export default function ModalPengajuan() {
       alertError("Ops! Pengajuan gagal dikirim", error.response.data.errors);
     }
   };
+
+  useEffect(() => {
+    getSetting();
+  }, []);
 
   return (
     <>
@@ -104,7 +132,7 @@ export default function ModalPengajuan() {
                     <option value="Sakit">Sakit</option>
                     <option value="Cuti">Cuti</option>
                     <option value="Izin">Izin</option>
-                    <option value="WFH">WFH</option>
+                    {wfh ? <option value="WFH">WFH</option> : null}
                   </select>
                 </div>
                 <div className="mb-3">

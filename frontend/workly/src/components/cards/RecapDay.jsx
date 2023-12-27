@@ -26,7 +26,9 @@ export default function RecapDay() {
     const tanggal = dateObject.getDate();
     const bulan = dateObject.getMonth() + 1;
     const tahun = dateObject.getFullYear();
-    return `${jam}:${menit} ${hari} ${tanggal}/${bulan}/${tahun}`;
+    return `${jam}:${
+      menit < 10 ? "0" : ""
+    }${menit} ${hari} ${tanggal}/${bulan}/${tahun}`;
   };
 
   const getRecap = async () => {

@@ -8,19 +8,14 @@ import {
 import axios from "axios";
 import Swal from "sweetalert2";
 import { toastSuccess, alertError } from "../alert/SweetAlert";
-import {
-  dayString,
-  monthString,
-  date,
-  hours,
-  minutes,
-  year,
-} from "../../utils/date-time";
+import { dayString, monthString, date, year } from "../../utils/date-time";
 
 export default function AbsenOut({ isWorked }) {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [disable, setDisable] = useState(isWorked);
+  const [hours, setHours] = useState(new Date().getHours());
+  const [minutes, setMinutes] = useState(new Date().getMinutes());
 
   const confirmOut = () => {
     Swal.fire({
@@ -84,9 +79,19 @@ export default function AbsenOut({ isWorked }) {
         );
       }
     };
+
     getPosition();
+
+    const intervalId = setInterval(() => {
+      setHours(new Date().getHours());
+      setMinutes(new Date().getMinutes());
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
-  console.log(disable);
+
   return (
     <div className="card text-center">
       <div className="card-header">
@@ -95,7 +100,8 @@ export default function AbsenOut({ isWorked }) {
             <BsArrowLeftSquareFill className="me-1" /> Absen Keluar
           </div>
           <div className="d-flex align-items-center me-3 ms-3">
-            <BsClockFill className="me-1" /> {hours}:{minutes}
+            <BsClockFill className="me-1" /> {hours}:{minutes < 10 ? "0" : ""}
+            {minutes}
           </div>
           <div className="d-flex align-items-center ms-3">
             <BsCalendar2Fill className="me-1" /> {dayString()} {date}/

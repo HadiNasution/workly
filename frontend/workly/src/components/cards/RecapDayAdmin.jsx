@@ -30,7 +30,7 @@ export default function RecapDayAdmin() {
 
     const jam = dateOutObject.getHours();
     const menit = dateOutObject.getMinutes();
-    return `${jam}:${menit}`;
+    return `${jam}:${menit < 10 ? "0" : ""}${menit}`;
   };
 
   const showRecap = () => {

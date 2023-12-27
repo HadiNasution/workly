@@ -52,7 +52,6 @@ export default function DetailProfileEmployee() {
         }
       );
       if (data.data) {
-        console.log(data.data);
         setProfile(data.data);
         localStorage.setItem("avatar", data.data[0].picture);
       }
@@ -107,11 +106,7 @@ export default function DetailProfileEmployee() {
       // Jika logout berhasil, hapus token dari session storage
       if (data.data) {
         sessionStorage.clear();
-        localStorage.removeItem("name");
-        localStorage.removeItem("avatar");
-        localStorage.removeItem("shot");
-        localStorage.removeItem("role");
-        localStorage.removeItem("email");
+        localStorage.clear();
         // lalu redirect ke halaman login
         navigate("/");
       }

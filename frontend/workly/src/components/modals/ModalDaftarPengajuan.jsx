@@ -44,7 +44,7 @@ export default function ModalDaftarPengajuan() {
   };
 
   const showRecap = () => {
-    if (recap.length !== 0) {
+    if (recap !== null && recap.length !== 0) {
       return recap.map((item) => (
         <div key={item.id}>
           <div className="card w-100 m-2">

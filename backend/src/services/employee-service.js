@@ -278,7 +278,7 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
   }
   logger.info("EMPLOYEE ABSEN IN BERHASIL");
   // // simpan ke tabel log
-  // const note = `Employee ${absenRequest.name} absen masuk pada : ${currentUTCTime}`;
+  // const note = `Employee ${employee.name} absen masuk pada : ${currentUTCTime}`;
   // await prismaClient.log.create({
   //   data: {
   //     date: currentUTCTime,
@@ -381,7 +381,7 @@ const absenOut = async (latitude, longitude, employee) => {
   const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
   logger.info("EMPLOYEE ABSEN OUT BERHASIL");
   // // simpan ke tabel log
-  // const note = `Employee ${extractedData[0].name} absen keluar pada : ${currentUTCTime}`;
+  // const note = `Employee ${employee.name} absen keluar pada : ${currentUTCTime}`;
   // await prismaClient.log.create({
   //   data: {
   //     date: currentUTCTime,

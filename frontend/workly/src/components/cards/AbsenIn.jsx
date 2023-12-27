@@ -8,14 +8,7 @@ import {
 import { generate } from "random-words";
 import axios from "axios";
 import { toastSuccess, alertError } from "../alert/SweetAlert";
-import {
-  dayString,
-  monthString,
-  date,
-  hours,
-  minutes,
-  year,
-} from "../../utils/date-time";
+import { dayString, monthString, date, year } from "../../utils/date-time";
 
 export default function AbsenIn({ onLogin }) {
   const [latitude, setLatitude] = useState(null);
@@ -26,6 +19,8 @@ export default function AbsenIn({ onLogin }) {
   const [wfh, setWfh] = useState(false);
   const [enableWfh, setEnableWfh] = useState(true);
   const [usingShot, setUsingShot] = useState(true);
+  const [hours, setHours] = useState(new Date().getHours());
+  const [minutes, setMinutes] = useState(new Date().getMinutes());
   let warning;
   let countDownInterval;
 
@@ -138,6 +133,8 @@ export default function AbsenIn({ onLogin }) {
     };
     // fungsi untuk cek setiap detik
     const shotInterval = setInterval(() => {
+      setHours(new Date().getHours());
+      setMinutes(new Date().getMinutes());
       // Mendapatkan nilai terkini dari local storage
       const currentValue = localStorage.getItem("shot");
       // mendapatkan nilai terkini dari checkbox wfh
@@ -174,8 +171,7 @@ export default function AbsenIn({ onLogin }) {
       clearInterval(countDownInterval);
     };
   }, [counter, shot]);
-  console.log(latitude);
-  console.log(longitude);
+
   return (
     <div className="card text-center">
       <div className="card-header">
@@ -184,7 +180,8 @@ export default function AbsenIn({ onLogin }) {
             <BsArrowRightSquareFill className="me-1" /> Absen Masuk
           </div>
           <div className="d-flex align-items-center me-3 ms-3">
-            <BsClockFill className="me-1" /> {hours}:{minutes}
+            <BsClockFill className="me-1" /> {hours}:{minutes < 10 ? "0" : ""}
+            {minutes}
           </div>
           <div className="d-flex align-items-center ms-3">
             <BsCalendar2Fill className="me-1" /> {dayString()} {date}/
