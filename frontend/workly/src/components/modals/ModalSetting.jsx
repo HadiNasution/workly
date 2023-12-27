@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import Swal from "sweetalert2";
+import { toastSuccess, alertError } from "../alert/SweetAlert";
 
 export default function ModalSetting() {
   const [name, setName] = useState("");
@@ -74,30 +74,14 @@ export default function ModalSetting() {
 
       if (data.data) {
         console.log(data.data);
-        Swal.fire({
-          title: "Perubahan berhasil disimpan!",
-          icon: "success",
-          background: "#555555",
-          color: "#FFFFFF",
-          timer: 2000,
-          timerProgressBar: true,
-          toast: true,
-          position: "center",
-        });
+        toastSuccess(
+          "Perubahan berhasil disimpan!",
+          "Sekarang pengguna akan menggunakan pengaturan baru"
+        );
       }
     } catch (error) {
-      console.log(error);
-      if (error.response) {
-        console.error("Server Response:", error.response.data);
-      }
-      Swal.fire({
-        title: "Ops! Perubahan gagal disimpan",
-        text: "Mohon maaf atas kendala yang terjadi, mohon untuk mencoba kembali lain waktu dan silahkan hubungi admin",
-        icon: "error",
-        background: "#555555",
-        color: "#FFFFFF",
-        position: "center",
-      });
+      console.error("Server Response:", error.response.data.errors);
+      alertError("Oops! Perubahan gagal disimpan", error.response.data.errors);
     }
   };
 
@@ -171,7 +155,7 @@ export default function ModalSetting() {
                   <div className="col">
                     <div className="mb-3">
                       <label htmlFor="office-latitude" className="form-label">
-                        Koordinat Latitude kantor
+                        Koordinat Latitude kantor (gunakan titik, bukan koma)
                       </label>
                       <input
                         type="number"
@@ -183,7 +167,7 @@ export default function ModalSetting() {
                     </div>
                     <div className="mb-3">
                       <label htmlFor="office-longitude" className="form-label">
-                        Koordinat Longitude kantor
+                        Koordinat Longitude kantor (gunakan titik, bukan koma)
                       </label>
                       <input
                         type="number"

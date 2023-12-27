@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import Swal from "sweetalert2";
+import { toastWarning } from "../alert/SweetAlert";
 import { convertDayString } from "../../utils/date-time";
 import { BsCalendar2Fill, BsInfoCircleFill } from "react-icons/bs";
 
@@ -30,19 +30,8 @@ export default function Log() {
       // console.log(data.data);
       setResult(data.data);
     } catch (error) {
-      if (error.response) {
-        console.error("Server Response:", error.response.data);
-        Swal.fire({
-          title: "Data kosong",
-          icon: "warning",
-          background: "#555555",
-          color: "#FFFFFF",
-          timer: 2000,
-          timerProgressBar: true,
-          toast: true,
-          position: "top",
-        });
-      }
+      console.error("Server Response:", error.response.data);
+      toastWarning("Data kosong");
     }
   };
 

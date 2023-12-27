@@ -2,7 +2,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { isTokenExpired } from "../../auth/auth-login";
-import Swal from "sweetalert2";
+import { toastSuccess, alertError } from "../alert/SweetAlert";
 import RecapAdminTab from "../tabs/RecapAdmin";
 import ModalSetting from "../modals/ModalSetting";
 
@@ -32,10 +32,12 @@ const AdminHome = () => {
         sessionStorage.clear();
         localStorage.clear();
         // lalu redirect ke halaman login
+        toastSuccess("Logout berhasil", "See you!");
         navigate("/");
       }
     } catch (error) {
       console.log(error.response.data.errors);
+      alertError("Logout gagal", error.response.data.errors);
     }
   };
 

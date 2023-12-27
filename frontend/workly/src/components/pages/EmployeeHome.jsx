@@ -7,7 +7,7 @@ import RecapEmployeeTab from "../tabs/RecapEmployee";
 import DetailProfileEmployee from "../offcanvas/DetailProfileEmployee";
 import ModalPengajuan from "../modals/ModalPengajuan";
 import ModalDaftarPengajuan from "../modals/ModalDaftarPengajuan";
-import Swal from "sweetalert2";
+import { toastWarning, alertError, toastSuccess } from "../alert/SweetAlert";
 import axios from "axios";
 
 const EmployeeHome = () => {
@@ -44,14 +44,13 @@ const EmployeeHome = () => {
         localStorage.removeItem("shot");
         localStorage.removeItem("email");
         localStorage.removeItem("role");
+        toastSuccess("Logout berhasil", "See you!");
         // lalu redirect ke halaman login
         navigate("/");
       }
     } catch (error) {
-      console.log(error);
-      if (error.response) {
-        console.error("Server Response:", error.response.data);
-      }
+      console.error("Server Response:", error.response.data);
+      alertError("Logout gagal", error.response.data.errors);
     }
   };
 
@@ -72,6 +71,7 @@ const EmployeeHome = () => {
       }
     } catch (error) {
       console.log(error);
+      toastWarning("Data setting kosong");
     }
   };
 
@@ -79,14 +79,7 @@ const EmployeeHome = () => {
     const checkTokenExpiration = () => {
       // cek apakah token masih berlaku
       if (isTokenExpired()) {
-        Swal.fire({
-          title: "Sesi habis",
-          text: "Silahkan untuk login kembali",
-          icon: "warning",
-          background: "#555555",
-          color: "#FFFFFF",
-          position: "center",
-        });
+        toastWarning("Sesi habis, silahkan untuk login kembali");
         logoutEmployee();
       }
     };

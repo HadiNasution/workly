@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Swal from "sweetalert2";
+import { toastSuccess } from "../alert/SweetAlert";
 
 export default function LoginAdminform() {
   const navigate = useNavigate();
@@ -39,16 +39,7 @@ export default function LoginAdminform() {
       localStorage.setItem("name", name);
       localStorage.setItem("nip", nip);
       localStorage.setItem("email", emailResponse);
-      Swal.fire({
-        title: "Login berhasil",
-        icon: "success",
-        background: "#555555",
-        color: "#FFFFFF",
-        timer: 2000, // Durasi dalam milidetik
-        timerProgressBar: true,
-        toast: true,
-        position: "center",
-      });
+      toastSuccess("Login berhasil!", "Senang melihat anda lagi");
       // redirect ke halaman home admin
       navigate("/admin/home");
     } catch (error) {

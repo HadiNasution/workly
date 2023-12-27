@@ -20,9 +20,7 @@ export default function RecapDayAdmin() {
       //   console.log(data.data);
       if (data.data) setDataRecap(data.data);
     } catch (error) {
-      // if (error.response) {
-      //   console.error("Server Response:", error.response.data);
-      // }
+      console.error("Server Response:", error.response.data.errors);
     }
   };
 
@@ -96,6 +94,14 @@ export default function RecapDayAdmin() {
   return dataRecap && dataRecap.length > 0 ? (
     showRecap()
   ) : (
-    <i>Data masih kosong</i>
+    <div className="text-center mt-5 mb-5">
+      <img
+        src="../../../public/assets/sleep-ill.gif"
+        alt="sleep illustration"
+        width={200}
+        height={120}
+      />
+      <h6 className="text-secondary">Belum ada yang absen masuk...</h6>
+    </div>
   );
 }

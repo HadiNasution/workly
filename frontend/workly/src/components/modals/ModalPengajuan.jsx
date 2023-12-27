@@ -1,5 +1,5 @@
 import axios from "axios";
-import Swal from "sweetalert2";
+import { toastSuccess, alertError } from "../alert/SweetAlert";
 
 export default function ModalPengajuan() {
   const kirimPengajuan = async (event) => {
@@ -34,31 +34,14 @@ export default function ModalPengajuan() {
 
       if (data.data) {
         console.log(data.data);
-        Swal.fire({
-          title: "Pengajuan Berhasil!",
-          text: "Selalu periksa menu Daftar pengajuan untuk melihat status pengajuan",
-          icon: "success",
-          background: "#555555",
-          color: "#FFFFFF",
-          timer: 2000,
-          timerProgressBar: true,
-          toast: true,
-          position: "center",
-        });
+        toastSuccess(
+          "Pengajuan berhasil",
+          "Untuk melihat status pengajuan, buka menu status pengajuan"
+        );
       }
     } catch (error) {
-      console.log(error);
-      if (error.response) {
-        console.error("Server Response:", error.response.data);
-      }
-      Swal.fire({
-        title: "Ops! Pengajuan gagal dikirim",
-        text: "Mohon maaf atas kendala yang terjadi, mohon untuk mencoba kembali lain waktu dan silahkan hubungi admin",
-        icon: "error",
-        background: "#555555",
-        color: "#FFFFFF",
-        position: "center",
-      });
+      console.error("Server Response:", error.response.data.errors);
+      alertError("Ops! Pengajuan gagal dikirim", error.response.data.errors);
     }
   };
 

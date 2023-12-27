@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import MonthCard from "./MonthCard";
-import Swal from "sweetalert2";
+import { toastWarning } from "../alert/SweetAlert";
 
 export default function RecapMonth() {
   const currentTime = new Date();
@@ -36,16 +36,7 @@ export default function RecapMonth() {
     } catch (error) {
       if (error.response) {
         console.error("Server Response:", error.response.data);
-        Swal.fire({
-          title: "Data kosong",
-          icon: "warning",
-          background: "#555555",
-          color: "#FFFFFF",
-          timer: 2000, // Durasi dalam milidetik
-          timerProgressBar: true,
-          toast: true,
-          position: "center",
-        });
+        toastWarning("Data kosong");
       }
     }
   };

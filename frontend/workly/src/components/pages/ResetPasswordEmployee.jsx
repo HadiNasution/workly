@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import ModalResetPassword from "../modals/ModalResetPassword";
-import Swal from "sweetalert2";
+import { toastSuccess } from "../alert/SweetAlert";
 
 export default function ResetPasswordEmployee() {
   const [modalData, setModalData] = useState(null); // data (password dummy) yg akan dikirim di modal
@@ -33,6 +33,10 @@ export default function ResetPasswordEmployee() {
         }
       );
       setModalData(data.data);
+      toastSuccess(
+        "Password berhasil diubah",
+        "Pastikan untuk tidak melupakan password baru anda"
+      );
     } catch (error) {
       // console.log(error);
       if (error.response) {

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import Swal from "sweetalert2";
+import { toastWarning } from "../alert/SweetAlert";
 import MonthCardAdmin from "./MonthCardAdmin";
 
 export default function RecapMonthAdmin() {
@@ -34,16 +34,7 @@ export default function RecapMonthAdmin() {
     } catch (error) {
       if (error.response) {
         console.error("Server Response:", error.response.data);
-        Swal.fire({
-          title: "Data kosong",
-          icon: "warning",
-          background: "#555555",
-          color: "#FFFFFF",
-          timer: 2000, // Durasi dalam milidetik
-          timerProgressBar: true,
-          toast: true,
-          position: "top",
-        });
+        toastWarning("Data kosong");
       }
     }
   };

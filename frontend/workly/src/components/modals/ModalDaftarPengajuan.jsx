@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import { toastWarning } from "../alert/SweetAlert";
 import { convertDayString } from "../../utils/date-time";
 import { BsImageFill, BsClockFill, BsCheckCircleFill } from "react-icons/bs";
 
@@ -25,17 +25,8 @@ export default function ModalDaftarPengajuan() {
         setRecap(data.data);
       }
     } catch (error) {
-      console.log(error);
-      if (error.response) {
-        console.error("Server Response:", error.response.data);
-      }
-      Swal.fire({
-        title: "Data kosong",
-        icon: "warning",
-        background: "#555555",
-        color: "#FFFFFF",
-        position: "center",
-      });
+      console.error("Server Response:", error.response.data.errors);
+      toastWarning("Data kosong");
     }
   };
 

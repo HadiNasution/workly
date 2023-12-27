@@ -51,6 +51,8 @@ export default function RecapDay() {
           : "Data masih kosong"
       );
       setLate(data.data.is_late ? "Terlambat" : "Tepat waktu");
+      // console.log(data.data.time_out);
+      // console.log(typeof data.data.time_out);
       setWfh(data.data.is_wfh ? "WFH" : "Dikantor");
     } catch (error) {
       // if (error.response) {
@@ -60,18 +62,17 @@ export default function RecapDay() {
   };
 
   useEffect(() => {
-    // reload data recap setiap 1 detik
-    // const reloadRecap = () => {
-    //   getRecap();
-    // };
-    // reloadRecap();
-    // const intervalId = setInterval(reloadRecap, 1000);
-    // return () => clearInterval(intervalId);
-    getRecap();
+    //reload data recap setiap 1 detik
+    const reloadRecap = () => {
+      getRecap();
+    };
+    reloadRecap();
+    const intervalId = setInterval(reloadRecap, 2000);
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
-    <div className="row">
+    <div className="row mb-5">
       <div className="col">
         <div className="card">
           <div className="card-body">

@@ -2,7 +2,7 @@ import { convertDayString, monthString, year } from "../../utils/date-time";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Swal from "sweetalert2";
+import { toastSuccess, alertError } from "../alert/SweetAlert";
 
 export default function DetailProfileEmployee() {
   const [profile, setProfile] = useState(null);
@@ -61,16 +61,7 @@ export default function DetailProfileEmployee() {
       if (error.response) {
         console.error("Server Response:", error.response.data);
       }
-      Swal.fire({
-        title: "Data profil kosong",
-        icon: "error",
-        timer: 5000,
-        timerProgressBar: true,
-        toast: true,
-        background: "#555555",
-        color: "#FFFFFF",
-        position: "top",
-      });
+      alertError("Data profil kosong", error.response.data.errors);
     }
   };
 
@@ -94,28 +85,16 @@ export default function DetailProfileEmployee() {
       );
       if (data.data) {
         setPict(data.data.picture);
-        Swal.fire({
-          title: "Upload Foto Berhasil!",
-          text: "Dengan foto baru ini,kamu jadi terlihat lebih baik",
-          icon: "success",
-          background: "#555555",
-          color: "#FFFFFF",
-          position: "center",
-        });
+        toastSuccess(
+          "Foto berhasil disimpan!",
+          "Dengan foto baru ini,kamu jadi terlihat lebih baik"
+        );
       }
     } catch (error) {
-      console.log(error);
       if (error.response) {
-        console.error("Server Response:", error.response.data);
+        console.error("Server Response:", error.response.data.errors);
       }
-      Swal.fire({
-        title: "Ops! Masalah teknis",
-        text: "Mohon maaf atas kendala yang terjadi, mohon untuk mencoba kembali lain waktu dan silahkan hubungi admin",
-        icon: "error",
-        background: "#555555",
-        color: "#FFFFFF",
-        position: "center",
-      });
+      alertError("Oops! Foto gagal disimpan", error.response.data.errors);
     }
   };
 
@@ -143,7 +122,6 @@ export default function DetailProfileEmployee() {
         navigate("/");
       }
     } catch (error) {
-      console.log(error);
       if (error.response) {
         console.error("Server Response:", error.response.data);
       }

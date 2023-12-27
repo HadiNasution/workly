@@ -236,6 +236,9 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
     },
   });
 
+  let isWfh;
+  wfh === "false" ? (isWfh = false) : (isWfh = true);
+
   const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
   const convertCurrent = new Date(currentUTCTime); // convert UTC ke lokal
   const localTime = convertCurrent.toLocaleString(); // waktu sekarang dalam lokal
@@ -285,7 +288,7 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
     data: {
       time_in: currentUTCTime,
       is_late: isLate,
-      is_wfh: !!wfh,
+      is_wfh: isWfh,
       is_working: true,
       latitude_in: latitude,
       longitude_in: longitude,
@@ -306,7 +309,6 @@ const absenOut = async (latitude, longitude, employee) => {
       id: 1,
     },
   });
-  const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
 
   // logic untuk set waktu hari ini
   let today = new Date();
@@ -374,7 +376,7 @@ const absenOut = async (latitude, longitude, employee) => {
       );
     }
   }
-
+  const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
   logger.info("EMPLOYEE ABSEN OUT BERHASIL");
   // // simpan ke tabel log
   // const note = `Employee ${extractedData[0].name} absen keluar pada : ${currentUTCTime}`;

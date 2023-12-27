@@ -7,7 +7,7 @@ import {
 } from "react-icons/bs";
 import { generate } from "random-words";
 import axios from "axios";
-import Swal from "sweetalert2";
+import { toastSuccess, alertError } from "../alert/SweetAlert";
 import {
   dayString,
   monthString,
@@ -97,7 +97,7 @@ export default function AbsenIn({ onLogin }) {
     try {
       const token = sessionStorage.getItem("token");
       const { data } = await axios.get(
-        `http://localhost:3000/api/employee/absenIn/${latitude}/${longitude}/${wfh}`,
+        `http://localhost:3000/api/employee/absenIn/-6.935783427330478/107.5782643924172/${wfh}`,
         {
           headers: {
             Authorization: token,
@@ -105,49 +105,37 @@ export default function AbsenIn({ onLogin }) {
           },
         }
       );
-      Swal.fire({
-        title: data.data,
-        icon: "success",
-        background: "#555555",
-        color: "#FFFFFF",
-        timer: 3000, // Durasi dalam milidetik
-        timerProgressBar: true,
-        toast: true,
-        position: "center",
-      });
+      toastSuccess(data.data, "Jangan lupa untuk absen keluar");
       onLogin(); // set state login di parent, agar card absen in diganti card absen out
     } catch (error) {
       console.log(error);
-      Swal.fire({
-        title: "Absen masuk gagal!",
-        text: error.response.data.errors,
-        icon: "error",
-        background: "#555555",
-        color: "#FFFFFF",
-        position: "center",
-      });
-    }
-  };
-
-  // get koordinat latitude longitude
-  const getPosition = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLatitude(position.coords.latitude);
-          setLongitude(position.coords.longitude);
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-        },
-        { enableHighAccuracy: true }
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
+      alertError("Absen masuk gagal", error.response.data.errors);
     }
   };
 
   useEffect(() => {
+    // get koordinat latitude longitude
+    const getPosition = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setLatitude(position.coords.latitude);
+            setLongitude(position.coords.longitude);
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+            alertError("Gagal mendapatkan lokasi", error);
+          },
+          { enableHighAccuracy: true }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+        alertError(
+          "Gagal mendapatkan lokasi",
+          "Geolocation is not supported by this browser."
+        );
+      }
+    };
     // fungsi untuk cek setiap detik
     const shotInterval = setInterval(() => {
       // Mendapatkan nilai terkini dari local storage
@@ -178,14 +166,16 @@ export default function AbsenIn({ onLogin }) {
       }, 1000);
     }
 
-    getPosition(); // ambil koordinat saat kopmponen pertamakali dirender
     getSetting();
+    getPosition();
 
     return () => {
       clearInterval(shotInterval);
       clearInterval(countDownInterval);
     };
   }, [counter, shot]);
+  console.log(latitude);
+  console.log(longitude);
   return (
     <div className="card text-center">
       <div className="card-header">
