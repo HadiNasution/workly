@@ -152,10 +152,165 @@ export default function ModalSetting() {
                       <textarea
                         className="form-control"
                         id="office-address"
-                        rows="6"
+                        rows="4"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                       ></textarea>
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="default-password" className="form-label">
+                        Password default
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="default-password"
+                        value={defaultPass}
+                        onChange={(e) => setDefaultPass(e.target.value)}
+                      ></input>
+                      <div id="passwordHelpBlock" class="form-text">
+                        untuk pengguna baru
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="mb-3">
+                      <label htmlFor="office-latitude" className="form-label">
+                        Koordinat Latitude kantor
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="office-latitude"
+                        value={latitude}
+                        onChange={(e) => setLatitude(e.target.value)}
+                      ></input>
+                      <div id="passwordHelpBlock" class="form-text">
+                        gunakan titik, bukan koma
+                      </div>
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="office-longitude" className="form-label">
+                        Koordinat Longitude kantor
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="office-longitude"
+                        value={longitude}
+                        onChange={(e) => setLongitude(e.target.value)}
+                      ></input>
+                      <div id="passwordHelpBlock" class="form-text">
+                        gunakan titik, bukan koma
+                      </div>
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="office-radius" className="form-label">
+                        Zona radius absensi
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="number"
+                          className="form-control"
+                          id="office-radius"
+                          value={radius}
+                          onChange={(e) => setRadius(e.target.value)}
+                        ></input>
+                        <span class="input-group-text" id="basic-addon2">
+                          meter
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="mb-3">
+                      <label htmlFor="minute-late-limit" className="form-label">
+                        Toleransi waktu terlambat
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="number"
+                          className="form-control"
+                          id="minute-late-limit"
+                          value={lateLimit}
+                          onChange={(e) => setLateLimit(e.target.value)}
+                        ></input>
+                        <span class="input-group-text" id="basic-addon2">
+                          menit
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mb-3">
+                      <div className="row">
+                        <div className="col">
+                          <label
+                            htmlFor="exampleFormControlInput1"
+                            className="form-label"
+                          >
+                            Jam masuk
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="time-in"
+                            value={timeIn}
+                            onChange={(e) => setTimeIn(e.target.value)}
+                          ></input>
+                        </div>
+                        <div className="col">
+                          <label
+                            htmlFor="exampleFormControlInput1"
+                            className="form-label"
+                          >
+                            Jam keluar
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="time-out"
+                            value={timeOut}
+                            onChange={(e) => setTimeOut(e.target.value)}
+                          ></input>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mb-3">
+                      <div className="row">
+                        <div className="col">
+                          <label htmlFor="wfh-limit" className="form-label">
+                            WFH dalam 1 bulan
+                          </label>
+                          <div className="input-group">
+                            <input
+                              type="number"
+                              className="form-control"
+                              id="wfh-limit"
+                              value={wfhLimit}
+                              onChange={(e) => setWfhLimit(e.target.value)}
+                            ></input>
+                            <span class="input-group-text" id="basic-addon2">
+                              x
+                            </span>
+                          </div>
+                        </div>
+                        <div className="col">
+                          <label htmlFor="leaves-limit" className="form-label">
+                            Cuti dalam 1 tahun
+                          </label>
+                          <div className="input-group">
+                            <input
+                              type="number"
+                              className="form-control"
+                              id="leaves-limit"
+                              value={leavesLimit}
+                              onChange={(e) => setLeavesLimit(e.target.value)}
+                            ></input>
+                            <span class="input-group-text" id="basic-addon2">
+                              x
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div className="form-check form-switch">
                       <input
@@ -182,124 +337,6 @@ export default function ModalSetting() {
                       <label className="form-check-label" htmlFor="enable-wfh">
                         Izinkan Work From Home
                       </label>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="mb-3">
-                      <label htmlFor="office-latitude" className="form-label">
-                        Koordinat Latitude kantor (gunakan titik, bukan koma)
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="office-latitude"
-                        value={latitude}
-                        onChange={(e) => setLatitude(e.target.value)}
-                      ></input>
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="office-longitude" className="form-label">
-                        Koordinat Longitude kantor (gunakan titik, bukan koma)
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="office-longitude"
-                        value={longitude}
-                        onChange={(e) => setLongitude(e.target.value)}
-                      ></input>
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="office-radius" className="form-label">
-                        Zona absensi (Radius dalam meter)
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="office-radius"
-                        value={radius}
-                        onChange={(e) => setRadius(e.target.value)}
-                      ></input>
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="default-password" className="form-label">
-                        Password default (untuk pengguna baru)
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="default-password"
-                        value={defaultPass}
-                        onChange={(e) => setDefaultPass(e.target.value)}
-                      ></input>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="mb-3">
-                      <label htmlFor="minute-late-limit" className="form-label">
-                        Toleransi waktu terlambat (menit)
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="minute-late-limit"
-                        value={lateLimit}
-                        onChange={(e) => setLateLimit(e.target.value)}
-                      ></input>
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="wfh-limit" className="form-label">
-                        Batas WFH dalam 1 bulan
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="wfh-limit"
-                        value={wfhLimit}
-                        onChange={(e) => setWfhLimit(e.target.value)}
-                      ></input>
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="leaves-limit" className="form-label">
-                        Batas Cuti dalam 1 tahun
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="leaves-limit"
-                        value={leavesLimit}
-                        onChange={(e) => setLeavesLimit(e.target.value)}
-                      ></input>
-                    </div>
-                    <div className="mb-3">
-                      <label
-                        htmlFor="exampleFormControlInput1"
-                        className="form-label"
-                      >
-                        Jam masuk
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="time-in"
-                        value={timeIn}
-                        onChange={(e) => setTimeIn(e.target.value)}
-                      ></input>
-                    </div>
-                    <div className="mb-3">
-                      <label
-                        htmlFor="exampleFormControlInput1"
-                        className="form-label"
-                      >
-                        Jam keluar
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="time-out"
-                        value={timeOut}
-                        onChange={(e) => setTimeOut(e.target.value)}
-                      ></input>
                     </div>
                   </div>
                 </div>

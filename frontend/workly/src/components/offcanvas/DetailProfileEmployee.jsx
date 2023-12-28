@@ -213,7 +213,7 @@ export default function DetailProfileEmployee() {
           </div>
           {profile ? (
             <div className="profile mt-2">
-              <h3 style={{ fontWeight: "bolder" }}>
+              <h3 style={{ fontWeight: "bolder" }} className="mt-3 mb-3">
                 {profile[0].name ?? <i>Data masih kosong</i>}
               </h3>
               <div className="d-flex justify-content-between">
@@ -242,7 +242,7 @@ export default function DetailProfileEmployee() {
               </div>
               <div className="d-flex justify-content-between">
                 <p>
-                  <b>Tanggal masuk : </b>
+                  <b>Tanggal bergabung : </b>
                 </p>
                 <p>
                   {dateFormat(profile[0].join_date) ?? <i>Data masih kosong</i>}
@@ -260,7 +260,6 @@ export default function DetailProfileEmployee() {
                 <span
                   style={{
                     fontWeight: "bold",
-                    color: "gray",
                     fontSize: 16,
                   }}
                 >

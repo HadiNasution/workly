@@ -159,30 +159,37 @@ export default function ModalPengajuan() {
                     name="surat"
                     id="surat"
                   />
+                  <div id="passwordHelpBlock" class="form-text">
+                    format yang diterima : png, jpg, jpeg
+                  </div>
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="datepicker" className="form-label">
-                    Waktu mulai:
-                  </label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="waktu-mulai"
-                    name="waktu-mulai"
-                    required
-                  ></input>
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="datepicker" className="form-label">
-                    Waktu selesai:
-                  </label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="waktu-selesai"
-                    name="waktu-selesai"
-                    required
-                  ></input>
+                  <div className="row">
+                    <div className="col">
+                      <label htmlFor="datepicker" className="form-label">
+                        Waktu mulai:
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        id="waktu-mulai"
+                        name="waktu-mulai"
+                        required
+                      ></input>
+                    </div>
+                    <div className="col">
+                      <label htmlFor="datepicker" className="form-label">
+                        Waktu selesai:
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        id="waktu-selesai"
+                        name="waktu-selesai"
+                        required
+                      ></input>
+                    </div>
+                  </div>
                 </div>
                 <button type="submit" className="btn btn-primary w-100">
                   Kirim pengajuan

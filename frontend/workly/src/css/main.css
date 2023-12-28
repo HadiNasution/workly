@@ -33,7 +33,16 @@ button:hover {
 }
 
 .card {
-  background-color: whitesmoke;
+  background-color: rgb(243, 243, 243) !important;
+  border: solid 2px white !important;
+}
+
+.card:hover {
+  border: solid 2px black !important;
+}
+
+.card-header {
+  border-bottom: none !important;
 }
 
 .btn-primary {
@@ -44,6 +53,21 @@ button:hover {
 .btn-secondary {
   background-color: black !important;
   border: none;
+}
+
+.btn-link {
+  color: black !important;
+  font-weight: bold;
+}
+
+.input-group-text {
+  background-color: white;
+  border: solid 0.5px gray;
+}
+
+.form-control,
+.form-select {
+  border: solid 0.5px gray;
 }
 
 h1 {
@@ -58,7 +82,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden !important;
   overflow-y: scroll !important;
-  background-color: rgb(245, 245, 245);
+  background-color: white;
 }
 
 .container {
