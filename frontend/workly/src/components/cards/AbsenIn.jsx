@@ -177,7 +177,7 @@ export default function AbsenIn({ onLogin }) {
       <div className="card-header">
         <div className="d-flex justify-content-center">
           <div className="d-flex align-items-center me-3">
-            <BsArrowRightSquareFill className="me-1" /> Absen Masuk
+            <BsArrowRightSquareFill className="me-1" color="cyan" /> Absen Masuk
           </div>
           <div className="d-flex align-items-center me-3 ms-3">
             <BsClockFill className="me-1" /> {hours}:{minutes < 10 ? "0" : ""}
@@ -232,13 +232,13 @@ export default function AbsenIn({ onLogin }) {
             </div>
           </div>
         ) : (
-          <button onClick={absenIn} className="btn btn-primary w-100 m-1">
+          <button onClick={absenIn} className="btn btn-success w-100 m-1">
             Absen Masuk
           </button>
         )}
         {warning}
         {wfh ? (
-          <button onClick={absenIn} className="btn btn-primary w-100 m-1">
+          <button onClick={absenIn} className="btn btn-success w-100 m-1">
             Absen Masuk WFH
           </button>
         ) : null}

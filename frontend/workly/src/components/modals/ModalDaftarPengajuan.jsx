@@ -2,7 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toastWarning } from "../alert/SweetAlert";
 import { convertDayString } from "../../utils/date-time";
-import { BsImageFill, BsClockFill, BsCheckCircleFill } from "react-icons/bs";
+import {
+  BsImageFill,
+  BsClockFill,
+  BsCheckCircleFill,
+  BsArrowRight,
+  BsXOctagonFill,
+} from "react-icons/bs";
 
 export default function ModalDaftarPengajuan() {
   const [recap, setRecap] = useState(null);
@@ -43,6 +49,23 @@ export default function ModalDaftarPengajuan() {
     return formatWaktu;
   };
 
+  // Fungsi untuk menghitung selisih hari antara dua tanggal
+  const hitungSelisihHari = (tanggalAwal, tanggalAkhir) => {
+    const satuHari = 24 * 60 * 60 * 1000; // Satu hari dalam milidetik
+
+    // Mengkonversi kedua tanggal ke objek Date
+    const dateAwal = new Date(tanggalAwal);
+    const dateAkhir = new Date(tanggalAkhir);
+
+    // Menghitung selisih dalam milidetik
+    const selisihMilidetik = Math.abs(dateAkhir - dateAwal);
+
+    // Menghitung selisih hari
+    const selisihHari = Math.floor(selisihMilidetik / satuHari);
+
+    return selisihHari;
+  };
+
   const showRecap = () => {
     if (recap !== null && recap.length !== 0) {
       return recap.map((item) => (
@@ -51,21 +74,26 @@ export default function ModalDaftarPengajuan() {
             <div className="card-header">
               <div className="d-flex justify-content-between">
                 <h5>{item.type}</h5>
-                {item.is_approved ? (
-                  <h5 style={{ color: "lime" }}>
-                    <BsCheckCircleFill
-                      className="me-2"
-                      style={{ color: "lime" }}
-                    />
-                    Disetujui
-                  </h5>
+                {item.is_approved !== null ? (
+                  <h6>
+                    {item.is_approved === true ? (
+                      <>
+                        <BsCheckCircleFill color="lime" className="me-1 mb-1" />
+                        <span style={{ color: "lime" }}>Disetujui</span>
+                      </>
+                    ) : (
+                      <>
+                        <BsXOctagonFill color="#ff364a" className="me-1 mb-1" />
+                        <span style={{ color: "#ff364a" }}>Ditolak</span>
+                      </>
+                    )}
+                  </h6>
                 ) : (
                   <div className="d-flex justify-content-start align-items-center">
-                    <BsClockFill
-                      style={{ color: "yellow" }}
-                      className="mb-2 me-2"
-                    />
-                    <h5 style={{ color: "yellow" }}>Belum disetujui</h5>
+                    <BsClockFill color="yellow" className="mb-1 me-1" />
+                    <span style={{ color: "yellow" }}>
+                      Menunggu untuk disetujui
+                    </span>
                   </div>
                 )}
               </div>
@@ -73,7 +101,9 @@ export default function ModalDaftarPengajuan() {
             <div className="card-body">
               <div className="d-flex justify-content-between">
                 <p>
-                  <b>Tanggal mulai :</b> {dateFormated(item.start_date)}
+                  {dateFormated(item.start_date)}
+                  <BsArrowRight className="me-2 ms-2" />
+                  {dateFormated(item.end_date)}
                 </p>
                 {item.images ? (
                   <div className="surat">
@@ -90,7 +120,7 @@ export default function ModalDaftarPengajuan() {
                 )}
               </div>
               <p>
-                <b>Tanggal selesai :</b> {dateFormated(item.end_date)}
+                <b>{hitungSelisihHari(item.start_date, item.end_date)} Hari</b>
               </p>
               <p>
                 <b>Catatan :</b> {item.note}

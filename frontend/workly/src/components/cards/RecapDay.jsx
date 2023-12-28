@@ -1,6 +1,5 @@
 import {
   BsHouseFill,
-  BsGeoAltFill,
   BsClockFill,
   BsArrowRightSquareFill,
   BsArrowLeftSquareFill,
@@ -53,8 +52,6 @@ export default function RecapDay() {
           : "Data masih kosong"
       );
       setLate(data.data.is_late ? "Terlambat" : "Tepat waktu");
-      // console.log(data.data.time_out);
-      // console.log(typeof data.data.time_out);
       setWfh(data.data.is_wfh ? "WFH" : "Dikantor");
     } catch (error) {
       // if (error.response) {
@@ -69,8 +66,9 @@ export default function RecapDay() {
       getRecap();
     };
     reloadRecap();
-    const intervalId = setInterval(reloadRecap, 2000);
+    const intervalId = setInterval(reloadRecap, 1000);
     return () => clearInterval(intervalId);
+    // getRecap();
   }, []);
 
   return (
@@ -79,26 +77,17 @@ export default function RecapDay() {
         <div className="card">
           <div className="card-body">
             <div className="d-flex align-items-center mb-2">
-              <BsArrowRightSquareFill
-                className="me-2 fs-4"
-                style={{ color: "cyan" }}
-              />
+              <BsArrowRightSquareFill className="me-2 fs-4" color="cyan" />
               <h4>Absen Masuk</h4>
             </div>
             <div className="d-flex justify-content-start">
               <p className="me-4">
-                <BsClockFill className="me-2" />
+                <BsClockFill className="me-1 mb-1" />
                 {timeIn ? timeIn : <i>Data masih kosong</i>}
               </p>
-              <p>
-                <BsHouseFill className="me-2" />
-                {wfh ? wfh : <i>Data masih kosong</i>}
-              </p>
-            </div>
-            <div className="d-flex justify-content-start">
               <p className="me-4">
-                <BsGeoAltFill className="me-2" />
-                <i>Data masih kosong</i>
+                <BsHouseFill className="me-1 mb-1" />
+                {wfh ? wfh : <i>Data masih kosong</i>}
               </p>
               <p>
                 <BsExclamationCircleFill className="me-2" />
@@ -112,26 +101,17 @@ export default function RecapDay() {
         <div className="card">
           <div className="card-body">
             <div className="d-flex align-items-center mb-2">
-              <BsArrowLeftSquareFill
-                className="me-2 fs-4"
-                style={{ color: "yellow" }}
-              />
+              <BsArrowLeftSquareFill className="me-2 fs-4" color="orange" />
               <h4>Absen Keluar</h4>
             </div>
             <div className="d-flex justify-content-start">
               <p className="me-4">
-                <BsClockFill className="me-2" />
+                <BsClockFill className="me-1 mb-1" />
                 {timeOut ? timeOut : <i>Data masih kosong</i>}
               </p>
               <p>
-                <BsHouseFill className="me-2" />
+                <BsHouseFill className="me-1 mb-1" />
                 {wfh ? wfh : <i>Data masih kosong</i>}
-              </p>
-            </div>
-            <div className="d-flex justify-content-start">
-              <p>
-                <BsGeoAltFill className="me-2" />
-                <i>Data masih kosong</i>
               </p>
             </div>
           </div>

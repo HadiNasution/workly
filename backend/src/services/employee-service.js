@@ -378,6 +378,35 @@ const absenOut = async (latitude, longitude, employee) => {
     }
   }
 
+  // ambil id recap dari employee
+  const idRecap = await prismaClient.employee.findMany({
+    where: {
+      id: employee.id,
+    },
+    include: {
+      attendance_recap: {
+        select: {
+          id: true,
+          count_works: true,
+        },
+      },
+    },
+  });
+
+  // update count_works + 1
+  if (idRecap) {
+    await prismaClient.attendanceRecap.update({
+      data: {
+        count_works: idRecap[0].attendance_recap[0].count_works + 1,
+      },
+      where: {
+        id: idRecap[0].attendance_recap[0].id,
+      },
+    });
+  } else {
+    throw new ResponseError(404, "Data tidak ditemukan");
+  }
+
   const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
   logger.info("EMPLOYEE ABSEN OUT BERHASIL");
   // // simpan ke tabel log
@@ -468,6 +497,7 @@ const createPermission = async (request, employee, filePath) => {
       type: createRequest.type,
       note: createRequest.note,
       date: currentDate,
+      is_approved: null,
       images: filePath,
       start_date: createRequest.start_date,
       end_date: createRequest.end_date,
@@ -540,8 +570,8 @@ const getAttendanceRecapByDay = async (employee) => {
     },
   });
 
-  if (!attendance) throw new ResponseError(404, "Data kosong");
-  logger.info("GET ATTENDANCE RECAP BY DAY BERHASIL");
+  // if (!attendance) throw new ResponseError(404, "Data kosong");
+  // logger.info("GET ATTENDANCE RECAP BY DAY BERHASIL");
   return attendance;
 };
 

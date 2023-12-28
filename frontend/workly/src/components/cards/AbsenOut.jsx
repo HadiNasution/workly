@@ -97,7 +97,8 @@ export default function AbsenOut({ isWorked }) {
       <div className="card-header">
         <div className="d-flex justify-content-center">
           <div className="d-flex align-items-center me-3">
-            <BsArrowLeftSquareFill className="me-1" /> Absen Keluar
+            <BsArrowLeftSquareFill className="me-1" color="orange" /> Absen
+            Keluar
           </div>
           <div className="d-flex align-items-center me-3 ms-3">
             <BsClockFill className="me-1" /> {hours}:{minutes < 10 ? "0" : ""}
