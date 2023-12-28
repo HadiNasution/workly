@@ -177,7 +177,7 @@ export default function AbsenIn({ onLogin }) {
       <div className="card-header">
         <div className="d-flex justify-content-center">
           <div className="d-flex align-items-center me-3">
-            <BsArrowRightSquareFill className="me-1" color="cyan" /> Absen Masuk
+            <BsArrowRightSquareFill className="me-1" color="blue" /> Absen Masuk
           </div>
           <div className="d-flex align-items-center me-3 ms-3">
             <BsClockFill className="me-1" /> {hours}:{minutes < 10 ? "0" : ""}
@@ -243,19 +243,14 @@ export default function AbsenIn({ onLogin }) {
           </button>
         ) : null}
       </div>
-      <div className="card-footer text-body-secondary">
-        {latitude && longitude ? (
-          <p style={{ color: "#11f227" }}>
-            <BsGeoAltFill className="me-1" />
-            Lokasi aktif
-          </p>
-        ) : (
-          <p style={{ color: "#dc3545" }}>
+      {latitude && longitude ? null : (
+        <div className="card-footer text-body-secondary">
+          <p style={{ color: "red" }}>
             Lokasi tidak aktif, izinkan akses lokasi dibrowser untuk situs ini
             atau periksa koneksi internet
           </p>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

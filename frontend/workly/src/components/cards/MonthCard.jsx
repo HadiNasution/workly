@@ -27,49 +27,35 @@ export default function MonthCard(data) {
     let hari = convertDayString(dateObject);
     let tanggal = dateObject.getDate();
 
-    let formatWaktu = `${hari} ${tanggal}`;
+    let formatWaktu = `${hari}, ${tanggal}`;
     return formatWaktu;
   };
 
   return (
     <>
-      <div className="card m-1 w-100">
-        <div className="card-header">
+      <div className="card w-100" style={{ minWidth: 250, minHeight: 120 }}>
+        <div className="card-header d-flex justify-content-between align-items-center">
           <h4>{dateFormat(item.time_in)}</h4>
+          <span class="badge text-bg-danger">
+            {item.is_late ? "Terlambat" : ""}
+          </span>
         </div>
         <div className="card-body">
-          <div className="d-flex justify-content-start">
-            <p className="me-4">
-              <BsArrowRightSquareFill
-                className="me-2"
-                style={{ color: "cyan" }}
-              />{" "}
-              <b>Absen masuk</b> <br></br>
+          <div className="d-flex justify-content-around align-items-center">
+            <p className="me-3">
+              <BsArrowRightSquareFill className="me-1 mb-1" color="blue" />
               {item.time_in ? timeFormat(item.time_in) : <i>-</i>}
             </p>
-            <p className="me-4">
-              <BsArrowLeftSquareFill
-                className="me-2"
-                style={{ color: "yellow" }}
-              />{" "}
-              <b>Absen keluar</b> <br></br>
+            <p className="me-3">
+              <BsArrowLeftSquareFill className="me-1 mb-1" color="orange" />
               {item.time_out ? timeFormat(item.time_out) : <i>-</i>}
             </p>
-          </div>
-          <div className="d-flex justify-content-start">
-            <p className="me-4">
-              <BsHouseFill className="me-2" /> <b>Lokasi kerja</b> <br></br>
-              {item.is_wfh ? "Work From Home" : "Di kantor"}
-            </p>
-            <p>
-              <BsExclamationCircleFill className="me-2" /> <b>Waktu absen</b>{" "}
-              <br></br>
-              {item.is_late ? (
-                <span style={{ color: "red" }}>Terlambat</span>
-              ) : (
-                <span style={{ color: "green" }}>Tepat waktu</span>
-              )}
-            </p>
+            {item.is_wfh ? (
+              <p>
+                <BsHouseFill className="me-1 mb-1" color="lime" />
+                WFH
+              </p>
+            ) : null}
           </div>
         </div>
       </div>

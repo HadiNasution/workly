@@ -11,10 +11,7 @@ export default function LoginPage() {
           boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)",
         }}
       >
-        <h1
-          style={{ fontSize: 60 }}
-          className="d-inline mb-5 fw-bolder text-body-secondary"
-        >
+        <h1 style={{ fontSize: 60 }} className="d-inline mb-5 fw-bolder">
           Workly
         </h1>
         <img

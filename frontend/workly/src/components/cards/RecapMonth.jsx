@@ -44,9 +44,7 @@ export default function RecapMonth() {
   const showCard = () => {
     if (result) {
       return result.map((item, index) => (
-        <div key={index} className="d-flex">
-          <MonthCard data={item} />
-          <MonthCard data={item} />
+        <div key={index} className="col mt-4">
           <MonthCard data={item} />
         </div>
       ));
@@ -60,7 +58,7 @@ export default function RecapMonth() {
   }, [result]);
 
   return (
-    <div className="row">
+    <div className="row mb-5">
       <div className="col">
         <div className="d-block">
           <form
@@ -106,7 +104,7 @@ export default function RecapMonth() {
             </button>
           </form>
         </div>
-        {showCard()}
+        <div className="row">{showCard()}</div>
       </div>
     </div>
   );

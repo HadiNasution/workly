@@ -40,6 +40,7 @@ const login = async (request) => {
 
   // jika email tidak ditemukan didatabase, maka berikan pesan error 401
   if (!admin) throw new ResponseError(401, "Email tidak ditemukan");
+
   // lalu validasi password dengan bcrypt.compare
   const isPasswordValid = await bcrypt.compare(
     loginRequest.password,
@@ -963,6 +964,7 @@ const log = async (targetYear, targetMonth) => {
     select: {
       date: true,
       note: true,
+      is_error: true,
     },
     orderBy: {
       date: "desc",

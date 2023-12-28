@@ -16,7 +16,6 @@ export default function RecapEmployeeTab() {
             role="tab"
             aria-controls="employee-tab-pane"
             aria-selected="true"
-            style={{ fontWeight: "bold" }}
           >
             <BsClockFill className="me-1 mb-1" />
             Kehadiran hari ini
@@ -32,7 +31,6 @@ export default function RecapEmployeeTab() {
             role="tab"
             aria-controls="admin-tab-pane"
             aria-selected="false"
-            style={{ fontWeight: "bold" }}
           >
             <BsCalendar2CheckFill className="me-1 mb-1" />
             Kehadiran perbulan

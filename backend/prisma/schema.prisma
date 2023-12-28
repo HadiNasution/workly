@@ -109,6 +109,7 @@ model Log {
   id Int @id @default(autoincrement())
   date DateTime
   note String @db.VarChar(255)
+  is_error Boolean @default(false)
   created_at DateTime @default(now())
   updated_at DateTime? @updatedAt
   deleted_at DateTime?

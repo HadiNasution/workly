@@ -7,7 +7,7 @@ import {
 } from "react-icons/bs";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { toastSuccess, alertError } from "../alert/SweetAlert";
+import { toastSuccess, alertError, toastWarning } from "../alert/SweetAlert";
 import { dayString, monthString, date, year } from "../../utils/date-time";
 
 export default function AbsenOut({ isWorked }) {
@@ -67,7 +67,7 @@ export default function AbsenOut({ isWorked }) {
           },
           (error) => {
             console.error("Error getting location:", error);
-            alertError("Gagal mendapatkan lokasi", error);
+            toastWarning("Gagal mendapatkan lokasi");
           },
           { enableHighAccuracy: true }
         );
@@ -119,19 +119,14 @@ export default function AbsenOut({ isWorked }) {
           Absen keluar
         </button>
       </div>
-      <div className="card-footer text-body-secondary">
-        {latitude && longitude ? (
-          <p style={{ color: "#11f227" }}>
-            <BsGeoAltFill className="me-1" />
-            Lokasi aktif
-          </p>
-        ) : (
-          <p style={{ color: "#e00727" }}>
+      {latitude && longitude ? null : (
+        <div className="card-footer text-body-secondary">
+          <p style={{ color: "#dc3545" }}>
             Lokasi tidak aktif, izinkan akses lokasi dibrowser untuk situs ini
             atau periksa koneksi internet
           </p>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

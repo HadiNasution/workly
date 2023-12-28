@@ -42,8 +42,7 @@ export default function RecapMonthAdmin() {
   const showCard = () => {
     if (result) {
       return result.map((item, index) => (
-        <div key={index} className="d-flex">
-          <MonthCardAdmin data={item} />
+        <div key={index} className="col">
           <MonthCardAdmin data={item} />
         </div>
       ));
@@ -103,7 +102,7 @@ export default function RecapMonthAdmin() {
             </button>
           </form>
         </div>
-        {showCard()}
+        <div className="row">{showCard()}</div>
       </div>
     </div>
   );

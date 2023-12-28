@@ -1,5 +1,3 @@
-import { BsPersonFill } from "react-icons/bs";
-
 export default function MonthCardAdmin(data) {
   const item = data.data;
   return (

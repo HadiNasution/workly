@@ -1,5 +1,7 @@
 import { ResponseError } from "../error/response-error.js";
 
+const currentDate = new Date();
+const localCurrentTime = currentDate.toLocaleString();
 const errorMiddleware = async (err, req, res, next) => {
   // jika tidak mendapati error maka next() dan tidak menjalankan kode dibawahnya
   if (!err) {
@@ -17,6 +19,14 @@ const errorMiddleware = async (err, req, res, next) => {
       .end();
   } else {
     // jika mendapati error yang tidak bisa dihandle
+    const note = `Error server, status 500 - ${err.message}. Pada: ${localCurrentTime}.`;
+    await prismaClient.log.create({
+      data: {
+        date: currentDate,
+        note,
+        is_error: true,
+      },
+    });
     res
       .status(500)
       .json({

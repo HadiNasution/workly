@@ -15,7 +15,7 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: rgb(20, 20, 20) !important;
   text-decoration: none !important;
 }
 
@@ -23,8 +23,32 @@ button:hover {
   background-color: none !important;
 }
 
+.nav-link {
+  color: gray !important;
+  font-weight: bold;
+}
+
+.nav-item .nav-link.active {
+  color: black !important;
+}
+
+.card {
+  background-color: whitesmoke;
+}
+
+.btn-primary {
+  background-color: black !important;
+  border: none;
+}
+
+.btn-secondary {
+  background-color: black !important;
+  border: none;
+}
+
 h1 {
-  color: azure !important;
+  color: rgb(20, 20, 20) !important;
+  font-weight: bolder !important;
 }
 
 body {
@@ -34,6 +58,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden !important;
   overflow-y: scroll !important;
+  background-color: rgb(245, 245, 245);
 }
 
 .container {

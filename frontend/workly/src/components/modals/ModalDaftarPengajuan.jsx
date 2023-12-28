@@ -70,7 +70,7 @@ export default function ModalDaftarPengajuan() {
     if (recap !== null && recap.length !== 0) {
       return recap.map((item) => (
         <div key={item.id}>
-          <div className="card w-100 m-2">
+          <div className="card w-100 mb-2">
             <div className="card-header">
               <div className="d-flex justify-content-between">
                 <h5>{item.type}</h5>
@@ -78,23 +78,26 @@ export default function ModalDaftarPengajuan() {
                   <h6>
                     {item.is_approved === true ? (
                       <>
-                        <BsCheckCircleFill color="lime" className="me-1 mb-1" />
-                        <span style={{ color: "lime" }}>Disetujui</span>
+                        <BsCheckCircleFill
+                          color="green"
+                          className="me-1 mb-1"
+                        />
+                        <span style={{ color: "green" }}>Disetujui</span>
                       </>
                     ) : (
                       <>
-                        <BsXOctagonFill color="#ff364a" className="me-1 mb-1" />
-                        <span style={{ color: "#ff364a" }}>Ditolak</span>
+                        <BsXOctagonFill color="red" className="me-1 mb-1" />
+                        <span style={{ color: "red" }}>Ditolak</span>
                       </>
                     )}
                   </h6>
                 ) : (
-                  <div className="d-flex justify-content-start align-items-center">
-                    <BsClockFill color="yellow" className="mb-1 me-1" />
-                    <span style={{ color: "yellow" }}>
+                  <h6>
+                    <BsClockFill color="orangered" className="me-1 mb-1" />
+                    <span style={{ color: "orangered" }}>
                       Menunggu untuk disetujui
                     </span>
-                  </div>
+                  </h6>
                 )}
               </div>
             </div>

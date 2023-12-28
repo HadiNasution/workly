@@ -251,6 +251,37 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
 
   // Memeriksa apakah waktu absen melebihi batas waktu yang ditentukan
   const isLate = localTime > localTimeLimit;
+  // kalo telat, update count_late di recap
+  if (isLate) {
+    // ambil id recap dari employee
+    const idRecap = await prismaClient.employee.findMany({
+      where: {
+        id: employee.id,
+      },
+      include: {
+        attendance_recap: {
+          select: {
+            id: true,
+            count_late: true,
+          },
+        },
+      },
+    });
+
+    // update count_works + 1
+    if (idRecap) {
+      await prismaClient.attendanceRecap.update({
+        data: {
+          count_late: idRecap[0].attendance_recap[0].count_late + 1,
+        },
+        where: {
+          id: idRecap[0].attendance_recap[0].id,
+        },
+      });
+    } else {
+      throw new ResponseError(404, "Data tidak ditemukan");
+    }
+  }
   // Jika tidak WFH, cek koordinat absen
   if (wfh === "false") {
     // koordinat zona geofencing kantor WGS Bandung
@@ -276,15 +307,8 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
       );
     }
   }
+
   logger.info("EMPLOYEE ABSEN IN BERHASIL");
-  // // simpan ke tabel log
-  // const note = `Employee ${employee.name} absen masuk pada : ${currentUTCTime}`;
-  // await prismaClient.log.create({
-  //   data: {
-  //     date: currentUTCTime,
-  //     note,
-  //   },
-  // });
   return prismaClient.attendance.create({
     data: {
       time_in: currentUTCTime,
@@ -409,14 +433,6 @@ const absenOut = async (latitude, longitude, employee) => {
 
   const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
   logger.info("EMPLOYEE ABSEN OUT BERHASIL");
-  // // simpan ke tabel log
-  // const note = `Employee ${employee.name} absen keluar pada : ${currentUTCTime}`;
-  // await prismaClient.log.create({
-  //   data: {
-  //     date: currentUTCTime,
-  //     note,
-  //   },
-  // });
   return prismaClient.attendance.update({
     where: {
       id: id,
@@ -581,8 +597,8 @@ const getAttendanceRecapByMonth = async (employee, targetYear, targetMonth) => {
   const firstDayOfMonth = new Date(targetYear, targetMonth - 1, 1);
   const lastDayOfMonth = new Date(targetYear, targetMonth, 0);
 
+  // Query the database using the date range
   try {
-    // Query the database using the date range
     const attendance = await prismaClient.attendance.findMany({
       where: {
         employee_id: employee.id,
@@ -592,6 +608,7 @@ const getAttendanceRecapByMonth = async (employee, targetYear, targetMonth) => {
         },
       },
       select: {
+        id: true,
         time_in: true,
         time_out: true,
         is_late: true,

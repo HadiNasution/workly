@@ -17,7 +17,6 @@ export default function RecapAdminTab() {
             role="tab"
             aria-controls="recapday-tab-pane"
             aria-selected="true"
-            style={{ fontWeight: "bold" }}
           >
             <BsClockFill className="me-1 mb-1" />
             Kehadiran karyawan hari ini
@@ -33,7 +32,6 @@ export default function RecapAdminTab() {
             role="tab"
             aria-controls="recapmonth-tab-pane"
             aria-selected="false"
-            style={{ fontWeight: "bold" }}
           >
             <BsCalendar2CheckFill className="me-1 mb-1" />
             Kehadiran karyawan perbulan
@@ -49,14 +47,13 @@ export default function RecapAdminTab() {
             role="tab"
             aria-controls="log-tab-pane"
             aria-selected="false"
-            style={{ fontWeight: "bold" }}
           >
             <BsEyeFill className="me-1" />
             Log aplikasi
           </button>
         </li>
       </ul>
-      <div className="tab-content" id="myTabContent">
+      <div className="tab-content mb-5" id="myTabContent">
         <div
           className="tab-pane fade show active"
           id="recapday-tab-pane"

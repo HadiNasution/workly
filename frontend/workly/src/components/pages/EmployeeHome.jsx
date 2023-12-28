@@ -123,7 +123,10 @@ const EmployeeHome = () => {
               ></img>
               <h1>
                 Heyoo {name}! <br></br>
-                <span className="fs-5 text-secondary">
+                <span
+                  className="fs-5"
+                  style={{ color: "gray", fontWeight: "lighter" }}
+                >
                   {officeName} • {role} • {email}
                 </span>
               </h1>

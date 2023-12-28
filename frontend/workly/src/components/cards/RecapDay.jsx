@@ -77,20 +77,20 @@ export default function RecapDay() {
         <div className="card">
           <div className="card-body">
             <div className="d-flex align-items-center mb-2">
-              <BsArrowRightSquareFill className="me-2 fs-4" color="cyan" />
+              <BsArrowRightSquareFill className="me-2 mb-1 fs-4" color="blue" />
               <h4>Absen Masuk</h4>
             </div>
             <div className="d-flex justify-content-start">
               <p className="me-4">
-                <BsClockFill className="me-1 mb-1" />
+                <BsClockFill className="me-1 mb-1" color="gray" />
                 {timeIn ? timeIn : <i>Data masih kosong</i>}
               </p>
               <p className="me-4">
-                <BsHouseFill className="me-1 mb-1" />
+                <BsHouseFill className="me-1 mb-1" color="gray" />
                 {wfh ? wfh : <i>Data masih kosong</i>}
               </p>
               <p>
-                <BsExclamationCircleFill className="me-2" />
+                <BsExclamationCircleFill className="me-2" color="gray" />
                 {late ? late : <i>Data masih kosong</i>}
               </p>
             </div>
@@ -101,16 +101,19 @@ export default function RecapDay() {
         <div className="card">
           <div className="card-body">
             <div className="d-flex align-items-center mb-2">
-              <BsArrowLeftSquareFill className="me-2 fs-4" color="orange" />
+              <BsArrowLeftSquareFill
+                className="me-2 mb-1 fs-4"
+                color="orange"
+              />
               <h4>Absen Keluar</h4>
             </div>
             <div className="d-flex justify-content-start">
               <p className="me-4">
-                <BsClockFill className="me-1 mb-1" />
+                <BsClockFill className="me-1 mb-1" color="gray" />
                 {timeOut ? timeOut : <i>Data masih kosong</i>}
               </p>
               <p>
-                <BsHouseFill className="me-1 mb-1" />
+                <BsHouseFill className="me-1 mb-1" color="gray" />
                 {wfh ? wfh : <i>Data masih kosong</i>}
               </p>
             </div>

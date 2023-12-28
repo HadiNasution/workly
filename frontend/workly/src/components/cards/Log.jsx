@@ -2,7 +2,11 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { toastWarning } from "../alert/SweetAlert";
 import { convertDayString } from "../../utils/date-time";
-import { BsCalendar2Fill, BsInfoCircleFill } from "react-icons/bs";
+import {
+  BsCalendar2Fill,
+  BsInfoCircleFill,
+  BsExclamationTriangleFill,
+} from "react-icons/bs";
 
 export default function Log() {
   const currentTime = new Date();
@@ -60,8 +64,17 @@ export default function Log() {
                   {timeFormat(item.date)}
                 </div>
                 <div className="info">
-                  <BsInfoCircleFill className="me-2 text-info" />
-                  {item.note}
+                  {item.is_error ? (
+                    <>
+                      <BsExclamationTriangleFill className="me-2 text-danger" />
+                      {item.note}
+                    </>
+                  ) : (
+                    <>
+                      <BsInfoCircleFill className="me-2 text-info" />
+                      {item.note}
+                    </>
+                  )}
                 </div>
               </div>
             </div>
