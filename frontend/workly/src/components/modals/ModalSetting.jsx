@@ -168,7 +168,7 @@ export default function ModalSetting() {
                         value={defaultPass}
                         onChange={(e) => setDefaultPass(e.target.value)}
                       ></input>
-                      <div id="passwordHelpBlock" class="form-text">
+                      <div id="passwordHelpBlock" className="form-text">
                         untuk pengguna baru
                       </div>
                     </div>
@@ -185,7 +185,7 @@ export default function ModalSetting() {
                         value={latitude}
                         onChange={(e) => setLatitude(e.target.value)}
                       ></input>
-                      <div id="passwordHelpBlock" class="form-text">
+                      <div id="passwordHelpBlock" className="form-text">
                         gunakan titik, bukan koma
                       </div>
                     </div>
@@ -200,7 +200,7 @@ export default function ModalSetting() {
                         value={longitude}
                         onChange={(e) => setLongitude(e.target.value)}
                       ></input>
-                      <div id="passwordHelpBlock" class="form-text">
+                      <div id="passwordHelpBlock" className="form-text">
                         gunakan titik, bukan koma
                       </div>
                     </div>
@@ -216,7 +216,7 @@ export default function ModalSetting() {
                           value={radius}
                           onChange={(e) => setRadius(e.target.value)}
                         ></input>
-                        <span class="input-group-text" id="basic-addon2">
+                        <span className="input-group-text" id="basic-addon2">
                           meter
                         </span>
                       </div>
@@ -235,7 +235,7 @@ export default function ModalSetting() {
                           value={lateLimit}
                           onChange={(e) => setLateLimit(e.target.value)}
                         ></input>
-                        <span class="input-group-text" id="basic-addon2">
+                        <span className="input-group-text" id="basic-addon2">
                           menit
                         </span>
                       </div>
@@ -288,7 +288,10 @@ export default function ModalSetting() {
                               value={wfhLimit}
                               onChange={(e) => setWfhLimit(e.target.value)}
                             ></input>
-                            <span class="input-group-text" id="basic-addon2">
+                            <span
+                              className="input-group-text"
+                              id="basic-addon2"
+                            >
                               x
                             </span>
                           </div>
@@ -305,7 +308,10 @@ export default function ModalSetting() {
                               value={leavesLimit}
                               onChange={(e) => setLeavesLimit(e.target.value)}
                             ></input>
-                            <span class="input-group-text" id="basic-addon2">
+                            <span
+                              className="input-group-text"
+                              id="basic-addon2"
+                            >
                               x
                             </span>
                           </div>

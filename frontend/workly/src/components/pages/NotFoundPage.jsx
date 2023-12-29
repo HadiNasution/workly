@@ -8,7 +8,7 @@ export default function NotFoundPage() {
     <div style={styles.darkContainer}>
       <div style={styles.errorContainer}>
         <img
-          src="../../../public/assets/error-404-animated.gif"
+          src="../../../public/assets/empty-ill-2.gif"
           alt="Illustration"
           width={250}
           height={250}
@@ -42,16 +42,11 @@ const styles = {
   errorContainer: {
     maxWidth: "400px",
     padding: "20px",
-    backgroundColor: "#555",
     boxShadow: "0 0 10px rgba(255, 255, 255, 0.1)",
     borderRadius: "8px",
     textAlign: "center",
   },
-  heading: {
-    color: "#d9534f",
-  },
   paragraph: {
-    color: "#ddd",
     marginBottom: "20px",
   },
   illustration: {
@@ -60,8 +55,6 @@ const styles = {
   },
   button: {
     padding: "10px 20px",
-    backgroundColor: "#5bc0de",
-    color: "#fff",
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",

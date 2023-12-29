@@ -82,12 +82,13 @@ export default function RecapDayAdmin() {
 
   useEffect(() => {
     // reload data recap setiap 1 detik
-    const reloadRecap = () => {
-      getRecap();
-    };
-    reloadRecap();
-    const intervalId = setInterval(reloadRecap, 1000);
-    return () => clearInterval(intervalId);
+    // const reloadRecap = () => {
+    //   getRecap();
+    // };
+    // reloadRecap();
+    // const intervalId = setInterval(reloadRecap, 1000);
+    // return () => clearInterval(intervalId);
+    getRecap();
   }, []);
 
   return dataRecap && dataRecap.length > 0 ? (
@@ -98,7 +99,7 @@ export default function RecapDayAdmin() {
         src="../../../public/assets/sleep-ill.gif"
         alt="sleep illustration"
         width={200}
-        height={120}
+        height={200}
       />
       <h6 className="text-secondary">Belum ada yang absen masuk...</h6>
     </div>

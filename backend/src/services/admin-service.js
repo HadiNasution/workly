@@ -408,21 +408,56 @@ const createEmployee = async (request, admin) => {
 // service untuk admin melihat daftar semua employee
 const getEmployee = async () => {
   const employee = await prismaClient.employee.findMany({
-    select: {
-      id: true,
-      name: true,
-      nip: true,
-      email: true,
+    include: {
+      attendance_recap: {
+        select: {
+          count_late: true,
+          count_sick: true,
+          count_leaves: true,
+          count_permits: true,
+          count_wfh: true,
+          count_works: true,
+        },
+      },
     },
     orderBy: {
-      id: "asc",
+      id: "desc",
     },
   });
-  if (!employee || employee.length === 0) {
-    throw new ResponseError(404, "Data employee kosong");
+
+  if (!employee || employee.length === 0)
+    throw new ResponseError(404, "Pegawai tidak ditemukan");
+
+  // ekstrak hayan data yang dibutuhkan FE saja
+  const extractedData =
+    (employee &&
+      employee.map((item) => {
+        return {
+          id: item.id,
+          name: item.name,
+          nip: item.nip,
+          email: item.email,
+          role: item.role,
+          departmen: item.departmen,
+          picture: item.picture,
+          join: item.join_date,
+          quit: item.quit_date,
+          late: item.attendance_recap[0].count_late,
+          sick: item.attendance_recap[0].count_sick,
+          permits: item.attendance_recap[0].count_permits,
+          leaves: item.attendance_recap[0].count_leaves,
+          wfh: item.attendance_recap[0].count_wfh,
+          works: item.attendance_recap[0].count_works,
+        };
+      })) ||
+    [];
+
+  if (!extractedData || extractedData.length === 0) {
+    throw new ResponseError(404, "Data kosong");
   }
-  logger.info("RESPONSE GET EMPLOYEE BERHASIL");
-  return employee;
+
+  logger.info("RESPONSE GET DETAIL EMPLOYEE BERHASIL");
+  return extractedData;
 };
 
 // service untuk admin update data employee
@@ -521,15 +556,51 @@ const detailEmployee = async (employeeNip) => {
       nip: employeeNip, // ambil semua data di tabel employee dan attendance milik nip tersebut
     },
     include: {
-      attendance: true, // join ke tabel attendance
-      attendance_recap: true, // join ke tabel attendanceRecap
+      attendance_recap: {
+        select: {
+          count_late: true,
+          count_sick: true,
+          count_leaves: true,
+          count_permits: true,
+          count_wfh: true,
+          count_works: true,
+        },
+      },
     },
   });
 
   if (!employee || employee.length === 0)
     throw new ResponseError(404, "Pegawai tidak ditemukan");
+
+  // ekstrak hayan data yang dibutuhkan FE saja
+  const extractedData =
+    (employee &&
+      employee.map((item) => {
+        return {
+          name: item.name,
+          nip: item.nip,
+          email: item.email,
+          role: item.role,
+          departmen: item.departmen,
+          picture: item.picture,
+          join: item.join_date,
+          quit: item.quit_date,
+          late: item.attendance_recap[0].count_late,
+          sick: item.attendance_recap[0].count_sick,
+          permits: item.attendance_recap[0].count_permits,
+          leaves: item.attendance_recap[0].count_leaves,
+          wfh: item.attendance_recap[0].count_wfh,
+          works: item.attendance_recap[0].count_works,
+        };
+      })) ||
+    [];
+
+  if (!extractedData || extractedData.length === 0) {
+    throw new ResponseError(404, "Data kosong");
+  }
+
   logger.info("RESPONSE DETAIL EMPLOYEE BERHASIL");
-  return employee;
+  return extractedData;
 };
 
 // service untuk melihat rekap kehadiran pada hari itu

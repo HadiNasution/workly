@@ -47,7 +47,7 @@ const createAdminValidation = Joi.object({
   role: Joi.string().max(12),
   departmen: Joi.string().max(100),
   join_date: Joi.date().required(),
-  quit_date: Joi.date(),
+  quit_date: Joi.date().required(),
 });
 
 // validasi untuk update admin

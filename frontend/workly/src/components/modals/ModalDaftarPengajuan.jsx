@@ -136,7 +136,7 @@ export default function ModalDaftarPengajuan() {
       return (
         <div className="text-center">
           <img
-            src="../../../public/assets/horse-glass.gif"
+            src="../../../public/assets/empty-ill.gif"
             alt="sleep illustration"
             width={200}
             height={200}

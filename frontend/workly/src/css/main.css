@@ -32,7 +32,8 @@ button:hover {
   color: black !important;
 }
 
-.card {
+.card,
+.accordion {
   background-color: rgb(243, 243, 243) !important;
   border: solid 2px white !important;
 }

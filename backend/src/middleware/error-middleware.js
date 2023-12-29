@@ -1,4 +1,5 @@
 import { ResponseError } from "../error/response-error.js";
+import { prismaClient } from "../app/database.js";
 
 const currentDate = new Date();
 const localCurrentTime = currentDate.toLocaleString();
