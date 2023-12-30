@@ -12,12 +12,12 @@ adminRoute.put("/update/:adminId", adminController.update);
 adminRoute.delete("/delete/:adminId", adminController.deleteAdmin);
 adminRoute.post("/create/employee", adminController.create);
 adminRoute.get("/get/employee", adminController.getEmployee);
-adminRoute.put("/update", adminController.updateEmployee);
+adminRoute.post("/update/employee", adminController.updateEmployee);
 adminRoute.delete(
   "/delete/employee/:employeeNip",
   adminController.deleteEmployee
 );
-adminRoute.get("/employee/detail/:employeeNip", adminController.detailEmployee);
+adminRoute.get("/employee/detail/:id", adminController.getEmployeeById);
 adminRoute.get("/recap/day", adminController.attendanceRecapByDay);
 adminRoute.get("/recap/month", adminController.attendanceRecapByMonth);
 adminRoute.get("/search", adminController.searchEmployee);

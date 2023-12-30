@@ -463,21 +463,15 @@ const getEmployee = async () => {
 // service untuk admin update data employee
 const updateEmployee = async (request) => {
   const updateRequest = validate(adminUpdateEmployeeValidation, request);
-  const isEmailDuplicate = await prismaClient.employee.count({
-    where: {
-      email: updateRequest.email,
-    },
-  });
-
-  if (isEmailDuplicate === 1) throw new ResponseError(400, "Email Sudah ada");
-
+  const id = parseInt(updateRequest.id);
   // get data lama
   const oldData = await prismaClient.employee.findUnique({
     where: {
-      nip: updateRequest.nip,
+      id,
     },
     select: {
       name: true,
+      nip: true,
       email: true,
       role: true,
       departmen: true,
@@ -488,9 +482,26 @@ const updateEmployee = async (request) => {
 
   if (!oldData) throw new ResponseError(404, "employee tidak ditemukan");
 
+  // Cek apakah email baru sudah dipakai
+  if (updateRequest.email && updateRequest.email !== oldData.email) {
+    const existingUserWithEmail = await prismaClient.employee.findUnique({
+      where: {
+        email: updateRequest.email,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (existingUserWithEmail) {
+      throw new ResponseError(400, "Email sudah digunakan oleh pengguna lain");
+    }
+  }
+
   // kondisi jika admin hanya update beberapa field
   // jika name diupdate, pakai data baru jika tidak pakai data lama dari oldData
   const newName = updateRequest.name ? updateRequest.name : oldData.name;
+  const newNip = updateRequest.nip ? updateRequest.nip : oldData.nip;
   const newEmail = updateRequest.email ? updateRequest.email : oldData.email;
   const newRole = updateRequest.role ? updateRequest.role : oldData.role;
   const newDepartmen = updateRequest.departmen
@@ -516,6 +527,7 @@ const updateEmployee = async (request) => {
   return prismaClient.employee.update({
     data: {
       name: newName,
+      nip: newNip,
       email: newEmail,
       role: newRole,
       departmen: newDepartmen,
@@ -523,7 +535,7 @@ const updateEmployee = async (request) => {
       quit_date: newQuitDate,
     },
     where: {
-      nip: updateRequest.nip,
+      id,
     },
   });
 };
@@ -550,57 +562,28 @@ const deleteEmployee = async (employeeNip) => {
 };
 
 // service untuk melihat detail employee dan rekap kehadiran employee
-const detailEmployee = async (employeeNip) => {
-  const employee = await prismaClient.employee.findMany({
+const getEmployeeById = async (id) => {
+  const employee = await prismaClient.employee.findUnique({
     where: {
-      nip: employeeNip, // ambil semua data di tabel employee dan attendance milik nip tersebut
+      id: id,
     },
-    include: {
-      attendance_recap: {
-        select: {
-          count_late: true,
-          count_sick: true,
-          count_leaves: true,
-          count_permits: true,
-          count_wfh: true,
-          count_works: true,
-        },
-      },
+    select: {
+      id: true,
+      nip: true,
+      name: true,
+      email: true,
+      role: true,
+      departmen: true,
+      join_date: true,
+      quit_date: true,
     },
   });
 
   if (!employee || employee.length === 0)
     throw new ResponseError(404, "Pegawai tidak ditemukan");
 
-  // ekstrak hayan data yang dibutuhkan FE saja
-  const extractedData =
-    (employee &&
-      employee.map((item) => {
-        return {
-          name: item.name,
-          nip: item.nip,
-          email: item.email,
-          role: item.role,
-          departmen: item.departmen,
-          picture: item.picture,
-          join: item.join_date,
-          quit: item.quit_date,
-          late: item.attendance_recap[0].count_late,
-          sick: item.attendance_recap[0].count_sick,
-          permits: item.attendance_recap[0].count_permits,
-          leaves: item.attendance_recap[0].count_leaves,
-          wfh: item.attendance_recap[0].count_wfh,
-          works: item.attendance_recap[0].count_works,
-        };
-      })) ||
-    [];
-
-  if (!extractedData || extractedData.length === 0) {
-    throw new ResponseError(404, "Data kosong");
-  }
-
-  logger.info("RESPONSE DETAIL EMPLOYEE BERHASIL");
-  return extractedData;
+  logger.info("RESPONSE GET EMPLOYEE ID BERHASIL");
+  return employee;
 };
 
 // service untuk melihat rekap kehadiran pada hari itu
@@ -1164,7 +1147,7 @@ export default {
   getEmployee,
   updateEmployee,
   deleteEmployee,
-  detailEmployee,
+  getEmployeeById,
   attendanceRecapByDay,
   attendanceRecapByMonth,
   searchEmployee,

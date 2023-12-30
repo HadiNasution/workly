@@ -1,32 +1,75 @@
 import axios from "axios";
 import { toastSuccess, alertError } from "../alert/SweetAlert";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function ModalTambahKaryawan() {
+export default function ModalUpdateKaryawan({ userId, modalId }) {
   const [error, setError] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [employeeNip, setEmployeeNip] = useState("");
+  const [role, setRole] = useState("");
+  const [departmen, setDepartmen] = useState("");
+  const [join, setJoin] = useState("");
+  const [quit, setQuit] = useState("");
+  const [idUser, setIdUser] = useState(0);
+  const [id, setId] = useState(userId);
+  const token = sessionStorage.getItem("token");
 
-  const tambahKaryawan = async (event) => {
+  const getEmployee = async (id) => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/admin/employee/detail/${id}`,
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (data.data) {
+        setIdUser(data.data.id);
+        setName(data.data.name);
+        setEmployeeNip(data.data.nip);
+        setEmail(data.data.email);
+        setRole(data.data.role);
+        setDepartmen(data.data.departmen);
+        setJoin(data.data.join_date);
+        setQuit(data.data.quit_date);
+      }
+    } catch (error) {
+      console.error("Server Response:", error);
+      //   alertError("Data tidak ditemukan", error.response.data.errors);
+    }
+  };
+
+  const dateFormat = (date) => {
+    const originalDateString = new Date(date);
+    const originalDate = new Date(originalDateString);
+
+    const day = originalDate.getDate();
+    const month = originalDate.getMonth() + 1;
+    const year = originalDate.getFullYear();
+
+    const formattedDay = day < 10 ? `0${day}` : day;
+    const formattedMonth = month < 10 ? `0${month}` : month;
+
+    return `${year}-${formattedMonth}-${formattedDay}`;
+  };
+
+  const updateEmployee = async (event) => {
     event.preventDefault();
-    const name = document.getElementById("name").value;
-    const nip = document.getElementById("nip").value;
-    const email = document.getElementById("email").value;
-    const role = document.getElementById("role").value;
-    const departmen = document.getElementById("departmen").value;
-    const tanggalMasuk = document.getElementById("tanggal-masuk").value;
-    const tanggalKeluar = document.getElementById("tanggal-keluar").value;
-    const token = sessionStorage.getItem("token");
-
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/api/admin/create/employee",
+        "http://localhost:3000/api/admin/update/employee",
         {
-          name,
-          nip,
-          email,
-          role,
-          departmen,
-          join_date: tanggalMasuk,
-          quit_date: tanggalKeluar,
+          id: idUser,
+          name: name,
+          nip: employeeNip,
+          email: email,
+          role: role,
+          departmen: departmen,
+          join_date: join,
+          quit_date: quit,
         },
         {
           headers: {
@@ -36,40 +79,42 @@ export default function ModalTambahKaryawan() {
         }
       );
 
-      //   console.log(data.data);
       if (data.data) {
-        window.location.reload();
-        toastSuccess(`Karyawan ${name} berhasil ditambahkan`, "");
+        console.log(data.data);
+        toastSuccess("Berhasil", data.data);
       }
     } catch (error) {
       console.error("Server Response:", error);
-      error.response.data.errors
-        ? setError(error.response.data.errors)
-        : alertError("Karyawan gagal ditambahkan", error);
+      if (error.response.data.errors) setError(error.response.data.errors);
     }
   };
+
+  useEffect(() => {
+    setId(userId);
+  }, [userId, id]);
 
   return (
     <>
       <button
-        className="btn btn-primary w-50"
+        className="btn btn-info w-25"
         data-bs-toggle="modal"
-        data-bs-target="#tambahKaryawanModal"
+        data-bs-target={`#${modalId}`}
+        onClick={() => getEmployee(id)}
       >
-        Tambah karyawan
+        Update
       </button>
       <div
         className="modal fade"
-        id="tambahKaryawanModal"
+        id={modalId}
         tabIndex="-1"
-        aria-labelledby="tambahKaryawanModalLabel"
+        aria-labelledby={modalId}
         aria-hidden="true"
       >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="tambahKaryawanModalLabel">
-                Tambah karyawan
+              <h1 className="modal-title fs-5" id={modalId}>
+                Update karyawan
               </h1>
               <button
                 type="button"
@@ -86,9 +131,10 @@ export default function ModalTambahKaryawan() {
               )}
               <form
                 method="post"
-                onSubmit={tambahKaryawan}
                 className="text-start"
+                onSubmit={updateEmployee}
               >
+                <input type="hidden" name="id" value={idUser} />
                 <div className="mb-3">
                   <label htmlFor="name" className="form-label">
                     Nama
@@ -97,7 +143,8 @@ export default function ModalTambahKaryawan() {
                     type="text"
                     className="form-control"
                     id="name"
-                    required
+                    value={name ? name : ""}
+                    onChange={(e) => setName(e.target.value)}
                   ></input>
                 </div>
                 <div className="mb-3">
@@ -105,10 +152,11 @@ export default function ModalTambahKaryawan() {
                     NIP
                   </label>
                   <input
-                    type="number"
+                    type="text"
                     className="form-control"
                     id="nip"
-                    required
+                    value={employeeNip ? employeeNip : ""}
+                    onChange={(e) => setEmployeeNip(e.target.value)}
                   ></input>
                 </div>
                 <div className="mb-3">
@@ -119,7 +167,8 @@ export default function ModalTambahKaryawan() {
                     type="email"
                     className="form-control"
                     id="email"
-                    required
+                    value={email ? email : ""}
+                    onChange={(e) => setEmail(e.target.value)}
                   ></input>
                 </div>
                 <div className="mb-3">
@@ -130,7 +179,8 @@ export default function ModalTambahKaryawan() {
                     type="text"
                     className="form-control"
                     id="role"
-                    required
+                    value={role ? role : ""}
+                    onChange={(e) => setRole(e.target.value)}
                   ></input>
                 </div>
                 <div className="mb-3">
@@ -141,7 +191,8 @@ export default function ModalTambahKaryawan() {
                     type="text"
                     className="form-control"
                     id="departmen"
-                    required
+                    value={departmen ? departmen : ""}
+                    onChange={(e) => setDepartmen(e.target.value)}
                   ></input>
                 </div>
                 <div className="mb-3">
@@ -155,7 +206,8 @@ export default function ModalTambahKaryawan() {
                         className="form-control"
                         id="tanggal-masuk"
                         name="tanggal-masuk"
-                        required
+                        value={join ? dateFormat(join) : ""}
+                        onChange={(e) => setJoin(e.target.value)}
                       ></input>
                     </div>
                     <div className="col">
@@ -166,6 +218,8 @@ export default function ModalTambahKaryawan() {
                         type="date"
                         className="form-control"
                         id="tanggal-keluar"
+                        value={quit ? dateFormat(quit) : ""}
+                        onChange={(e) => setQuit(e.target.value)}
                         name="tanggal-keluar"
                       ></input>
                     </div>
@@ -175,7 +229,7 @@ export default function ModalTambahKaryawan() {
                   className="btn btn-primary w-100 mt-3 mb-3"
                   type="submit"
                 >
-                  Tambah karyawan
+                  Update karyawan
                 </button>
               </form>
             </div>

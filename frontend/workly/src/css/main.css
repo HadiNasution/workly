@@ -71,6 +71,10 @@ button:hover {
   border: solid 0.5px gray;
 }
 
+.modal-header {
+  border-bottom: none !important;
+}
+
 h1 {
   color: rgb(20, 20, 20) !important;
   font-weight: bolder !important;

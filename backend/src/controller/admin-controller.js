@@ -90,9 +90,8 @@ const getEmployee = async (req, res, next) => {
 
 const updateEmployee = async (req, res, next) => {
   try {
-    const nip = req.body.nip;
     await adminService.updateEmployee(req.body);
-    res.status(201).json({ data: `Data ${nip} sudah di update` });
+    res.status(201).json({ data: `Data ${req.body.name} sudah di update` });
   } catch (error) {
     next(error);
   }
@@ -108,10 +107,9 @@ const deleteEmployee = async (req, res, next) => {
   }
 };
 
-const detailEmployee = async (req, res, next) => {
+const getEmployeeById = async (req, res, next) => {
   try {
-    const { employeeNip } = req.params;
-    const result = await adminService.detailEmployee(employeeNip);
+    const result = await adminService.getEmployeeById(parseInt(req.params.id));
     res.status(200).json({ data: result });
   } catch (error) {
     next(error);
@@ -228,7 +226,7 @@ export default {
   getEmployee,
   updateEmployee,
   deleteEmployee,
-  detailEmployee,
+  getEmployeeById,
   attendanceRecapByDay,
   attendanceRecapByMonth,
   searchEmployee,

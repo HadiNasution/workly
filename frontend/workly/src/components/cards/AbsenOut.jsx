@@ -22,8 +22,6 @@ export default function AbsenOut({ isWorked }) {
       title: "Konfirmasi",
       text: "Apakah Anda ingin absen keluar?",
       icon: "question",
-      background: "#555555",
-      color: "#FFFFFF",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",

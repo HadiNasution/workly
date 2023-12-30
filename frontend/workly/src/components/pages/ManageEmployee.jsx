@@ -27,7 +27,9 @@ export default function ManageEmployee() {
       <div className="row mt-3 d-flex align-items-center">
         <div className="col">
           <h1>Kelola Karyawan</h1>
-          <p>Tambah, Update, Hapus dan Detail karyawan</p>
+          <h5 className="text-secondary">
+            Tambah, Update, Hapus dan Informasi karyawan
+          </h5>
         </div>
         <div className="col text-end">
           <ModalTambahKaryawan />

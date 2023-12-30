@@ -17,21 +17,24 @@ import { adminAuth, employeeAuth } from "./auth/auth-login";
 import ManageEmployee from "./components/pages/ManageEmployee";
 import ManageAdmin from "./components/pages/ManageAdmin";
 import ManagePermission from "./components/pages/ManagePermission";
+import { toastWarning } from "./components/alert/SweetAlert";
 
 const ProtectedEmployeeRoute = ({ element, path }) => {
-  return employeeAuth() ? (
-    element
-  ) : (
-    <Navigate to="/" replace state={{ from: path }} />
-  );
+  if (employeeAuth()) {
+    return element;
+  } else {
+    toastWarning("Anda bukan karyawan");
+    return <Navigate to="/" replace state={{ from: path }} />;
+  }
 };
 
 const ProtectedAdminRoute = ({ element, path }) => {
-  return adminAuth() ? (
-    element
-  ) : (
-    <Navigate to="/" replace state={{ from: path }} />
-  );
+  if (adminAuth()) {
+    return element;
+  } else {
+    toastWarning("Anda bukan admin");
+    return <Navigate to="/" replace state={{ from: path }} />;
+  }
 };
 
 ReactDOM.createRoot(document.getElementById("root")).render(

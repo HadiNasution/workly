@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { BsTrashFill, BsPencilFill } from "react-icons/bs";
 import { convertDayString } from "../../utils/date-time";
-import { alertError, toastSuccess } from "../alert/SweetAlert";
+import { alertError, toastSuccess, toastWarning } from "../alert/SweetAlert";
+import Swal from "sweetalert2";
+import ModalUpdateKaryawan from "../modals/ModalUpdateKaryawan";
 
 export default function Karyawan() {
   const [data, setData] = useState(null);
@@ -22,9 +23,26 @@ export default function Karyawan() {
       //   console.log(data.data);
       if (data.data) setData(data.data);
     } catch (error) {
-      console.error("Server Response:", error.response.data);
+      console.error("Server Response:", error);
       toastWarning("Data kosong");
     }
+  };
+
+  const confirmDelete = (nip) => {
+    Swal.fire({
+      title: "Konfirmasi",
+      text: `Apakah Anda ingin menghapus karyawan dengan nip ${nip}`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ya",
+      cancelButtonText: "Batal",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteEmployee(nip);
+      }
+    });
   };
 
   const deleteEmployee = async (nip) => {
@@ -40,7 +58,10 @@ export default function Karyawan() {
         }
       );
       //   console.log(data.data);
-      if (data.data) toastSuccess("Berhasil", data.data);
+      if (data.data) {
+        window.location.reload();
+        toastSuccess("Berhasil", data.data);
+      }
     } catch (error) {
       console.error("Server Response:", error.response.data);
       alertError(`Gagal hapus karyawan ${nip}`, error);
@@ -60,7 +81,11 @@ export default function Karyawan() {
 
   const showEmployee = () => {
     return data.map((item) => (
-      <div className="accordion mt-2 mb-2" id="accordionEmployee" key={item.id}>
+      <div
+        className="accordion mt-2 mb-2 mt-4"
+        id={`accordionEmployee${item.id}`}
+        key={item.id}
+      >
         <div className="accordion-item">
           <h2 className="accordion-header">
             <button
@@ -136,17 +161,16 @@ export default function Karyawan() {
                   </p>
                 </div>
                 <div className="col text-end">
-                  <BsPencilFill
-                    className="fs-5 me-3"
-                    color="blue"
-                    style={{ cursor: "pointer" }}
+                  <ModalUpdateKaryawan
+                    userId={item.id}
+                    modalId={`update${item.id}`}
                   />
-                  <BsTrashFill
-                    className="fs-5 me-3"
-                    color="red"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => deleteEmployee(item.nip)}
-                  />
+                  <button
+                    className="btn btn-danger ms-3"
+                    onClick={() => confirmDelete(item.nip)}
+                  >
+                    Hapus
+                  </button>
                 </div>
               </div>
             </div>

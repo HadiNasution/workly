@@ -12,16 +12,9 @@ export default function LoginPage() {
         }}
       >
         <h1 style={{ fontSize: 60 }} className="d-inline mb-5 fw-bolder">
-          Workly
+          Workly<span className="text-secondary">.</span>
         </h1>
-        <img
-          src="../../../public/assets/coffee.png"
-          className="ms-1"
-          alt="coffee"
-          height={80}
-          width={80}
-        ></img>
-        <ul className="nav nav-tabs mb-3 mt-3" id="myTab" role="tablist">
+        <ul className="nav nav-tabs mb-3 mt-5" id="myTab" role="tablist">
           <li className="nav-item" role="presentation">
             <button
               className="nav-link active"

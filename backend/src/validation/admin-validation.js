@@ -61,15 +61,17 @@ const adminUpdateValidation = Joi.object({
 
 // validasi update employee
 const adminUpdateEmployeeValidation = Joi.object({
-  name: Joi.string().max(100),
-  nip: Joi.string().max(16).required(),
+  id: Joi.number().required(),
+  name: Joi.string().max(100).optional(),
+  nip: Joi.string().max(16).optional(),
   email: Joi.string()
     .max(100)
-    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
-  role: Joi.string().max(12),
-  departmen: Joi.string().max(100),
-  join_date: Joi.date(),
-  quit_date: Joi.date(),
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .optional(),
+  role: Joi.string().max(12).optional(),
+  departmen: Joi.string().max(100).optional(),
+  join_date: Joi.date().optional(),
+  quit_date: Joi.date().optional(),
 });
 
 // validasi untuk search employee
