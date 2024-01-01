@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
 import Admin from "../cards/Admin";
+import ModalTambahAdmin from "../modals/ModalTambahAdmin";
 
 export default function ManageAdmin() {
   const goBack = () => {
@@ -23,13 +24,15 @@ export default function ManageAdmin() {
           </div>
         </div>
       </div>
-      <div className="row mt-3 d-flex align-items-center">
+      <div className="row mt-3 mb-2 d-flex align-items-center">
         <div className="col">
           <h1>Kelola admin</h1>
-          <p>Tambah, Update, Hapus dan Detail admin</p>
+          <h5 className="text-secondary">
+            Tambah, Update, Hapus dan Informasi admin
+          </h5>
         </div>
         <div className="col text-end">
-          <button className="btn btn-primary w-75"> Tambah admin</button>
+          <ModalTambahAdmin />
         </div>
       </div>
       <div className="row">

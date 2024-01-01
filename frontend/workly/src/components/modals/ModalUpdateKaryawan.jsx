@@ -18,7 +18,7 @@ export default function ModalUpdateKaryawan({ userId, modalId }) {
   const getEmployee = async (id) => {
     try {
       const { data } = await axios.get(
-        `http://localhost:3000/api/admin/employee/detail/${id}`,
+        `http://localhost:3000/api/admin/get/employee/${id}`,
         {
           headers: {
             Authorization: token,

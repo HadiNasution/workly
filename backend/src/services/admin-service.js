@@ -228,13 +228,14 @@ const reset = async (request) => {
 const get = async () => {
   const admins = await prismaClient.admin.findMany({
     select: {
+      id: true,
       name: true,
       nip: true,
       email: true,
       is_super_admin: true,
     },
     orderBy: {
-      is_super_admin: "asc", // 'desc' untuk descending, 'asc' untuk ascending
+      is_super_admin: "desc",
     },
   });
 
@@ -242,17 +243,30 @@ const get = async () => {
   return admins;
 };
 
-// service untuk admin dan superadmin update data profile
-const update = async (request, adminId) => {
-  const updateRequest = validate(adminUpdateValidation, request);
+// service untuk admin get data admin by id
+const getAdminById = async (adminId) => {
   const id = parseInt(adminId);
-  const isEmailDuplicate = await prismaClient.admin.count({
+  const admins = await prismaClient.admin.findUnique({
     where: {
-      email: updateRequest.email,
+      id,
+    },
+    select: {
+      id: true,
+      name: true,
+      nip: true,
+      email: true,
+      is_super_admin: true,
     },
   });
 
-  if (isEmailDuplicate === 1) throw new ResponseError(400, "Email Sudah ada");
+  if (!admins) throw new ResponseError(404, "Data Admin kosong");
+  return admins;
+};
+
+// service untuk admin dan superadmin update data admin lain
+const update = async (request) => {
+  const updateRequest = validate(adminUpdateValidation, request);
+  const id = parseInt(updateRequest.id);
 
   // get data lama
   const oldData = await prismaClient.admin.findUnique({
@@ -261,22 +275,53 @@ const update = async (request, adminId) => {
     },
     select: {
       name: true,
+      nip: true,
       email: true,
-      password: true,
+      is_super_admin: true,
     },
   });
 
   if (!oldData) throw new ResponseError(404, "Admin tidak ditemukan");
 
+  // Cek apakah email baru sudah dipakai
+  if (updateRequest.email && updateRequest.email !== oldData.email) {
+    const existingUserWithEmail = await prismaClient.admin.findUnique({
+      where: {
+        email: updateRequest.email,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (existingUserWithEmail) {
+      throw new ResponseError(400, "Email sudah digunakan oleh pengguna lain");
+    }
+  }
+
+  // Cek apakah nip baru sudah dipakai
+  if (updateRequest.nip && updateRequest.nip !== oldData.nip) {
+    const existingUserWithNip = await prismaClient.admin.findUnique({
+      where: {
+        nip: updateRequest.nip,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (existingUserWithNip) {
+      throw new ResponseError(400, "NIP sudah digunakan oleh pengguna lain");
+    }
+  }
+
   // kondisi jika admin hanya update beberapa field
   // jika name diupdate, pakai data baru jika tidak pakai data lama dari oldData
   const newName = updateRequest.name ? updateRequest.name : oldData.name;
+  const newNip = updateRequest.nio ? updateRequest.nip : oldData.nip;
   const newEmail = updateRequest.email ? updateRequest.email : oldData.email;
-  const newPass = updateRequest.pas
-    ? await bcrypt.hash(updateRequest.pass, 10)
-    : oldData.pass;
 
-  // logger.info("UPDATE ADMIN BERHASIL");
+  logger.info("UPDATE ADMIN BERHASIL");
   // // simpan ke tabel log
   // const date = new Date();
   // const note = `Admin ${updateRequest.name} Update data pada : ${date}`;
@@ -289,8 +334,9 @@ const update = async (request, adminId) => {
   return prismaClient.admin.update({
     data: {
       name: newName,
+      nip: newNip,
       email: newEmail,
-      password: newPass,
+      is_super_admin: updateRequest.is_super_admin,
     },
     where: {
       id,
@@ -299,18 +345,17 @@ const update = async (request, adminId) => {
 };
 
 // service untuk admin dan superadmin delete admin
-const deleteAdmin = async (adminId) => {
-  const id = parseInt(adminId);
+const deleteAdmin = async (adminNip) => {
   const admin = await prismaClient.admin.delete({
     where: {
-      id,
+      nip: adminNip,
     },
   });
   if (!admin) throw new ResponseError(404, "Admin tidak ditemukan");
-  // logger.info("DELETE EMPLOYEE BERHASIL");
+  logger.info("DELETE EMPLOYEE BERHASIL");
   // // simpan ke tabel log
   // const date = new Date();
-  // const note = `Admin hapus data admin ${adminId} (id) pada : ${date}`;
+  // const note = `Admin hapus data admin ${adminNip} (nip) pada : ${date}`;
   // await prismaClient.log.create({
   //   data: {
   //     date,
@@ -498,6 +543,22 @@ const updateEmployee = async (request) => {
     }
   }
 
+  // Cek apakah nip baru sudah dipakai
+  if (updateRequest.nip && updateRequest.nip !== oldData.nip) {
+    const existingUserWithNip = await prismaClient.employee.findUnique({
+      where: {
+        nip: updateRequest.nip,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (existingUserWithNip) {
+      throw new ResponseError(400, "NIP sudah digunakan oleh pengguna lain");
+    }
+  }
+
   // kondisi jika admin hanya update beberapa field
   // jika name diupdate, pakai data baru jika tidak pakai data lama dari oldData
   const newName = updateRequest.name ? updateRequest.name : oldData.name;
@@ -562,10 +623,11 @@ const deleteEmployee = async (employeeNip) => {
 };
 
 // service untuk melihat detail employee dan rekap kehadiran employee
-const getEmployeeById = async (id) => {
+const getEmployeeById = async (employeeId) => {
+  const id = parseInt(employeeId);
   const employee = await prismaClient.employee.findUnique({
     where: {
-      id: id,
+      id,
     },
     select: {
       id: true,
@@ -1141,13 +1203,14 @@ export default {
   logout,
   reset,
   get,
+  getAdminById,
   createEmployee,
   update,
   deleteAdmin,
   getEmployee,
+  getEmployeeById,
   updateEmployee,
   deleteEmployee,
-  getEmployeeById,
   attendanceRecapByDay,
   attendanceRecapByMonth,
   searchEmployee,

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { isTokenExpired } from "../../auth/auth-login";
-import { toastSuccess, alertError } from "../alert/SweetAlert";
+import { toastSuccess, alertError, toastWarning } from "../alert/SweetAlert";
 import RecapAdminTab from "../tabs/RecapAdmin";
 import ModalSetting from "../modals/ModalSetting";
 
@@ -90,14 +90,7 @@ const AdminHome = () => {
     // Fungsi untuk pengecekan expired token
     const checkTokenExpiration = () => {
       if (isTokenExpired()) {
-        Swal.fire({
-          title: "Sesi habis",
-          text: "Silahkan untuk login kembali",
-          icon: "warning",
-          background: "#555555",
-          color: "#FFFFFF",
-          position: "center",
-        });
+        toastWarning("Sesi habis", "Silahkan untuk login kembali");
         logoutAdmin();
       }
     };

@@ -7,17 +7,19 @@ const adminRoute = new express.Router();
 adminRoute.use(adminAuthMiddleware); // auth middleware
 
 adminRoute.delete("/logout", adminController.logout);
-adminRoute.get("/get", adminController.get);
-adminRoute.put("/update/:adminId", adminController.update);
-adminRoute.delete("/delete/:adminId", adminController.deleteAdmin);
+adminRoute.get("/get/admin", adminController.getAdmin);
+adminRoute.get("/get/admin/:adminId", adminController.getAdminById);
+adminRoute.post("/create/admin", adminController.regist);
+adminRoute.post("/update/admin", adminController.update);
+adminRoute.delete("/delete/admin/:adminNip", adminController.deleteAdmin);
 adminRoute.post("/create/employee", adminController.create);
 adminRoute.get("/get/employee", adminController.getEmployee);
+adminRoute.get("/get/employee/:employeeId", adminController.getEmployeeById);
 adminRoute.post("/update/employee", adminController.updateEmployee);
 adminRoute.delete(
   "/delete/employee/:employeeNip",
   adminController.deleteEmployee
 );
-adminRoute.get("/employee/detail/:id", adminController.getEmployeeById);
 adminRoute.get("/recap/day", adminController.attendanceRecapByDay);
 adminRoute.get("/recap/month", adminController.attendanceRecapByMonth);
 adminRoute.get("/search", adminController.searchEmployee);

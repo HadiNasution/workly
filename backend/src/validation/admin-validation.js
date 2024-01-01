@@ -52,11 +52,14 @@ const createAdminValidation = Joi.object({
 
 // validasi untuk update admin
 const adminUpdateValidation = Joi.object({
-  name: Joi.string().max(100),
+  id: Joi.number().required(),
+  name: Joi.string().max(100).optional(),
+  nip: Joi.string().max(16).optional(),
   email: Joi.string()
     .max(100)
-    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
-  password: Joi.string().max(100),
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .optional(),
+  is_super_admin: Joi.boolean().optional(),
 });
 
 // validasi update employee

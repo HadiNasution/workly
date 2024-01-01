@@ -36,7 +36,7 @@ const reset = async (req, res, next) => {
   }
 };
 
-const get = async (req, res, next) => {
+const getAdmin = async (req, res, next) => {
   try {
     const result = await adminService.get();
     res.status(200).json({ data: result });
@@ -45,13 +45,21 @@ const get = async (req, res, next) => {
   }
 };
 
+const getAdminById = async (req, res, next) => {
+  try {
+    const result = await adminService.getAdminById(req.params.adminId);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const update = async (req, res, next) => {
   try {
-    const adminId = req.params.adminId;
-    const employee = req.body;
-    const adminName = req.admin.name;
-    await adminService.update(employee, adminId);
-    res.status(200).json({ data: `Data ${adminName} berhasil di update` });
+    await adminService.update(req.body);
+    res.status(200).json({
+      data: `Data admin ${req.body.name} berhasil di update`,
+    });
   } catch (error) {
     next(error);
   }
@@ -59,10 +67,10 @@ const update = async (req, res, next) => {
 
 const deleteAdmin = async (req, res, next) => {
   try {
-    const adminId = req.params.adminId;
-    const adminName = req.admin.name;
-    await adminService.deleteAdmin(adminId);
-    res.status(200).json({ data: `Admin ${adminName} berhasil dihapus` });
+    await adminService.deleteAdmin(req.params.adminNip);
+    res
+      .status(200)
+      .json({ data: `Admin ${req.params.adminNip} berhasil dihapus` });
   } catch (error) {
     next(error);
   }
@@ -88,6 +96,15 @@ const getEmployee = async (req, res, next) => {
   }
 };
 
+const getEmployeeById = async (req, res, next) => {
+  try {
+    const result = await adminService.getEmployeeById(req.params.employeeId);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const updateEmployee = async (req, res, next) => {
   try {
     await adminService.updateEmployee(req.body);
@@ -102,15 +119,6 @@ const deleteEmployee = async (req, res, next) => {
     const { employeeNip } = req.params;
     await adminService.deleteEmployee(employeeNip);
     res.status(200).json({ data: `Data ${employeeNip} sudah di hapus` });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getEmployeeById = async (req, res, next) => {
-  try {
-    const result = await adminService.getEmployeeById(parseInt(req.params.id));
-    res.status(200).json({ data: result });
   } catch (error) {
     next(error);
   }
@@ -219,14 +227,15 @@ export default {
   regist,
   logout,
   reset,
-  get,
+  getAdmin,
+  getAdminById,
   update,
   deleteAdmin,
   create,
   getEmployee,
+  getEmployeeById,
   updateEmployee,
   deleteEmployee,
-  getEmployeeById,
   attendanceRecapByDay,
   attendanceRecapByMonth,
   searchEmployee,
