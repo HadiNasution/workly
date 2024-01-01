@@ -886,8 +886,6 @@ const getPermission = async () => {
           name: true,
           nip: true,
           email: true,
-          role: true,
-          departmen: true,
         },
       },
     },
@@ -898,10 +896,18 @@ const getPermission = async () => {
   // jumlah permission yang belum di approve
   let totalItemsNeedApproval = await prismaClient.permission.count({
     where: {
-      is_approved: false,
+      is_approved: null,
     },
   });
   if (totalItemsNeedApproval === 0) totalItemsNeedApproval = 0;
+
+  // jumlah permission yang sudah di reject
+  let totalItemsRejected = await prismaClient.permission.count({
+    where: {
+      is_approved: false,
+    },
+  });
+  if (totalItemsRejected === 0) totalItemsRejected = 0;
 
   // jumlah permission yang sudah di approve
   let totalItemsApproved = await prismaClient.permission.count({
@@ -911,25 +917,18 @@ const getPermission = async () => {
   });
   if (totalItemsApproved === 0) totalItemsApproved = 0;
 
-  // total jumlah permission
-  let totalItems = totalItemsApproved + totalItemsNeedApproval;
-
   // ekstrak hayan data yang dibutuhkan FE saja
   const extractedData =
     (permission &&
       permission.map((item) => {
         return {
           type: item.type,
-          date: item.date ? item.date : null,
+          note: item.note ? item.note : "",
           is_approved: item.is_approved,
           images: item.images ? item.images : null,
           start_date: item.start_date ? item.start_date : null,
           end_date: item.end_date ? item.end_date : null,
           name: item.employee.name,
-          nip: item.employee.nip,
-          email: item.employee.email,
-          role: item.employee.role ? item.employee.role : null,
-          departmen: item.employee.departmen ? item.employee.departmen : null,
         };
       })) ||
     [];
@@ -941,9 +940,9 @@ const getPermission = async () => {
   return {
     result: extractedData,
     status: {
-      total: totalItems,
       approve: totalItemsNeedApproval,
       approved: totalItemsApproved,
+      rejected: totalItemsRejected,
     },
   };
 };

@@ -5,6 +5,7 @@ import { isTokenExpired } from "../../auth/auth-login";
 import { toastSuccess, alertError, toastWarning } from "../alert/SweetAlert";
 import RecapAdminTab from "../tabs/RecapAdmin";
 import ModalSetting from "../modals/ModalSetting";
+import ModalKelolaPengajuan from "../modals/ModalKelolaPengajuan";
 
 const AdminHome = () => {
   const navigate = useNavigate();
@@ -163,25 +164,7 @@ const AdminHome = () => {
         </div>
         {showSuperAdminMenu()}
         <div className="col">
-          <div className="card">
-            <div className="card-body">
-              <img
-                src="../../../public/assets/bell.png"
-                alt="pengajuan-icon"
-                height={60}
-                width={60}
-              ></img>
-              <p className="d-inline ms-3">
-                <a
-                  className="stretched-link"
-                  style={{ color: "white", cursor: "pointer" }}
-                  onClick={() => navigate("/admin/manage/permission")}
-                >
-                  Kelola Pengajuan
-                </a>
-              </p>
-            </div>
-          </div>
+          <ModalKelolaPengajuan />
         </div>
       </div>
       <div className="row mt-4">
