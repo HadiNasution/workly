@@ -525,6 +525,7 @@ const createPermission = async (request, employee, filePath) => {
 
 // service untuk employee melihat daftar permission
 const getPermission = async (employee) => {
+  // get data permission dari employee id
   const permission = await prismaClient.employee.findMany({
     where: {
       id: employee.id,
@@ -532,15 +533,12 @@ const getPermission = async (employee) => {
     include: {
       permission: {
         select: {
-          id: true,
           type: true,
           note: true,
-          date: true,
           is_approved: true,
           images: true,
           start_date: true,
           end_date: true,
-          admin_id: true,
         },
         orderBy: {
           is_approved: "asc",
@@ -550,14 +548,52 @@ const getPermission = async (employee) => {
   });
   if (!permission) throw new ResponseError(404, "Data kosong");
 
+  // get jumlah permission yang belum di approve milik employee id
+  let totalItemsNeedApproval = await prismaClient.permission.count({
+    where: {
+      is_approved: null,
+      employee_id: employee.id,
+    },
+  });
+  if (totalItemsNeedApproval === 0) totalItemsNeedApproval = 0;
+
+  // get jumlah permission yang sudah di approve milik employee id
+  let totalItemsApproved = await prismaClient.permission.count({
+    where: {
+      is_approved: true,
+      employee_id: employee.id,
+    },
+  });
+  if (totalItemsApproved === 0) totalItemsApproved = 0;
+
+  // get jumlah permission yang ditolak milik employee id
+  let totalItemsRejected = await prismaClient.permission.count({
+    where: {
+      is_approved: false,
+      employee_id: employee.id,
+    },
+  });
+  if (totalItemsRejected === 0) totalItemsRejected = 0;
+
   // ekstrak hanya data yang dibutuhkan saja
   const permissionsOnly = permission.map((employee) => employee.permission);
+
   if (!permissionsOnly || permissionsOnly.length === 0) {
     throw new ResponseError(404, "Data Permission kosong");
   }
+
   const data = permissionsOnly[0];
+
   logger.info("GET PERMISSION BERHASIL");
-  return data;
+
+  return {
+    result: data,
+    status: {
+      approve: totalItemsNeedApproval,
+      approved: totalItemsApproved,
+      rejected: totalItemsRejected,
+    },
+  };
 };
 
 // service untuk employee melihat status hadir hari itu

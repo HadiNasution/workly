@@ -159,7 +159,7 @@ export default function ModalPengajuan() {
                     name="surat"
                     id="surat"
                   />
-                  <div id="passwordHelpBlock" class="form-text">
+                  <div id="passwordHelpBlock" className="form-text">
                     format yang diterima : png, jpg, jpeg
                   </div>
                 </div>

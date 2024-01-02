@@ -1,17 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toastWarning } from "../alert/SweetAlert";
-import { convertDayString } from "../../utils/date-time";
-import {
-  BsImageFill,
-  BsClockFill,
-  BsCheckCircleFill,
-  BsArrowRight,
-  BsXOctagonFill,
-} from "react-icons/bs";
+import DaftarPengajuan from "../tabs/DaftarPengajuan";
 
 export default function ModalDaftarPengajuan() {
   const [recap, setRecap] = useState(null);
+  const [approved, setApproved] = useState(0);
+  const [approve, setApprove] = useState(0);
+  const [rejected, setRejected] = useState(0);
 
   const getDaftarPengajuan = async () => {
     try {
@@ -25,125 +21,15 @@ export default function ModalDaftarPengajuan() {
           },
         }
       );
-
       if (data.data) {
-        // console.log(data.data);
-        setRecap(data.data);
+        setRecap(data.data.result);
+        setApprove(data.data.status.approve);
+        setApproved(data.data.status.approved);
+        setRejected(data.data.status.rejected);
       }
     } catch (error) {
       console.error("Server Response:", error.response.data.errors);
       toastWarning("Data kosong");
-    }
-  };
-
-  const dateFormated = (date) => {
-    let dateString = date;
-    let dateObject = new Date(dateString);
-
-    let hari = convertDayString(dateObject);
-    let tanggal = dateObject.getDate();
-    let bulan = dateObject.getMonth() + 1;
-    let tahun = dateObject.getFullYear();
-
-    let formatWaktu = `${hari} ${tanggal}/${bulan}/${tahun}`;
-    return formatWaktu;
-  };
-
-  // Fungsi untuk menghitung selisih hari antara dua tanggal
-  const hitungSelisihHari = (tanggalAwal, tanggalAkhir) => {
-    const satuHari = 24 * 60 * 60 * 1000; // Satu hari dalam milidetik
-
-    // Mengkonversi kedua tanggal ke objek Date
-    const dateAwal = new Date(tanggalAwal);
-    const dateAkhir = new Date(tanggalAkhir);
-
-    // Menghitung selisih dalam milidetik
-    const selisihMilidetik = Math.abs(dateAkhir - dateAwal);
-
-    // Menghitung selisih hari
-    const selisihHari = Math.floor(selisihMilidetik / satuHari);
-
-    return selisihHari;
-  };
-
-  const showRecap = () => {
-    if (recap !== null && recap.length !== 0) {
-      return recap.map((item) => (
-        <div key={item.id}>
-          <div className="card w-100 mb-2">
-            <div className="card-header">
-              <div className="d-flex justify-content-between">
-                <h5>{item.type}</h5>
-                {item.is_approved !== null ? (
-                  <h6>
-                    {item.is_approved === true ? (
-                      <>
-                        <BsCheckCircleFill
-                          color="green"
-                          className="me-1 mb-1"
-                        />
-                        <span style={{ color: "green" }}>Disetujui</span>
-                      </>
-                    ) : (
-                      <>
-                        <BsXOctagonFill color="red" className="me-1 mb-1" />
-                        <span style={{ color: "red" }}>Ditolak</span>
-                      </>
-                    )}
-                  </h6>
-                ) : (
-                  <h6>
-                    <BsClockFill color="orangered" className="me-1 mb-1" />
-                    <span style={{ color: "orangered" }}>
-                      Menunggu untuk disetujui
-                    </span>
-                  </h6>
-                )}
-              </div>
-            </div>
-            <div className="card-body">
-              <div className="d-flex justify-content-between">
-                <p>
-                  {dateFormated(item.start_date)}
-                  <BsArrowRight className="me-2 ms-2" />
-                  {dateFormated(item.end_date)}
-                </p>
-                {item.images ? (
-                  <div className="surat">
-                    <BsImageFill />{" "}
-                    <a
-                      href={`http://localhost:3000/${item.images}`}
-                      target="_blank"
-                    >
-                      Lihat surat
-                    </a>
-                  </div>
-                ) : (
-                  ""
-                )}
-              </div>
-              <p>
-                <b>{hitungSelisihHari(item.start_date, item.end_date)} Hari</b>
-              </p>
-              <p>
-                <b>Catatan :</b> {item.note}
-              </p>
-            </div>
-          </div>
-        </div>
-      ));
-    } else {
-      return (
-        <div className="text-center">
-          <img
-            src="../../../public/assets/empty-ill.gif"
-            alt="sleep illustration"
-            width={200}
-            height={200}
-          />
-          <h6 className="text-secondary">Anda belum mengajukan apapun...</h6>
-        </div>
-      );
     }
   };
 
@@ -193,15 +79,13 @@ export default function ModalDaftarPengajuan() {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">{showRecap(recap)}</div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Tutup
-              </button>
+            <div className="modal-body">
+              <DaftarPengajuan
+                data={recap}
+                approve={approve}
+                approved={approved}
+                rejected={rejected}
+              />
             </div>
           </div>
         </div>

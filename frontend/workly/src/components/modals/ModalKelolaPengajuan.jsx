@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import CardPermissionAdmin from "../cards/PermissionAdmin";
+import {
+  CardPermissionAdminApproval,
+  CardPermissionAdmin,
+} from "../cards/PermissionAdmin";
 
 export default function ModalKelolaPengajuan() {
   const [data, setData] = useState(null);
   const [approved, setApproved] = useState(0);
   const [approve, setApprove] = useState(0);
-  const [reject, setRejected] = useState(0);
+  const [rejected, setRejected] = useState(0);
 
   const getPengajuan = async () => {
     try {
@@ -33,14 +36,26 @@ export default function ModalKelolaPengajuan() {
 
   const ApprovedCardList = (data) => {
     return data && data.length > 0 ? (
-      data.map(
-        (item, index) =>
-          item.is_approved && <CardPermissionAdmin key={index} {...item} />
+      approved !== 0 ? (
+        data.map(
+          (item, index) =>
+            item.is_approved && <CardPermissionAdmin key={index} {...item} />
+        )
+      ) : (
+        <div className="text-center mt-5 mb-5">
+          <img
+            src="../../../public/assets/empty-ill.gif"
+            alt="sleep illustration"
+            width={200}
+            height={200}
+          />
+          <h6 className="text-secondary">Belum ada pengajuan...</h6>
+        </div>
       )
     ) : (
       <div className="text-center mt-5 mb-5">
         <img
-          src="../../../public/assets/sleep-ill.gif"
+          src="../../../public/assets/empty-ill.gif"
           alt="sleep illustration"
           width={200}
           height={200}
@@ -52,16 +67,28 @@ export default function ModalKelolaPengajuan() {
 
   const RejectedCardList = (data) => {
     return data && data.length > 0 ? (
-      data.map(
-        (item, index) =>
-          item.is_approved === false && (
-            <CardPermissionAdmin key={index} {...item} />
-          )
+      rejected !== 0 ? (
+        data.map(
+          (item, index) =>
+            item.is_approved === false && (
+              <CardPermissionAdmin key={index} {...item} />
+            )
+        )
+      ) : (
+        <div className="text-center mt-5 mb-5">
+          <img
+            src="../../../public/assets/empty-ill.gif"
+            alt="sleep illustration"
+            width={200}
+            height={200}
+          />
+          <h6 className="text-secondary">Belum ada pengajuan...</h6>
+        </div>
       )
     ) : (
       <div className="text-center mt-5 mb-5">
         <img
-          src="../../../public/assets/sleep-ill.gif"
+          src="../../../public/assets/empty-ill.gif"
           alt="sleep illustration"
           width={200}
           height={200}
@@ -73,16 +100,28 @@ export default function ModalKelolaPengajuan() {
 
   const NeedApprovalCardList = (data) => {
     return data && data.length > 0 ? (
-      data.map(
-        (item, index) =>
-          item.is_approved === null && (
-            <CardPermissionAdmin key={index} {...item} />
-          )
+      approve !== 0 ? (
+        data.map(
+          (item, index) =>
+            item.is_approved === null && (
+              <CardPermissionAdminApproval key={index} {...item} />
+            )
+        )
+      ) : (
+        <div className="text-center mt-5 mb-5">
+          <img
+            src="../../../public/assets/empty-ill.gif"
+            alt="sleep illustration"
+            width={200}
+            height={200}
+          />
+          <h6 className="text-secondary">Belum ada pengajuan...</h6>
+        </div>
       )
     ) : (
       <div className="text-center mt-5 mb-5">
         <img
-          src="../../../public/assets/sleep-ill.gif"
+          src="../../../public/assets/empty-ill.gif"
           alt="sleep illustration"
           width={200}
           height={200}
@@ -183,7 +222,7 @@ export default function ModalKelolaPengajuan() {
                     aria-controls="rejected-tab-pane"
                     aria-selected="false"
                   >
-                    Rejected ({reject ? reject : 0})
+                    Rejected ({rejected ? rejected : 0})
                   </button>
                 </li>
               </ul>
