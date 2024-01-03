@@ -712,6 +712,17 @@ const getRecap = async (employee) => {
   return recap;
 };
 
+const getShot = async () => {
+  return prismaClient.setting.findFirst({
+    select: {
+      shot: true,
+    },
+    where: {
+      id: 1,
+    },
+  });
+};
+
 export default {
   login,
   logout,
@@ -726,4 +737,5 @@ export default {
   getAttendanceByMonth,
   getSetting,
   getRecap,
+  getShot,
 };

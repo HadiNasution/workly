@@ -1197,6 +1197,20 @@ const updateSetting = async (request) => {
   });
 };
 
+const generateShot = async () => {
+  return prismaClient.setting.update({
+    data: {
+      shot: generate({ minLength: 3, maxLength: 10 }),
+    },
+    select: {
+      shot: true,
+    },
+    where: {
+      id: 1,
+    },
+  });
+};
+
 export default {
   login,
   regist,
@@ -1220,4 +1234,5 @@ export default {
   log,
   updateSetting,
   getSetting,
+  generateShot,
 };

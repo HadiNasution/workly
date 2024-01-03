@@ -33,5 +33,6 @@ employeeRoute.get("/attendance/day", employeeController.getAttendanceByDay);
 employeeRoute.get("/attendance/month", employeeController.getAttendanceByMonth);
 employeeRoute.get("/setting", employeeController.getSetting);
 employeeRoute.get("/recap", employeeController.getRecap);
+employeeRoute.get("/shot", employeeController.getShot);
 
 export { employeeRoute };

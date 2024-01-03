@@ -222,6 +222,15 @@ const updateSetting = async (req, res, next) => {
   }
 };
 
+const generateShot = async (req, res, next) => {
+  try {
+    const result = await adminService.generateShot();
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   login,
   regist,
@@ -245,4 +254,5 @@ export default {
   log,
   updateSetting,
   getSetting,
+  generateShot,
 };

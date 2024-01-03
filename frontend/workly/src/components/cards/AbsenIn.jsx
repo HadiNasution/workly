@@ -13,7 +13,8 @@ import { dayString, monthString, date, year } from "../../utils/date-time";
 export default function AbsenIn({ onLogin }) {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [shot, setShot] = useState(localStorage.getItem("shot"));
+  const [shot, setShot] = useState("");
+  const [oldShot, setOldShot] = useState("");
   const [counter, setCounter] = useState(2);
   const [countdown, setCountdown] = useState(null);
   const [wfh, setWfh] = useState(false);
@@ -21,6 +22,7 @@ export default function AbsenIn({ onLogin }) {
   const [usingShot, setUsingShot] = useState(true);
   const [hours, setHours] = useState(new Date().getHours());
   const [minutes, setMinutes] = useState(new Date().getMinutes());
+  const token = sessionStorage.getItem("token");
   let warning;
   let countDownInterval;
 
@@ -90,7 +92,6 @@ export default function AbsenIn({ onLogin }) {
 
   const absenIn = async () => {
     try {
-      const token = sessionStorage.getItem("token");
       const { data } = await axios.get(
         `http://localhost:3000/api/employee/absenIn/-6.935783427330478/107.5782643924172/${wfh}`,
         {
@@ -108,50 +109,71 @@ export default function AbsenIn({ onLogin }) {
     }
   };
 
+  // get koordinat latitude longitude
+  const getPosition = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLatitude(position.coords.latitude);
+          setLongitude(position.coords.longitude);
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          alertError("Gagal mendapatkan lokasi", error);
+        },
+        { enableHighAccuracy: true }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+      alertError(
+        "Gagal mendapatkan lokasi",
+        "Geolocation is not supported by this browser."
+      );
+    }
+  };
+
+  const getShot = async () => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/employee/shot`,
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setShot(data.data.shot.toUpperCase());
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    // get koordinat latitude longitude
-    const getPosition = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            setLatitude(position.coords.latitude);
-            setLongitude(position.coords.longitude);
-          },
-          (error) => {
-            console.error("Error getting location:", error);
-            alertError("Gagal mendapatkan lokasi", error);
-          },
-          { enableHighAccuracy: true }
-        );
-      } else {
-        console.error("Geolocation is not supported by this browser.");
-        alertError(
-          "Gagal mendapatkan lokasi",
-          "Geolocation is not supported by this browser."
-        );
-      }
-    };
-    // fungsi untuk cek setiap detik
+    // fungsi untuk cek state setiap detik
     const shotInterval = setInterval(() => {
       setHours(new Date().getHours());
       setMinutes(new Date().getMinutes());
-      // Mendapatkan nilai terkini dari local storage
-      const currentValue = localStorage.getItem("shot");
+      // Mendapatkan nilai terkini dari shot
+      getShot();
       // mendapatkan nilai terkini dari checkbox wfh
       const value = document.getElementById("wfh");
       // dapatkan nilai wfh
       setWfh(value.checked);
       // apakah nilai berubah sejak update sebelumnya
-      if (currentValue !== shot) {
-        // Mengupdate state jika nilai berubah
-        setShot(currentValue);
-        // acak tombol
-        shuffleLinks();
-      }
     }, 1000); // Setiap detik
 
+    // jika state di databse berubah, maka update oldShot dan acak tombol
+    if (oldShot !== shot) {
+      // Mengupdate state jika nilai berubah
+      setOldShot(shot);
+      // acak tombol
+      shuffleLinks();
+    }
+
+    // jika pengguna salah pilih shot selama 2x, maka mulai hitung
     if (counter === 0) {
-      setCountdown(5); // Hitungan mundur selama 10 menit (dalam detik)
+      setCountdown(3600); // selama 1 jam (dalam detik)
       countDownInterval = setInterval(() => {
         setCountdown((prevCountdown) => {
           if (prevCountdown === 0) {
@@ -165,6 +187,7 @@ export default function AbsenIn({ onLogin }) {
 
     getSetting();
     getPosition();
+    setOldShot("");
 
     return () => {
       clearInterval(shotInterval);

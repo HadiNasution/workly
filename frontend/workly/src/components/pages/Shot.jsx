@@ -1,15 +1,27 @@
-import { generate } from "random-words";
 import { useState, useEffect } from "react";
+import axios from "axios";
+import { alertError } from "../alert/SweetAlert";
 
 export default function Shot() {
   const [shot, setShot] = useState(null);
-  const [countdown, setCountdown] = useState(60); // Waktu mundur dalam detik
+  const [countdown, setCountdown] = useState(30); // Waktu mundur dalam detik
 
-  const generateShot = () => {
-    const randomWord = generate({ minLength: 3, maxLength: 10 });
-    setShot(randomWord.toUpperCase());
-    localStorage.setItem("shot", randomWord.toUpperCase());
-    setCountdown(8); // Mengatur ulang waktu mundur setelah generateShot (dalam detik)
+  const generateShot = async () => {
+    try {
+      const { data } = await axios.put(
+        `http://localhost:3000/api/shot/generate`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setShot(data.data.shot.toUpperCase());
+      setCountdown(30); // Mengatur ulang waktu mundur setelah generateShot (dalam detik)
+    } catch (error) {
+      console.log(error);
+      alertError("Gagal generate shot", error);
+    }
   };
 
   useEffect(() => {
@@ -18,10 +30,10 @@ export default function Shot() {
       setCountdown((prevCountdown) => prevCountdown - 1);
     }, 1000);
 
-    // Fungsi untuk menjalankan generateShot setiap 1 menit (dalam milidetik)
+    // Fungsi untuk menjalankan generateShot setiap 30 detik (dalam milidetik)
     const intervalId = setInterval(() => {
       generateShot();
-    }, 8000);
+    }, 30000);
     generateShot();
     // Membersihkan interval saat komponen di-unmount atau selesai
     return () => {
@@ -38,7 +50,9 @@ export default function Shot() {
 
   return (
     <div className="card text-center">
-      <div className="card-header">Absen Workly ☕</div>
+      <div className="card-header">
+        <strong>Absen Workly</strong> ☕
+      </div>
       <div className="card-body">
         <h1 className="card-title fw-bolder">{shot}</h1>
       </div>

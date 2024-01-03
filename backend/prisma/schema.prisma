@@ -130,6 +130,7 @@ model Setting {
   time_out Int @default(17)
   wfh_limit Int? @default(4)
   leaves_limit Int? @default(12)
+  shot String? @db.VarChar(10)
   enable_wfh Boolean @default(true)
   using_shot Boolean @default(true)
   created_at DateTime @default(now())
