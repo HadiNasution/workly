@@ -1,5 +1,7 @@
 import { convertDayString } from "../../utils/date-time";
 import { BsArrowRight, BsImageFill } from "react-icons/bs";
+import axios from "axios";
+import { toastSuccess, alertError } from "../alert/SweetAlert.js";
 
 const dateFormated = (date) => {
   let dateString = date;
@@ -32,6 +34,7 @@ const hitungSelisihHari = (tanggalAwal, tanggalAkhir) => {
 };
 
 export function CardPermissionAdminApproval({
+  id,
   name,
   type,
   start_date,
@@ -39,6 +42,48 @@ export function CardPermissionAdminApproval({
   images,
   note,
 }) {
+  const token = sessionStorage.getItem("token");
+  const approve = async (id) => {
+    try {
+      const { data } = await axios.put(
+        `http://localhost:3000/api/admin/permission/${id}`,
+        null,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      if (data.data) {
+        toastSuccess(data.data, `Pengajuan ${name} telah di setujui`);
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response.data.errors)
+        alertError("Gagal reject", error.response.data.errors);
+    }
+  };
+
+  const reject = async (id) => {
+    try {
+      const { data } = await axios.put(
+        `http://localhost:3000/api/admin/permission/reject/${id}`,
+        null,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      if (data.data) {
+        toastSuccess(data.data, `Pengajuan ${name} telah di tolak`);
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response.data.errors)
+        alertError("Gagal reject", error.response.data.errors);
+    }
+  };
   return (
     <div className="card mb-2">
       <div className="card-header">
@@ -47,8 +92,12 @@ export function CardPermissionAdminApproval({
             {name} • {type}
           </h5>
           <div className="action">
-            <button className="btn btn-danger me-2">Reject</button>
-            <button className="btn btn-secondary">Approve</button>
+            <button className="btn btn-danger me-2" onClick={() => reject(id)}>
+              Reject
+            </button>
+            <button className="btn btn-success" onClick={() => approve(id)}>
+              Approve
+            </button>
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { employeeRoute } from "../routes/employee-api.js";
 import { errorMiddleware } from "../middleware/error-middleware.js";
 
 export const web = express();
+
 const allowedOrigins = [
   "http://localhost:5173",
   "https://8v1mp609-5173.asse.devtunnels.ms",
@@ -16,11 +17,10 @@ web.use(
     origin: allowedOrigins,
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Origin,X-Requested-With,Content-Type,Accept,Authorization",
   })
 );
 web.use("/uploads", express.static("./uploads"));
-
-// ADMIN
 web.use("/api", publicRoute);
 web.use("/api/admin", adminRoute);
 web.use("/api/employee", employeeRoute);

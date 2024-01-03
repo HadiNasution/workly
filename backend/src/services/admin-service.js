@@ -922,6 +922,7 @@ const getPermission = async () => {
     (permission &&
       permission.map((item) => {
         return {
+          id: item.id,
           type: item.type,
           note: item.note ? item.note : "",
           is_approved: item.is_approved,
@@ -1021,7 +1022,7 @@ const approvePermission = async (permissionId, admin) => {
       }
     });
 
-    // logger.info("TRANSAKSI APPROVE PERMISSION BERHASIL");
+    logger.info("TRANSAKSI APPROVE PERMISSION BERHASIL");
     // // simpan ke tabel log
     // const date = new Date();
     // const note = `Admin ${admin.id} (id) approve permission ${permissionId} (id) data pada : ${date}`;

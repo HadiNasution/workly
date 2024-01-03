@@ -29,14 +29,9 @@ employeeRoute.post(
   employeeController.createPermission
 );
 employeeRoute.get("/permission", employeeController.getPermission);
-employeeRoute.get(
-  "/attendance/day",
-  employeeController.getAttendanceRecapByDay
-);
-employeeRoute.get(
-  "/attendance/month",
-  employeeController.getAttendanceRecapByMonth
-);
+employeeRoute.get("/attendance/day", employeeController.getAttendanceByDay);
+employeeRoute.get("/attendance/month", employeeController.getAttendanceByMonth);
 employeeRoute.get("/setting", employeeController.getSetting);
+employeeRoute.get("/recap", employeeController.getRecap);
 
 export { employeeRoute };

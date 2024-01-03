@@ -4,10 +4,14 @@ import { useEffect, useState } from "react";
 
 export default function ModalPengajuan() {
   const [wfh, setWfh] = useState(true);
+  const [batasWfh, setBatasWfh] = useState(0);
+  const [batasCuti, setBatasCuti] = useState(0);
+  const [recapCuti, setRecapCuti] = useState(0);
+  const [recapWfh, setRecapWfh] = useState(0);
+  const token = sessionStorage.getItem("token");
 
   const getSetting = async () => {
     try {
-      const token = sessionStorage.getItem("token");
       const { data } = await axios.get(
         "http://localhost:3000/api/employee/setting",
         {
@@ -19,10 +23,33 @@ export default function ModalPengajuan() {
       );
       if (data.data) {
         setWfh(data.data.enable_wfh);
+        setBatasCuti(data.data.leaves_limit);
+        setBatasWfh(data.data.wfh_limit);
       }
     } catch (error) {
       console.log(error);
       toastWarning("Data setting kosong");
+    }
+  };
+
+  const getRecap = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/api/employee/recap",
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (data.data) {
+        setRecapCuti(data.data.count_leaves);
+        setRecapWfh(data.data.count_wfh);
+      }
+    } catch (error) {
+      console.log(error);
+      toastWarning("Data recap kosong");
     }
   };
 
@@ -71,6 +98,7 @@ export default function ModalPengajuan() {
 
   useEffect(() => {
     getSetting();
+    getRecap();
   }, []);
 
   return (
@@ -122,6 +150,16 @@ export default function ModalPengajuan() {
                 onSubmit={kirimPengajuan}
               >
                 <div className="mb-3">
+                  {recapCuti >= batasCuti ? (
+                    <div className="bg-warning text-white text-start rounded mb-3 p-2">
+                      ⛔ Kuota cuti tahun ini sudah habis.
+                    </div>
+                  ) : null}
+                  {recapWfh >= batasWfh ? (
+                    <div className="bg-warning text-white text-start rounded mb-3 p-2">
+                      ⛔ Kuota WFH bulan ini sudah habis.
+                    </div>
+                  ) : null}
                   <label className="mb-1">Alasan pengajuan</label>
                   <select
                     className="form-select mb-1"
@@ -129,10 +167,14 @@ export default function ModalPengajuan() {
                     id="tipe-pengajuan"
                     required
                   >
-                    <option value="Sakit">Sakit</option>
-                    <option value="Cuti">Cuti</option>
-                    <option value="Izin">Izin</option>
-                    {wfh ? <option value="WFH">WFH</option> : null}
+                    <option value="sakit">Sakit</option>
+                    {recapCuti >= batasCuti ? null : (
+                      <option value="cuti">Cuti</option>
+                    )}
+                    <option value="izin">Izin</option>
+                    {wfh || batasWfh >= recapWfh ? (
+                      <option value="wfh">WFH</option>
+                    ) : null}
                   </select>
                 </div>
                 <div className="mb-3">

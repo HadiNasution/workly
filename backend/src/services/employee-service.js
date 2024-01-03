@@ -597,7 +597,7 @@ const getPermission = async (employee) => {
 };
 
 // service untuk employee melihat status hadir hari itu
-const getAttendanceRecapByDay = async (employee) => {
+const getAttendanceByDay = async (employee) => {
   // logic untuk set waktu hari ini
   let today = new Date();
   today.setHours(0, 0, 0, 0); // Set waktu ke 00:00:00.000 (mulai hari)
@@ -628,7 +628,7 @@ const getAttendanceRecapByDay = async (employee) => {
 };
 
 // service untuk employee melihat daftar hadir perbulan
-const getAttendanceRecapByMonth = async (employee, targetYear, targetMonth) => {
+const getAttendanceByMonth = async (employee, targetYear, targetMonth) => {
   // menentukan awal dan akhir bulan
   const firstDayOfMonth = new Date(targetYear, targetMonth - 1, 1);
   const lastDayOfMonth = new Date(targetYear, targetMonth, 0);
@@ -693,6 +693,25 @@ const getSetting = async () => {
   });
 };
 
+const getRecap = async (employee) => {
+  const recap = prismaClient.attendanceRecap.findFirst({
+    select: {
+      count_leaves: true,
+      count_wfh: true,
+      count_works: true,
+      count_permits: true,
+      count_sick: true,
+      count_late: true,
+    },
+    where: {
+      employee_id: employee.id,
+    },
+  });
+  if (!recap) throw new ResponseError(404, "Data kosong");
+  logger.info("GET RECAP SUKSES");
+  return recap;
+};
+
 export default {
   login,
   logout,
@@ -703,7 +722,8 @@ export default {
   upload,
   createPermission,
   getPermission,
-  getAttendanceRecapByDay,
-  getAttendanceRecapByMonth,
+  getAttendanceByDay,
+  getAttendanceByMonth,
   getSetting,
+  getRecap,
 };

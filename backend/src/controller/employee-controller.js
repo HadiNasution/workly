@@ -93,21 +93,21 @@ const getPermission = async (req, res, next) => {
   }
 };
 
-const getAttendanceRecapByDay = async (req, res, next) => {
+const getAttendanceByDay = async (req, res, next) => {
   try {
-    const result = await employeeService.getAttendanceRecapByDay(req.employee);
+    const result = await employeeService.getAttendanceByDay(req.employee);
     res.status(200).json({ data: result });
   } catch (error) {
     next(error);
   }
 };
 
-const getAttendanceRecapByMonth = async (req, res, next) => {
+const getAttendanceByMonth = async (req, res, next) => {
   try {
     const employee = req.employee;
     const year = req.query.year;
     const month = req.query.month;
-    const result = await employeeService.getAttendanceRecapByMonth(
+    const result = await employeeService.getAttendanceByMonth(
       employee,
       year,
       month
@@ -128,6 +128,15 @@ const getSetting = async (req, res, next) => {
   }
 };
 
+const getRecap = async (req, res, next) => {
+  try {
+    const result = await employeeService.getRecap(req.employee);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   login,
   logout,
@@ -138,7 +147,8 @@ export default {
   upload,
   createPermission,
   getPermission,
-  getAttendanceRecapByDay,
-  getAttendanceRecapByMonth,
+  getAttendanceByDay,
+  getAttendanceByMonth,
   getSetting,
+  getRecap,
 };
