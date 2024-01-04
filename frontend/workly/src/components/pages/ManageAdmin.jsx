@@ -1,11 +1,10 @@
-import { Navigate } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
 import Admin from "../cards/Admin";
 import ModalTambahAdmin from "../modals/ModalTambahAdmin";
 
 export default function ManageAdmin() {
   const goBack = () => {
-    window.history.back() ?? Navigate("/");
+    window.history.back();
   };
   return (
     <>

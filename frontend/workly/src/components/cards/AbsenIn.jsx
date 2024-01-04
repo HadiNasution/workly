@@ -198,20 +198,22 @@ export default function AbsenIn({ onLogin }) {
   return (
     <div className="card text-center">
       <div className="card-header">
-        <div className="d-flex justify-content-center">
-          <div className="d-flex align-items-center me-3">
-            <BsArrowRightSquareFill className="me-1" color="blue" /> Absen Masuk
+        <div className="timeIn d-flex justify-content-center">
+          <div className="keterangan d-flex align-items-center me-3">
+            <BsArrowRightSquareFill className="me-2 mb-1" color="blue" />
+            Absen Masuk
           </div>
-          <div className="d-flex align-items-center me-3 ms-3">
-            <BsClockFill className="me-1" /> {hours}:{minutes < 10 ? "0" : ""}
+          <div className="waktu d-flex align-items-center me-3 ms-3">
+            <BsClockFill className="me-2 mb-1" />
+            {hours}:{minutes < 10 ? "0" : ""}
             {minutes}
           </div>
-          <div className="d-flex align-items-center ms-3">
-            <BsCalendar2Fill className="me-1" /> {dayString()} {date}/
-            {monthString()}/{year}
+          <div className="tanggal d-flex align-items-center ms-3">
+            <BsCalendar2Fill className="me-2 mb-1" />
+            {dayString()} {date}/{monthString()}/{year}
           </div>
         </div>
-        <div className="form-switch mt-2">
+        <div className="form-switch  mt-2">
           <input
             className="form-check-input me-2"
             type="checkbox"

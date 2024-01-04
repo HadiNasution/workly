@@ -3,10 +3,12 @@ import axios from "axios";
 import { alertError, toastSuccess, toastWarning } from "../alert/SweetAlert";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import { TailSpin } from "react-loader-spinner";
 import ModalUpdateAdmin from "../modals/ModalUpdateAdmin";
 
 export default function Admin() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const token = sessionStorage.getItem("token");
 
   const getAdmin = async () => {
@@ -20,17 +22,20 @@ export default function Admin() {
           },
         }
       );
-      if (data.data) setData(data.data);
+      if (data.data) {
+        setData(data.data);
+        setLoading(false);
+      }
     } catch (error) {
       console.error("Server Response:", error);
       toastWarning("Data kosong");
     }
   };
 
-  const confirmDelete = (nip) => {
+  const confirmDelete = (nip, name) => {
     Swal.fire({
       title: "Konfirmasi",
-      text: `Apakah Anda ingin menghapus admin dengan nip ${nip}`,
+      text: `Apakah Anda ingin menghapus admin ${name}`,
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -57,7 +62,7 @@ export default function Admin() {
       );
       if (data.data) {
         toastSuccess(`Admin dengan nip ${nip} berhasil dihapus`, "");
-        window.location.reload();
+        getAdmin();
       }
     } catch (error) {
       console.error("Server Response:", error);
@@ -84,11 +89,12 @@ export default function Admin() {
               <ModalUpdateAdmin
                 adminId={item.id}
                 modalId={`update${item.id}`}
+                reload={getAdmin}
               />
               <button
                 className="btn btn-danger"
                 onClick={() => {
-                  confirmDelete(item.nip);
+                  confirmDelete(item.nip, item.name);
                 }}
               >
                 Hapus
@@ -104,17 +110,36 @@ export default function Admin() {
     getAdmin();
   }, []);
 
-  return data && data.length > 0 ? (
-    showAdmin()
-  ) : (
-    <div className="text-center mt-5 mb-5">
-      <img
-        src="../../../public/assets/sleep-ill.gif"
-        alt="sleep illustration"
-        width={200}
-        height={200}
-      />
-      <h6 className="text-secondary">Data admin masih kosong...</h6>
+  return (
+    <div>
+      {loading ? (
+        <TailSpin
+          visible={true}
+          height="80"
+          width="80"
+          color="#4fa94d"
+          ariaLabel="tail-spin-loading"
+          radius="1"
+          wrapperStyle={{}}
+          wrapperClass=""
+        />
+      ) : (
+        <div>
+          {data.length === 0 ? (
+            <div className="text-center mt-5 mb-5">
+              <img
+                src="../../../public/assets/sleep-ill.gif"
+                alt="sleep illustration"
+                width={200}
+                height={200}
+              />
+              <h6 className="text-secondary">Belum ada yang absen masuk...</h6>
+            </div>
+          ) : (
+            showAdmin()
+          )}
+        </div>
+      )}
     </div>
   );
 }

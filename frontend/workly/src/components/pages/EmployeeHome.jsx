@@ -119,7 +119,7 @@ const EmployeeHome = () => {
                 alt="waving-hand"
                 width={80}
                 height={80}
-                className="me-3 mb-3"
+                className="logo me-3 mb-3"
               ></img>
               <h1>
                 Heyoo {name}! <br></br>

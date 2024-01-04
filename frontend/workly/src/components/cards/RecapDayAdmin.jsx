@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { BsPersonFill, BsClockFill, BsGeoAltFill } from "react-icons/bs";
+import { TailSpin } from "react-loader-spinner";
 
 export default function RecapDayAdmin() {
-  const [dataRecap, setDataRecap] = useState(null);
+  const [dataRecap, setDataRecap] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getRecap = async () => {
     try {
@@ -18,7 +20,10 @@ export default function RecapDayAdmin() {
         }
       );
       //   console.log(data.data);
-      if (data.data) setDataRecap(data.data);
+      if (data.data) {
+        setDataRecap(data.data);
+        setLoading(false);
+      }
     } catch (error) {
       console.error("Server Response:", error.response.data.errors);
     }
@@ -81,27 +86,45 @@ export default function RecapDayAdmin() {
   };
 
   useEffect(() => {
-    // reload data recap setiap 1 detik
-    // const reloadRecap = () => {
-    //   getRecap();
-    // };
-    // reloadRecap();
-    // const intervalId = setInterval(reloadRecap, 1000);
-    // return () => clearInterval(intervalId);
-    getRecap();
+    //reload data recap setiap 1 detik
+    const reloadRecap = () => {
+      getRecap();
+    };
+    reloadRecap();
+    const intervalId = setInterval(reloadRecap, 1000);
+    return () => clearInterval(intervalId);
   }, []);
 
-  return dataRecap && dataRecap.length > 0 ? (
-    showRecap()
-  ) : (
-    <div className="text-center mt-5 mb-5">
-      <img
-        src="../../../public/assets/sleep-ill.gif"
-        alt="sleep illustration"
-        width={200}
-        height={200}
-      />
-      <h6 className="text-secondary">Belum ada yang absen masuk...</h6>
+  return (
+    <div>
+      {loading ? (
+        <TailSpin
+          visible={true}
+          height="80"
+          width="80"
+          color="#4fa94d"
+          ariaLabel="tail-spin-loading"
+          radius="1"
+          wrapperStyle={{}}
+          wrapperClass=""
+        />
+      ) : (
+        <div>
+          {dataRecap.length === 0 ? (
+            <div className="text-center mt-5 mb-5">
+              <img
+                src="../../../public/assets/sleep-ill.gif"
+                alt="sleep illustration"
+                width={200}
+                height={200}
+              />
+              <h6 className="text-secondary">Belum ada yang absen masuk...</h6>
+            </div>
+          ) : (
+            showRecap()
+          )}
+        </div>
+      )}
     </div>
   );
 }

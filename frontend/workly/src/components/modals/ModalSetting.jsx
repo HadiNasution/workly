@@ -180,6 +180,7 @@ export default function ModalSetting() {
                       </label>
                       <input
                         type="number"
+                        step="any"
                         className="form-control"
                         id="office-latitude"
                         value={latitude}
@@ -195,6 +196,7 @@ export default function ModalSetting() {
                       </label>
                       <input
                         type="number"
+                        step="any"
                         className="form-control"
                         id="office-longitude"
                         value={longitude}
@@ -318,7 +320,7 @@ export default function ModalSetting() {
                         </div>
                       </div>
                     </div>
-                    <div className="form-check form-switch">
+                    <div className="form-check form-switch form-check-reverse">
                       <input
                         className="form-check-input"
                         type="checkbox"
@@ -331,7 +333,7 @@ export default function ModalSetting() {
                         Gunakan Shot (2 langkah validasi absensi)
                       </label>
                     </div>
-                    <div className="form-check form-switch">
+                    <div className="form-check form-switch form-check-reverse">
                       <input
                         className="form-check-input"
                         type="checkbox"

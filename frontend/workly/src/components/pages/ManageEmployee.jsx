@@ -1,11 +1,10 @@
-import { Navigate } from "react-router-dom";
 import { BsArrowLeft } from "react-icons/bs";
 import Karyawan from "../cards/Karyawan";
 import ModalTambahKaryawan from "../modals/ModalTambahKaryawan";
 
 export default function ManageEmployee() {
   const goBack = () => {
-    window.history.back() ?? Navigate("/");
+    window.history.back();
   };
   return (
     <>
@@ -35,7 +34,7 @@ export default function ManageEmployee() {
           <ModalTambahKaryawan />
         </div>
       </div>
-      <div className="row">
+      <div className="row mt-3">
         <div className="col">
           <Karyawan />
         </div>

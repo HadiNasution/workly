@@ -3,14 +3,16 @@ import { useState, useEffect } from "react";
 import { convertDayString } from "../../utils/date-time";
 import { alertError, toastSuccess, toastWarning } from "../alert/SweetAlert";
 import Swal from "sweetalert2";
+import { TailSpin } from "react-loader-spinner";
 import ModalUpdateKaryawan from "../modals/ModalUpdateKaryawan";
 
 export default function Karyawan() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const token = sessionStorage.getItem("token");
 
   const getEmployee = async () => {
     try {
-      const token = sessionStorage.getItem("token");
       const { data } = await axios.get(
         `http://localhost:3000/api/admin/get/employee`,
         {
@@ -21,17 +23,20 @@ export default function Karyawan() {
         }
       );
       //   console.log(data.data);
-      if (data.data) setData(data.data);
+      if (data.data) {
+        setData(data.data);
+        setLoading(false);
+      }
     } catch (error) {
       console.error("Server Response:", error);
       toastWarning("Data kosong");
     }
   };
 
-  const confirmDelete = (nip) => {
+  const confirmDelete = (nip, name) => {
     Swal.fire({
       title: "Konfirmasi",
-      text: `Apakah Anda ingin menghapus karyawan dengan nip ${nip}`,
+      text: `Apakah Anda ingin menghapus ${name}`,
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -47,7 +52,6 @@ export default function Karyawan() {
 
   const deleteEmployee = async (nip) => {
     try {
-      const token = sessionStorage.getItem("token");
       const { data } = await axios.delete(
         `http://localhost:3000/api/admin/delete/employee/${nip}`,
         {
@@ -59,8 +63,8 @@ export default function Karyawan() {
       );
       //   console.log(data.data);
       if (data.data) {
-        window.location.reload();
-        toastSuccess("Berhasil", data.data);
+        toastSuccess(`Karyawan dengan nip ${nip} berhasil dihapus`, "");
+        getEmployee();
       }
     } catch (error) {
       console.error("Server Response:", error.response.data);
@@ -82,7 +86,7 @@ export default function Karyawan() {
   const showEmployee = () => {
     return data.map((item) => (
       <div
-        className="accordion mt-2 mb-2 mt-4"
+        className="accordion"
         id={`accordionEmployee${item.id}`}
         key={item.id}
       >
@@ -164,10 +168,11 @@ export default function Karyawan() {
                   <ModalUpdateKaryawan
                     userId={item.id}
                     modalId={`update${item.id}`}
+                    reload={getEmployee}
                   />
                   <button
                     className="btn btn-danger ms-3"
-                    onClick={() => confirmDelete(item.nip)}
+                    onClick={() => confirmDelete(item.nip, item.name)}
                   >
                     Hapus
                   </button>
@@ -184,17 +189,36 @@ export default function Karyawan() {
     getEmployee();
   }, []);
 
-  return data && data.length > 0 ? (
-    showEmployee()
-  ) : (
-    <div className="text-center mt-5 mb-5">
-      <img
-        src="../../../public/assets/sleep-ill.gif"
-        alt="sleep illustration"
-        width={200}
-        height={200}
-      />
-      <h6 className="text-secondary">Data karyawan masih kosong...</h6>
+  return (
+    <div>
+      {loading ? (
+        <TailSpin
+          visible={true}
+          height="80"
+          width="80"
+          color="#4fa94d"
+          ariaLabel="tail-spin-loading"
+          radius="1"
+          wrapperStyle={{}}
+          wrapperClass=""
+        />
+      ) : (
+        <div>
+          {data.length === 0 ? (
+            <div className="text-center mt-5 mb-5">
+              <img
+                src="../../../public/assets/sleep-ill.gif"
+                alt="sleep illustration"
+                width={200}
+                height={200}
+              />
+              <h6 className="text-secondary">Belum ada yang absen masuk...</h6>
+            </div>
+          ) : (
+            showEmployee()
+          )}
+        </div>
+      )}
     </div>
   );
 }

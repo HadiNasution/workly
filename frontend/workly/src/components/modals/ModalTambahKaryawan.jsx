@@ -38,8 +38,10 @@ export default function ModalTambahKaryawan() {
 
       //   console.log(data.data);
       if (data.data) {
-        window.location.reload();
         toastSuccess(`Karyawan ${name} berhasil ditambahkan`, "");
+        setTimeout(function () {
+          window.location.reload();
+        }, 3000);
       }
     } catch (error) {
       console.error("Server Response:", error);

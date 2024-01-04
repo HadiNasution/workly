@@ -2,7 +2,7 @@ import axios from "axios";
 import { toastSuccess, alertError } from "../alert/SweetAlert";
 import { useState, useEffect } from "react";
 
-export default function ModalUpdateKaryawan({ userId, modalId }) {
+export default function ModalUpdateKaryawan({ userId, modalId, reload }) {
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -80,8 +80,8 @@ export default function ModalUpdateKaryawan({ userId, modalId }) {
       );
 
       if (data.data) {
-        console.log(data.data);
-        toastSuccess("Berhasil", data.data);
+        toastSuccess("Berhasil update", data.data);
+        reload();
       }
     } catch (error) {
       console.error("Server Response:", error);
@@ -96,7 +96,7 @@ export default function ModalUpdateKaryawan({ userId, modalId }) {
   return (
     <>
       <button
-        className="btn btn-info w-25"
+        className="btn btn-info"
         data-bs-toggle="modal"
         data-bs-target={`#${modalId}`}
         onClick={() => getEmployee(id)}

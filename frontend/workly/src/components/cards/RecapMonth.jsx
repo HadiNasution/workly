@@ -44,7 +44,7 @@ export default function RecapMonth() {
   const showCard = () => {
     if (result) {
       return result.map((item, index) => (
-        <div key={index} className="col mt-4">
+        <div key={index} className="col">
           <MonthCard data={item} />
         </div>
       ));

@@ -7,6 +7,25 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+@media only screen and (max-width: 600px) {
+  .logo {
+    display: none;
+  }
+  .shot {
+    display: inline !important;
+  }
+  .timeIn,
+  .keterangan,
+  .waktu {
+    display: inline !important;
+  }
+
+  .tanggal {
+    display: block !important;
+    margin-top: 8px;
+  }
+}
+
 * {
   margin: 0;
   padding: 0;

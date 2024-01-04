@@ -72,15 +72,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           }
         />
         <Route
-          path="/admin/manage/permission"
-          element={
-            <ProtectedAdminRoute
-              element={<ManagePermission />}
-              path="/admin/manage/permission"
-            />
-          }
-        />
-        <Route
           path="/employee/home"
           element={
             <ProtectedEmployeeRoute

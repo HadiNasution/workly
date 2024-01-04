@@ -2,7 +2,7 @@ import axios from "axios";
 import { toastSuccess, alertError } from "../alert/SweetAlert";
 import { useState, useEffect } from "react";
 
-export default function ModalUpdateAdmin({ adminId, modalId }) {
+export default function ModalUpdateAdmin({ adminId, modalId, reload }) {
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [nip, setNip] = useState("");
@@ -57,7 +57,8 @@ export default function ModalUpdateAdmin({ adminId, modalId }) {
       );
 
       if (data.data) {
-        toastSuccess("Berhasil", data.data);
+        toastSuccess("Berhasil update", data.data);
+        reload();
       }
     } catch (error) {
       console.error("Server Response:", error);

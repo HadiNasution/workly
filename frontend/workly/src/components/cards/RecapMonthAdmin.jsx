@@ -9,7 +9,7 @@ export default function RecapMonthAdmin() {
   const currentMonth = currentTime.getMonth();
   const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(currentMonth + 1);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState([]);
 
   const getRecap = async (event) => {
     event.preventDefault();
@@ -40,7 +40,7 @@ export default function RecapMonthAdmin() {
   };
 
   const showCard = () => {
-    if (result) {
+    if (result.length !== 0) {
       return result.map((item, index) => (
         <div key={index} className="col">
           <MonthCardAdmin data={item} />

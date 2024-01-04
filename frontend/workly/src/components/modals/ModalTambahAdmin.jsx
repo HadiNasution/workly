@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 export default function ModalTambahAdmin() {
   const [error, setError] = useState("");
   const [setting, setSetting] = useState("");
+  const [superAdmin, setSuperAdmin] = useState(false);
   const token = sessionStorage.getItem("token");
 
   const tambahAdmin = async (event) => {
@@ -22,6 +23,7 @@ export default function ModalTambahAdmin() {
           nip,
           email,
           password,
+          is_super_admin: superAdmin,
         },
         {
           headers: {
@@ -32,7 +34,9 @@ export default function ModalTambahAdmin() {
       );
       if (data.data) {
         toastSuccess(`Admin ${name} berhasil ditambahkan`, "");
-        window.location.reload();
+        setTimeout(function () {
+          window.location.reload();
+        }, 3000);
       }
     } catch (error) {
       console.error("Server Response:", error);
@@ -147,6 +151,19 @@ export default function ModalTambahAdmin() {
                     aria-label="Disabled input example"
                     disabled
                     readOnly
+                  ></input>
+                </div>
+                <div className="form-check form-switch form-check-reverse text-start">
+                  <label className="form-check-label" htmlFor="using-shot">
+                    Super admin
+                  </label>
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="status"
+                    value={superAdmin}
+                    onChange={() => setSuperAdmin(!superAdmin)}
                   ></input>
                 </div>
                 <button

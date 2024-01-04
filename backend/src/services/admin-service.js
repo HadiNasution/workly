@@ -318,7 +318,7 @@ const update = async (request) => {
   // kondisi jika admin hanya update beberapa field
   // jika name diupdate, pakai data baru jika tidak pakai data lama dari oldData
   const newName = updateRequest.name ? updateRequest.name : oldData.name;
-  const newNip = updateRequest.nio ? updateRequest.nip : oldData.nip;
+  const newNip = updateRequest.nip ? updateRequest.nip : oldData.nip;
   const newEmail = updateRequest.email ? updateRequest.email : oldData.email;
 
   logger.info("UPDATE ADMIN BERHASIL");
