@@ -231,6 +231,15 @@ const generateShot = async (req, res, next) => {
   }
 };
 
+const downloadRecap = async (req, res, next) => {
+  try {
+    await adminService.downloadRecap();
+    res.status(200).download("attendance-recap.csv");
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   login,
   regist,
@@ -255,4 +264,5 @@ export default {
   updateSetting,
   getSetting,
   generateShot,
+  downloadRecap,
 };

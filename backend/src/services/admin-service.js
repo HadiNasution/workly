@@ -17,6 +17,7 @@ import { v4 as uuid } from "uuid";
 import { addMinutes } from "date-fns";
 import { generate } from "random-words";
 import { logger } from "../app/logging.js";
+import { createObjectCsvWriter } from "csv-writer";
 
 // service untuk login admin dan superadmin
 const login = async (request) => {
@@ -1211,6 +1212,66 @@ const generateShot = async () => {
   });
 };
 
+const downloadRecap = async () => {
+  // get data recap dan karyawan
+  const data = await prismaClient.attendanceRecap.findMany({
+    include: {
+      employee: {
+        select: {
+          name: true,
+          nip: true,
+        },
+      },
+    },
+  });
+
+  if (!data || data.length === 0) {
+    throw new ResponseError(404, "Data kosong");
+  }
+
+  const extractedData =
+    (data &&
+      data.map((item, index) => {
+        return {
+          no: index,
+          late: item.count_late,
+          sick: item.count_sick,
+          permits: item.count_permits,
+          leaves: item.count_leaves,
+          wfh: item.count_wfh,
+          works: item.count_works,
+          name: item.employee.name,
+          nip: item.employee.nip,
+        };
+      })) ||
+    [];
+
+  if (!extractedData || extractedData.length === 0) {
+    throw new ResponseError(404, "Data kosong");
+  }
+
+  const csvWriter = createObjectCsvWriter({
+    path: "attendance-recap.csv",
+    header: [
+      { id: "no", title: "Nomor" },
+      { id: "name", title: "Name" },
+      { id: "nip", title: "NIP" },
+      { id: "late", title: "Total Terlambat" },
+      { id: "sick", title: "Total Sakit" },
+      { id: "permits", title: "Total Izin" },
+      { id: "leaves", title: "Total Cuti" },
+      { id: "wfh", title: "Total WFH" },
+      { id: "works", title: "Total Hadir" },
+    ],
+  });
+
+  if (!csvWriter || csvWriter.length === 0) {
+    throw new ResponseError(400, "CSV gagal dibuat");
+  }
+
+  return csvWriter.writeRecords(extractedData);
+};
+
 export default {
   login,
   regist,
@@ -1235,4 +1296,5 @@ export default {
   updateSetting,
   getSetting,
   generateShot,
+  downloadRecap,
 };
