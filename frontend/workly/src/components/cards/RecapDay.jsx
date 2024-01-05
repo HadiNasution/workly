@@ -54,9 +54,10 @@ export default function RecapDay() {
       setLate(data.data.is_late ? "Terlambat" : "Tepat waktu");
       setWfh(data.data.is_wfh ? "WFH" : "Dikantor");
     } catch (error) {
-      // if (error.response) {
-      //   console.error("Server Response:", error.response.data);
-      // }
+      console.log(error);
+      if (error.response) {
+        console.error("Server Response:", error.response.data);
+      }
     }
   };
 

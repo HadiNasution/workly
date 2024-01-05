@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { toastWarning } from "../alert/SweetAlert";
 import MonthCardAdmin from "./MonthCardAdmin";
+import { saveAs } from "file-saver";
 
 export default function RecapMonthAdmin() {
   const currentTime = new Date();
@@ -10,12 +10,13 @@ export default function RecapMonthAdmin() {
   const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(currentMonth + 1);
   const [result, setResult] = useState([]);
+  const [showDownload, setShowDownload] = useState(false);
+  const token = sessionStorage.getItem("token");
 
   const getRecap = async (event) => {
     event.preventDefault();
 
     try {
-      const token = sessionStorage.getItem("token");
       const { data } = await axios.get(
         `http://localhost:3000/api/admin/recap/month`,
         {
@@ -31,11 +32,12 @@ export default function RecapMonthAdmin() {
       );
       // console.log(data.data);
       setResult(data.data);
+      setShowDownload(true);
     } catch (error) {
-      if (error.response) {
-        console.error("Server Response:", error.response.data);
-        toastWarning("Data kosong");
-      }
+      setShowDownload(false);
+      // if (error.response) {
+      //   console.error("Server Response:", error.response.data);
+      // }
     }
   };
 
@@ -48,6 +50,26 @@ export default function RecapMonthAdmin() {
       ));
     } else {
       return "";
+    }
+  };
+
+  const downloadRecap = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/admin/download/recap`,
+        {
+          headers: {
+            Authorization: token,
+          },
+          responseType: "blob",
+        }
+      );
+      saveAs(response.data, "attendance-recap.csv");
+    } catch (error) {
+      console.log(error);
+      if (error.response) {
+        console.error("Server Response:", error.response.data);
+      }
     }
   };
 
@@ -96,8 +118,15 @@ export default function RecapMonthAdmin() {
               <option value="2023">2023</option>
               <option value="2024">2024</option>
             </select>
-            <button type="submit" className="btn btn-secondary m-1">
+            <button type="submit" className="btn btn-primary m-1">
               Tampilkan
+            </button>
+            <button
+              className="btn btn-secondary m-1"
+              hidden={!showDownload}
+              onClick={downloadRecap}
+            >
+              Download
             </button>
           </form>
         </div>

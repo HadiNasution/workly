@@ -198,7 +198,7 @@ export default function AbsenIn({ onLogin }) {
   return (
     <div className="card text-center">
       <div className="card-header">
-        <div className="timeIn d-flex justify-content-center">
+        <div className="timeIn d-flex justify-content-center mb-2">
           <div className="keterangan d-flex align-items-center me-3">
             <BsArrowRightSquareFill className="me-2 mb-1" color="blue" />
             Absen Masuk
@@ -213,7 +213,7 @@ export default function AbsenIn({ onLogin }) {
             {dayString()} {date}/{monthString()}/{year}
           </div>
         </div>
-        <div className="form-switch  mt-2">
+        <div className="form-switch d-inline mt-3">
           <input
             className="form-check-input me-2"
             type="checkbox"
@@ -221,7 +221,11 @@ export default function AbsenIn({ onLogin }) {
             id="wfh"
             hidden={!enableWfh}
           ></input>
-          <label className="form-check-label" htmlFor="wfh" hidden={!enableWfh}>
+          <label
+            className="form-check-label fw-bold"
+            htmlFor="wfh"
+            hidden={!enableWfh}
+          >
             WFH
           </label>
         </div>

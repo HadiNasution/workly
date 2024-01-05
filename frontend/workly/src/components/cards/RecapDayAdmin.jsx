@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { BsPersonFill, BsClockFill, BsGeoAltFill } from "react-icons/bs";
-import { TailSpin } from "react-loader-spinner";
+import ShimmerCard from "../loading/shimmer";
 
 export default function RecapDayAdmin() {
   const [dataRecap, setDataRecap] = useState([]);
@@ -26,6 +26,7 @@ export default function RecapDayAdmin() {
       }
     } catch (error) {
       console.error("Server Response:", error.response.data.errors);
+      setLoading(false);
     }
   };
 
@@ -98,16 +99,7 @@ export default function RecapDayAdmin() {
   return (
     <div>
       {loading ? (
-        <TailSpin
-          visible={true}
-          height="80"
-          width="80"
-          color="#4fa94d"
-          ariaLabel="tail-spin-loading"
-          radius="1"
-          wrapperStyle={{}}
-          wrapperClass=""
-        />
+        <ShimmerCard />
       ) : (
         <div>
           {dataRecap.length === 0 ? (

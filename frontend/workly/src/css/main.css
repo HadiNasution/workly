@@ -71,7 +71,8 @@ button:hover {
 }
 
 .btn-secondary {
-  background-color: black !important;
+  background-color: rgb(75, 75, 75) !important;
+  color: white !important;
   border: none;
 }
 
@@ -111,4 +112,13 @@ body {
 
 .container {
   height: auto;
+}
+
+@keyframes shimmerAnimation {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }

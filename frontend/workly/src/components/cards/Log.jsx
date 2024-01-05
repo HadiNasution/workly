@@ -131,7 +131,7 @@ export default function Log() {
               <option value="2023">2023</option>
               <option value="2024">2024</option>
             </select>
-            <button type="submit" className="btn btn-secondary m-1">
+            <button type="submit" className="btn btn-primary m-1">
               Tampilkan
             </button>
           </form>

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { convertDayString } from "../../utils/date-time";
 import { alertError, toastSuccess, toastWarning } from "../alert/SweetAlert";
 import Swal from "sweetalert2";
-import { TailSpin } from "react-loader-spinner";
+import ShimmerCard from "../loading/shimmer";
 import ModalUpdateKaryawan from "../modals/ModalUpdateKaryawan";
 
 export default function Karyawan() {
@@ -29,7 +29,7 @@ export default function Karyawan() {
       }
     } catch (error) {
       console.error("Server Response:", error);
-      toastWarning("Data kosong");
+      setLoading(false);
     }
   };
 
@@ -192,16 +192,7 @@ export default function Karyawan() {
   return (
     <div>
       {loading ? (
-        <TailSpin
-          visible={true}
-          height="80"
-          width="80"
-          color="#4fa94d"
-          ariaLabel="tail-spin-loading"
-          radius="1"
-          wrapperStyle={{}}
-          wrapperClass=""
-        />
+        <ShimmerCard />
       ) : (
         <div>
           {data.length === 0 ? (

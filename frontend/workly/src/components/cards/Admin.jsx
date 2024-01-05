@@ -3,7 +3,7 @@ import axios from "axios";
 import { alertError, toastSuccess, toastWarning } from "../alert/SweetAlert";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { TailSpin } from "react-loader-spinner";
+import ShimmerCard from "../loading/shimmer";
 import ModalUpdateAdmin from "../modals/ModalUpdateAdmin";
 
 export default function Admin() {
@@ -28,7 +28,7 @@ export default function Admin() {
       }
     } catch (error) {
       console.error("Server Response:", error);
-      toastWarning("Data kosong");
+      setLoading(false);
     }
   };
 
@@ -113,16 +113,7 @@ export default function Admin() {
   return (
     <div>
       {loading ? (
-        <TailSpin
-          visible={true}
-          height="80"
-          width="80"
-          color="#4fa94d"
-          ariaLabel="tail-spin-loading"
-          radius="1"
-          wrapperStyle={{}}
-          wrapperClass=""
-        />
+        <ShimmerCard />
       ) : (
         <div>
           {data.length === 0 ? (
