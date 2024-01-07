@@ -1,3 +1,4 @@
+import { axiosGet } from "../../controller/api-controller";
 import axios from "axios";
 import { toastSuccess, alertError } from "../alert/SweetAlert";
 import { useEffect, useState } from "react";
@@ -10,47 +11,29 @@ export default function ModalPengajuan() {
   const [recapWfh, setRecapWfh] = useState(0);
   const token = sessionStorage.getItem("token");
 
-  const getSetting = async () => {
-    try {
-      const { data } = await axios.get(
-        "http://localhost:3000/api/employee/setting",
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (data.data) {
-        setWfh(data.data.enable_wfh);
-        setBatasCuti(data.data.leaves_limit);
-        setBatasWfh(data.data.wfh_limit);
-      }
-    } catch (error) {
-      console.log(error);
-      toastWarning("Data setting kosong");
-    }
+  const getSetting = () => {
+    axiosGet("http://localhost:3000/api/employee/setting", token)
+      .then((result) => {
+        setWfh(result.enable_wfh);
+        setBatasCuti(result.leaves_limit);
+        setBatasWfh(result.wfh_limit);
+      })
+      .catch((error) => {
+        console.error("Get daftar pengajuan failed : ", error);
+        toastWarning("Data setting kosong");
+      });
   };
 
-  const getRecap = async () => {
-    try {
-      const { data } = await axios.get(
-        "http://localhost:3000/api/employee/recap",
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (data.data) {
-        setRecapCuti(data.data.count_leaves);
-        setRecapWfh(data.data.count_wfh);
-      }
-    } catch (error) {
-      console.log(error);
-      toastWarning("Data recap kosong");
-    }
+  const getRecap = () => {
+    axiosGet("http://localhost:3000/api/employee/recap", token)
+      .then((result) => {
+        setRecapCuti(result.count_leaves);
+        setRecapWfh(result.count_wfh);
+      })
+      .catch((error) => {
+        console.error("Get recap failed : ", error);
+        toastWarning("Data recap kosong");
+      });
   };
 
   const kirimPengajuan = async (event) => {
@@ -84,7 +67,6 @@ export default function ModalPengajuan() {
       );
 
       if (data.data) {
-        console.log(data.data);
         toastSuccess(
           "Pengajuan berhasil",
           "Untuk melihat status pengajuan, buka menu status pengajuan"

@@ -9,7 +9,7 @@ export default function RecapMonth() {
   const currentMonth = currentTime.getMonth();
   const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(currentMonth + 1);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState([]);
 
   const getRecap = async (event) => {
     event.preventDefault();
@@ -30,13 +30,11 @@ export default function RecapMonth() {
           },
         }
       );
-
-      //   console.log(data.data);
       setResult(data.data);
     } catch (error) {
       if (error.response) {
-        console.error("Server Response:", error.response.data);
-        toastWarning("Data kosong");
+        console.error("Server Response:", error.response.data.errors);
+        toastWarning(error.response.data.errors);
       }
     }
   };
@@ -53,9 +51,7 @@ export default function RecapMonth() {
     }
   };
 
-  useEffect(() => {
-    // console.log(result);
-  }, [result]);
+  useEffect(() => {}, [result]);
 
   return (
     <div className="row mb-5">
@@ -93,8 +89,6 @@ export default function RecapMonth() {
               value={year}
               onChange={(e) => setYear(e.target.value)}
             >
-              <option value="2021">2021</option>
-              <option value="2022">2022</option>
               <option value="2023">2023</option>
               <option value="2024">2024</option>
             </select>

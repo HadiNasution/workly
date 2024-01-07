@@ -1,22 +1,21 @@
 import { useState, useEffect } from "react";
 import {
-  BsGeoAltFill,
   BsCalendar2Fill,
   BsClockFill,
   BsArrowRightSquareFill,
 } from "react-icons/bs";
 import { generate } from "random-words";
-import axios from "axios";
-import { toastSuccess, alertError } from "../alert/SweetAlert";
+import { toastSuccess, alertError, toastWarning } from "../alert/SweetAlert";
 import { dayString, monthString, date, year } from "../../utils/date-time";
+import { axiosGet } from "../../controller/api-controller";
 
 export default function AbsenIn({ onLogin }) {
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
   const [shot, setShot] = useState("");
   const [oldShot, setOldShot] = useState("");
   const [counter, setCounter] = useState(2);
-  const [countdown, setCountdown] = useState(null);
+  const [countdown, setCountdown] = useState(0);
   const [wfh, setWfh] = useState(false);
   const [enableWfh, setEnableWfh] = useState(true);
   const [usingShot, setUsingShot] = useState(true);
@@ -49,25 +48,40 @@ export default function AbsenIn({ onLogin }) {
     });
   }
 
-  const getSetting = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
-      const { data } = await axios.get(
-        "http://localhost:3000/api/employee/setting",
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (data.data) {
-        setEnableWfh(data.data.enable_wfh);
-        setUsingShot(data.data.using_shot);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const getSetting = () => {
+    axiosGet("http://localhost:3000/api/employee/setting", token)
+      .then((result) => {
+        setEnableWfh(result.enable_wfh);
+        setUsingShot(result.using_shot);
+      })
+      .catch((error) => {
+        console.error("Get setting failed : ", error);
+      });
+  };
+
+  const absenIn = () => {
+    axiosGet(
+      `http://localhost:3000/api/employee/absenIn/${latitude}/${longitude}/${wfh}`,
+      token
+    )
+      .then((result) => {
+        toastSuccess(result, "Jangan lupa untuk absen keluar");
+        onLogin(); // set state login di parent, agar card absen in diganti card absen out
+      })
+      .catch((error) => {
+        console.error("Absen in failed : ", error);
+        alertError("Gagal", error.response.data.errors);
+      });
+  };
+
+  const getShot = () => {
+    axiosGet(`http://localhost:3000/api/employee/shot`, token)
+      .then((result) => {
+        setShot(result.shot.toUpperCase());
+      })
+      .catch((error) => {
+        console.error("Get shot failed ", error);
+      });
   };
 
   // logic untuk set warning jika absen salah
@@ -90,25 +104,6 @@ export default function AbsenIn({ onLogin }) {
     );
   }
 
-  const absenIn = async () => {
-    try {
-      const { data } = await axios.get(
-        `http://localhost:3000/api/employee/absenIn/-6.935783427330478/107.5782643924172/${wfh}`,
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      toastSuccess(data.data, "Jangan lupa untuk absen keluar");
-      onLogin(); // set state login di parent, agar card absen in diganti card absen out
-    } catch (error) {
-      console.log(error);
-      alertError("Absen masuk gagal", error.response.data.errors);
-    }
-  };
-
   // get koordinat latitude longitude
   const getPosition = () => {
     if (navigator.geolocation) {
@@ -119,7 +114,7 @@ export default function AbsenIn({ onLogin }) {
         },
         (error) => {
           console.error("Error getting location:", error);
-          alertError("Gagal mendapatkan lokasi", error);
+          toastWarning("Gagal mendapatkan lokasi");
         },
         { enableHighAccuracy: true }
       );
@@ -129,23 +124,6 @@ export default function AbsenIn({ onLogin }) {
         "Gagal mendapatkan lokasi",
         "Geolocation is not supported by this browser."
       );
-    }
-  };
-
-  const getShot = async () => {
-    try {
-      const { data } = await axios.get(
-        `http://localhost:3000/api/employee/shot`,
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      setShot(data.data.shot.toUpperCase());
-    } catch (error) {
-      console.log(error);
     }
   };
 

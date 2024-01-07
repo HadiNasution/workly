@@ -1,4 +1,5 @@
 import axios from "axios";
+import { axiosDelete } from "../../controller/api-controller";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { isTokenExpired } from "../../auth/auth-login";
@@ -14,32 +15,21 @@ const AdminHome = () => {
   const nip = localStorage.getItem("nip");
   const superAdmin = sessionStorage.getItem("is-super-admin");
   let role = superAdmin === "true" ? "Super admin" : "Administrator";
+  const token = sessionStorage.getItem("token");
 
-  const logoutAdmin = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
-      // Lakukan permintaan ke API Logout dengan menyertakan token
-      const { data } = await axios.delete(
-        "http://localhost:3000/api/admin/logout",
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      // Jika logout berhasil, hapus token dari session storage
-      if (data.data) {
+  const logoutAdmin = () => {
+    axiosDelete("http://localhost:3000/api/admin/logout", token)
+      .then((result) => {
         sessionStorage.clear();
         localStorage.clear();
         // lalu redirect ke halaman login
-        toastSuccess("Logout berhasil", "See you!");
+        toastSuccess("See you!", "");
         navigate("/");
-      }
-    } catch (error) {
-      console.log(error.response.data.errors);
-      alertError("Logout gagal", error.response.data.errors);
-    }
+      })
+      .catch((error) => {
+        console.error("Get setting failed : ", error);
+        alertError("Logout gagal", error.response.data.errors);
+      });
   };
 
   const showSuperAdminMenu = () => {

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { toastWarning } from "../alert/SweetAlert";
-import { convertDayString } from "../../utils/date-time";
+import { fullTimeFormat } from "../../utils/date-time";
 import {
   BsCalendar2Fill,
   BsInfoCircleFill,
@@ -14,7 +14,7 @@ export default function Log() {
   const currentMonth = currentTime.getMonth();
   const [year, setYear] = useState(currentYear);
   const [month, setMonth] = useState(currentMonth + 1);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState([]);
 
   const getLog = async (event) => {
     event.preventDefault();
@@ -39,19 +39,6 @@ export default function Log() {
     }
   };
 
-  const timeFormat = (date) => {
-    const dateOutString = date;
-    const dateOutObject = new Date(dateOutString);
-
-    const jam = dateOutObject.getHours();
-    const menit = dateOutObject.getMinutes();
-    const hari = convertDayString(dateOutObject);
-    const tanggal = dateOutObject.getDate();
-    const bulan = dateOutObject.getMonth() + 1;
-    const tahun = dateOutObject.getFullYear();
-    return `${jam}:${menit} ${hari} ${tanggal}/${bulan}/${tahun}`;
-  };
-
   const showCard = () => {
     if (result) {
       return result.map((item, index) => (
@@ -61,7 +48,7 @@ export default function Log() {
               <div className="d-flex justify-content-between">
                 <div className="date">
                   <BsCalendar2Fill className="me-2" />
-                  {timeFormat(item.date)}
+                  {fullTimeFormat(item.date)}
                 </div>
                 <div className="info">
                   {item.is_error ? (

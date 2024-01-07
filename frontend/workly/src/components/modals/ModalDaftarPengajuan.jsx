@@ -1,36 +1,27 @@
-import axios from "axios";
+import { axiosGetFormData } from "../../controller/api-controller";
 import { useEffect, useState } from "react";
 import { toastWarning } from "../alert/SweetAlert";
 import DaftarPengajuan from "../tabs/DaftarPengajuan";
 
 export default function ModalDaftarPengajuan() {
-  const [recap, setRecap] = useState(null);
+  const [recap, setRecap] = useState([]);
   const [approved, setApproved] = useState(0);
   const [approve, setApprove] = useState(0);
   const [rejected, setRejected] = useState(0);
+  const token = sessionStorage.getItem("token");
 
-  const getDaftarPengajuan = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
-      const { data } = await axios.get(
-        "http://localhost:3000/api/employee/permission",
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      if (data.data) {
-        setRecap(data.data.result);
-        setApprove(data.data.status.approve);
-        setApproved(data.data.status.approved);
-        setRejected(data.data.status.rejected);
-      }
-    } catch (error) {
-      console.error("Server Response:", error.response.data.errors);
-      toastWarning("Data kosong");
-    }
+  const getDaftarPengajuan = () => {
+    axiosGetFormData("http://localhost:3000/api/employee/permission", token)
+      .then((result) => {
+        setRecap(result.result);
+        setApprove(result.status.approve);
+        setApproved(result.status.approved);
+        setRejected(result.status.rejected);
+      })
+      .catch((error) => {
+        console.error("Get daftar pengajuan failed : ", error);
+        toastWarning("Data kosong");
+      });
   };
 
   useEffect(() => {

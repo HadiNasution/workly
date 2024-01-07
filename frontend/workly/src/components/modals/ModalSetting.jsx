@@ -1,3 +1,4 @@
+import { axiosGet } from "../../controller/api-controller";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { toastSuccess, alertError } from "../alert/SweetAlert";
@@ -16,43 +17,33 @@ export default function ModalSetting() {
   const [leavesLimit, setLeavesLimit] = useState(0);
   const [enableWfh, setEnableWfh] = useState(true);
   const [usingShot, setUsingShot] = useState(true);
+  const token = sessionStorage.getItem("token");
 
-  const getSetting = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
-      const { data } = await axios.get(
-        "http://localhost:3000/api/admin/setting",
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (data.data) {
-        setRadius(data.data.office_radius);
-        setLatitude(data.data.office_latitude);
-        setLongitude(data.data.office_longitude);
-        setAddress(data.data.office_address);
-        setName(data.data.office_name);
-        setDefaultPass(data.data.default_password);
-        setTimeIn(data.data.time_in);
-        setTimeOut(data.data.time_out);
-        setLateLimit(data.data.minute_late_limit);
-        setLeavesLimit(data.data.leaves_limit);
-        setWfhLimit(data.data.wfh_limit);
-        setEnableWfh(data.data.enable_wfh);
-        setUsingShot(data.data.using_shot);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const getSetting = () => {
+    axiosGet("http://localhost:3000/api/admin/setting", token)
+      .then((result) => {
+        setRadius(result.office_radius);
+        setLatitude(result.office_latitude);
+        setLongitude(result.office_longitude);
+        setAddress(result.office_address);
+        setName(result.office_name);
+        setDefaultPass(result.default_password);
+        setTimeIn(result.time_in);
+        setTimeOut(result.time_out);
+        setLateLimit(result.minute_late_limit);
+        setLeavesLimit(result.leaves_limit);
+        setWfhLimit(result.wfh_limit);
+        setEnableWfh(result.enable_wfh);
+        setUsingShot(result.using_shot);
+      })
+      .catch((error) => {
+        console.error("Get setting failed : ", error);
+      });
   };
 
   const simpanPengaturan = async (event) => {
     event.preventDefault();
     try {
-      const token = sessionStorage.getItem("token");
       const { data } = await axios.post(
         "http://localhost:3000/api/admin/setting",
         {

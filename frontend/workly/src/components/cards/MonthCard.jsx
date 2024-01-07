@@ -2,41 +2,18 @@ import {
   BsHouseFill,
   BsArrowRightSquareFill,
   BsArrowLeftSquareFill,
-  BsExclamationCircleFill,
 } from "react-icons/bs";
-import { convertDayString } from "../../utils/date-time";
+import { dayDateFormat, timeFormat } from "../../utils/date-time";
 
 export default function MonthCard(data) {
   const item = data.data;
-
-  const timeFormat = (date) => {
-    let dateString = date;
-    let dateObject = new Date(dateString);
-
-    let jam = dateObject.getHours();
-    let menit = dateObject.getMinutes();
-
-    let formatWaktu = `${jam}:${menit < 10 ? "0" : ""}${menit}`;
-    return formatWaktu;
-  };
-
-  const dateFormat = (date) => {
-    let dateString = date;
-    let dateObject = new Date(dateString);
-
-    let hari = convertDayString(dateObject);
-    let tanggal = dateObject.getDate();
-
-    let formatWaktu = `${hari}, ${tanggal}`;
-    return formatWaktu;
-  };
 
   return (
     <>
       <div className="card w-100" style={{ minWidth: 250, minHeight: 120 }}>
         <div className="card-header d-flex justify-content-between align-items-center">
-          <h4>{dateFormat(item.time_in)}</h4>
-          <span class="badge text-bg-danger">
+          <h4>{dayDateFormat(item.time_in)}</h4>
+          <span className="badge text-bg-danger">
             {item.is_late ? "Terlambat" : ""}
           </span>
         </div>

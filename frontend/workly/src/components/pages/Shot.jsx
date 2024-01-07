@@ -1,27 +1,21 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { axiosPut } from "../../controller/api-controller";
 import { alertError } from "../alert/SweetAlert";
 
 export default function Shot() {
-  const [shot, setShot] = useState(null);
+  const [shot, setShot] = useState("");
   const [countdown, setCountdown] = useState(30); // Waktu mundur dalam detik
 
-  const generateShot = async () => {
-    try {
-      const { data } = await axios.put(
-        `http://localhost:3000/api/shot/generate`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      setShot(data.data.shot.toUpperCase());
-      setCountdown(30); // Mengatur ulang waktu mundur setelah generateShot (dalam detik)
-    } catch (error) {
-      console.log(error);
-      alertError("Gagal generate shot", error);
-    }
+  const generateShot = () => {
+    axiosPut(`http://localhost:3000/api/shot/generate`)
+      .then((result) => {
+        setShot(result.shot.toUpperCase());
+        setCountdown(30); // Mengatur ulang waktu mundur setelah generateShot (dalam detik)
+      })
+      .catch((error) => {
+        console.error("Get shot failed : ", error);
+        alertError("Gagal generate shot", error);
+      });
   };
 
   useEffect(() => {

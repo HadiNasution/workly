@@ -1,7 +1,7 @@
-import axios from "axios";
+import { axiosGet, axiosDelete } from "../../controller/api-controller";
 import { useState, useEffect } from "react";
-import { convertDayString } from "../../utils/date-time";
-import { alertError, toastSuccess, toastWarning } from "../alert/SweetAlert";
+import { dateFormat } from "../../utils/date-time";
+import { alertError, toastSuccess } from "../alert/SweetAlert";
 import Swal from "sweetalert2";
 import ShimmerCard from "../loading/shimmer";
 import ModalUpdateKaryawan from "../modals/ModalUpdateKaryawan";
@@ -11,26 +11,16 @@ export default function Karyawan() {
   const [loading, setLoading] = useState(true);
   const token = sessionStorage.getItem("token");
 
-  const getEmployee = async () => {
-    try {
-      const { data } = await axios.get(
-        `http://localhost:3000/api/admin/get/employee`,
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      //   console.log(data.data);
-      if (data.data) {
-        setData(data.data);
+  const getEmployee = () => {
+    axiosGet(`http://localhost:3000/api/admin/get/employee`, token)
+      .then((result) => {
+        setData(result);
         setLoading(false);
-      }
-    } catch (error) {
-      console.error("Server Response:", error);
-      setLoading(false);
-    }
+      })
+      .catch((error) => {
+        console.error("Get employee failed : ", error);
+        setLoading(false);
+      });
   };
 
   const confirmDelete = (nip, name) => {
@@ -50,37 +40,16 @@ export default function Karyawan() {
     });
   };
 
-  const deleteEmployee = async (nip) => {
-    try {
-      const { data } = await axios.delete(
-        `http://localhost:3000/api/admin/delete/employee/${nip}`,
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      //   console.log(data.data);
-      if (data.data) {
+  const deleteEmployee = (nip) => {
+    axiosDelete(`http://localhost:3000/api/admin/delete/employee/${nip}`, token)
+      .then((result) => {
         toastSuccess(`Karyawan dengan nip ${nip} berhasil dihapus`, "");
         getEmployee();
-      }
-    } catch (error) {
-      console.error("Server Response:", error.response.data);
-      alertError(`Gagal hapus karyawan ${nip}`, error);
-    }
-  };
-
-  const formatTime = (date) => {
-    const dateString = date;
-    const dateObject = new Date(dateString);
-
-    const hari = convertDayString(dateObject);
-    const tanggal = dateObject.getDate();
-    const bulan = dateObject.getMonth() + 1;
-    const tahun = dateObject.getFullYear();
-    return `${hari} ${tanggal}/${bulan}/${tahun}`;
+      })
+      .catch((error) => {
+        console.error("Get employee failed : ", error);
+        alertError(`Gagal hapus karyawan ${nip}`, error);
+      });
   };
 
   const showEmployee = () => {
@@ -135,11 +104,11 @@ export default function Karyawan() {
                     <b>Role:</b> <br></br> {item.role}
                   </p>
                   <p>
-                    <b>Tanggal gabung:</b> <br></br> {formatTime(item.join)}
+                    <b>Tanggal gabung:</b> <br></br> {dateFormat(item.join)}
                   </p>
                   <p>
                     <b>Tanggal jatuh tempo:</b> <br></br>{" "}
-                    {formatTime(item.quit)}
+                    {dateFormat(item.quit)}
                   </p>
                 </div>
                 <div className="col">

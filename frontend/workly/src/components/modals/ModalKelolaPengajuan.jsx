@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { axiosGet } from "../../controller/api-controller";
 import axios from "axios";
 import {
   CardPermissionAdminApproval,
@@ -6,32 +7,24 @@ import {
 } from "../cards/PermissionAdmin";
 
 export default function ModalKelolaPengajuan() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [approved, setApproved] = useState(0);
   const [approve, setApprove] = useState(0);
   const [rejected, setRejected] = useState(0);
+  const token = sessionStorage.getItem("token");
 
-  const getPengajuan = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
-      const { data } = await axios.get(
-        "http://localhost:3000/api/admin/permission",
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (data.data) {
-        setData(data.data.result);
-        setApprove(data.data.status.approve);
-        setApproved(data.data.status.approved);
-        setRejected(data.data.status.rejected);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const getPengajuan = () => {
+    axiosGet("http://localhost:3000/api/admin/permission", token)
+      .then((result) => {
+        setData(result.result);
+        setApprove(result.status.approve);
+        setApproved(result.status.approved);
+        setRejected(result.status.rejected);
+      })
+      .catch((error) => {
+        console.error("Get daftar pengajuan failed : ", error);
+        toastWarning("Data kosong");
+      });
   };
 
   const ApprovedCardList = (data) => {

@@ -1,3 +1,4 @@
+import { axiosGet } from "../../controller/api-controller";
 import axios from "axios";
 import { toastSuccess, alertError, toastWarning } from "../alert/SweetAlert";
 import { useState, useEffect } from "react";
@@ -46,22 +47,15 @@ export default function ModalTambahAdmin() {
     }
   };
 
-  const getSetting = async () => {
-    try {
-      const { data } = await axios.get(
-        "http://localhost:3000/api/admin/setting",
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (data.data) setSetting(data.data);
-    } catch (error) {
-      console.error("Server Response:", error);
-      toastWarning("Data setting kosong");
-    }
+  const getSetting = () => {
+    axiosGet("http://localhost:3000/api/admin/setting", token)
+      .then((result) => {
+        setSetting(result);
+      })
+      .catch((error) => {
+        console.error("Get setting failed : ", error);
+        toastWarning("Data setting kosong");
+      });
   };
 
   useEffect(() => {

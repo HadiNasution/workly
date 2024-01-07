@@ -1,4 +1,4 @@
-import { convertDayString } from "../../utils/date-time";
+import { dateFormat } from "../../utils/date-time";
 import {
   BsImageFill,
   BsClockFill,
@@ -15,19 +15,6 @@ export default function CardPermission({
   images,
   is_approved,
 }) {
-  const dateFormated = (date) => {
-    let dateString = date;
-    let dateObject = new Date(dateString);
-
-    let hari = convertDayString(dateObject);
-    let tanggal = dateObject.getDate();
-    let bulan = dateObject.getMonth() + 1;
-    let tahun = dateObject.getFullYear();
-
-    let formatWaktu = `${hari} ${tanggal}/${bulan}/${tahun}`;
-    return formatWaktu;
-  };
-
   // Fungsi untuk menghitung selisih hari antara dua tanggal
   const hitungSelisihHari = (tanggalAwal, tanggalAkhir) => {
     const satuHari = 24 * 60 * 60 * 1000; // Satu hari dalam milidetik
@@ -77,9 +64,9 @@ export default function CardPermission({
       <div className="card-body">
         <div className="d-flex justify-content-between">
           <p>
-            {dateFormated(start_date)}
+            {dateFormat(start_date)}
             <BsArrowRight className="me-2 ms-2" />
-            {dateFormated(end_date)}
+            {dateFormat(end_date)}
           </p>
           {images ? (
             <div className="surat">

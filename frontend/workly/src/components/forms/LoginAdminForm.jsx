@@ -24,7 +24,6 @@ export default function LoginAdminform() {
           },
         }
       );
-      // console.log(data);
       // get response data
       const token = data.data.token;
       const isSuperAdmin = data.data.is_super_admin;

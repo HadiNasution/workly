@@ -1,5 +1,6 @@
 import axios from "axios";
-import { toastSuccess, alertError } from "../alert/SweetAlert";
+import { axiosGet } from "../../controller/api-controller";
+import { toastSuccess, toastWarning } from "../alert/SweetAlert";
 import { useState, useEffect } from "react";
 
 export default function ModalUpdateKaryawan({ userId, modalId, reload }) {
@@ -16,30 +17,21 @@ export default function ModalUpdateKaryawan({ userId, modalId, reload }) {
   const token = sessionStorage.getItem("token");
 
   const getEmployee = async (id) => {
-    try {
-      const { data } = await axios.get(
-        `http://localhost:3000/api/admin/get/employee/${id}`,
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (data.data) {
-        setIdUser(data.data.id);
-        setName(data.data.name);
-        setEmployeeNip(data.data.nip);
-        setEmail(data.data.email);
-        setRole(data.data.role);
-        setDepartmen(data.data.departmen);
-        setJoin(data.data.join_date);
-        setQuit(data.data.quit_date);
-      }
-    } catch (error) {
-      console.error("Server Response:", error);
-      //   alertError("Data tidak ditemukan", error.response.data.errors);
-    }
+    axiosGet(`http://localhost:3000/api/admin/get/employee/${id}`, token)
+      .then((result) => {
+        setIdUser(result.id);
+        setName(result.name);
+        setEmployeeNip(result.nip);
+        setEmail(result.email);
+        setRole(result.role);
+        setDepartmen(result.departmen);
+        setJoin(result.join_date);
+        setQuit(result.quit_date);
+      })
+      .catch((error) => {
+        console.error("Get setting failed : ", error);
+        toastWarning("Data employee tidak ditemukan");
+      });
   };
 
   const dateFormat = (date) => {

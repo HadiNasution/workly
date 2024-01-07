@@ -1,20 +1,7 @@
-import { convertDayString } from "../../utils/date-time";
+import { dateFormat } from "../../utils/date-time";
 import { BsArrowRight, BsImageFill } from "react-icons/bs";
-import axios from "axios";
+import { axiosPutNoContent } from "../../controller/api-controller";
 import { toastSuccess, alertError } from "../alert/SweetAlert.js";
-
-const dateFormated = (date) => {
-  let dateString = date;
-  let dateObject = new Date(dateString);
-
-  let hari = convertDayString(dateObject);
-  let tanggal = dateObject.getDate();
-  let bulan = dateObject.getMonth() + 1;
-  let tahun = dateObject.getFullYear();
-
-  let formatWaktu = `${hari} ${tanggal}/${bulan}/${tahun}`;
-  return formatWaktu;
-};
 
 // Fungsi untuk menghitung selisih hari antara dua tanggal
 const hitungSelisihHari = (tanggalAwal, tanggalAkhir) => {
@@ -43,46 +30,31 @@ export function CardPermissionAdminApproval({
   note,
 }) {
   const token = sessionStorage.getItem("token");
-  const approve = async (id) => {
-    try {
-      const { data } = await axios.put(
-        `http://localhost:3000/api/admin/permission/${id}`,
-        null,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      if (data.data) {
-        toastSuccess(data.data, `Pengajuan ${name} telah di setujui`);
-      }
-    } catch (error) {
-      console.log(error);
-      if (error.response.data.errors)
-        alertError("Gagal reject", error.response.data.errors);
-    }
+  const approve = (id) => {
+    axiosPutNoContent(`http://localhost:3000/api/admin/permission/${id}`, token)
+      .then((result) => {
+        toastSuccess(result, `Pengajuan ${name} telah di setujui`);
+      })
+      .catch((error) => {
+        console.error("Approve permission failed : ", error);
+        if (error.response.data.errors)
+          alertError("Gagal approve", error.response.data.errors);
+      });
   };
 
-  const reject = async (id) => {
-    try {
-      const { data } = await axios.put(
-        `http://localhost:3000/api/admin/permission/reject/${id}`,
-        null,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      if (data.data) {
-        toastSuccess(data.data, `Pengajuan ${name} telah di tolak`);
-      }
-    } catch (error) {
-      console.log(error);
-      if (error.response.data.errors)
-        alertError("Gagal reject", error.response.data.errors);
-    }
+  const reject = (id) => {
+    axiosPutNoContent(
+      `http://localhost:3000/api/admin/permission/reject/${id}`,
+      token
+    )
+      .then((result) => {
+        toastSuccess(result, `Pengajuan ${name} telah di tolak`);
+      })
+      .catch((error) => {
+        console.error("Approve permission failed : ", error);
+        if (error.response.data.errors)
+          alertError("Gagal reject", error.response.data.errors);
+      });
   };
   return (
     <div className="card mb-2">
@@ -104,9 +76,9 @@ export function CardPermissionAdminApproval({
       <div className="card-body">
         <div className="d-flex justify-content-between">
           <p>
-            {dateFormated(start_date)}
+            {dateFormat(start_date)}
             <BsArrowRight className="me-2 ms-2" />
-            {dateFormated(end_date)}
+            {dateFormat(end_date)}
           </p>
           {images ? (
             <div className="surat">
@@ -150,9 +122,9 @@ export function CardPermissionAdmin({
       <div className="card-body">
         <div className="d-flex justify-content-between">
           <p>
-            {dateFormated(start_date)}
+            {dateFormat(start_date)}
             <BsArrowRight className="me-2 ms-2" />
-            {dateFormated(end_date)}
+            {dateFormat(end_date)}
           </p>
           {images ? (
             <div className="surat">

@@ -1,7 +1,8 @@
-import { convertDayString, monthString, year } from "../../utils/date-time";
+import { dateFormat, monthString, year } from "../../utils/date-time";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { axiosGet, axiosDelete } from "../../controller/api-controller";
 import { toastSuccess, alertError } from "../alert/SweetAlert";
 
 export default function DetailProfileEmployee() {
@@ -10,6 +11,7 @@ export default function DetailProfileEmployee() {
   const [pict, setPict] = useState(localStorage.getItem("avatar"));
   const [wfhLimit, setWfhLimit] = useState(0);
   const [leavesLimit, setLeavesLimit] = useState(0);
+  const token = sessionStorage.getItem("token");
 
   let isPictNull;
   if (pict === "null") {
@@ -18,44 +20,28 @@ export default function DetailProfileEmployee() {
     isPictNull = false;
   }
 
-  const getSetting = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
-      const { data } = await axios.get(
-        "http://localhost:3000/api/employee/setting",
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (data.data) {
-        setWfhLimit(data.data.wfh_limit);
-        setLeavesLimit(data.data.leaves_limit);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const getSetting = () => {
+    axiosGet("http://localhost:3000/api/employee/setting", token)
+      .then((result) => {
+        setWfhLimit(result.wfh_limit);
+        setLeavesLimit(result.leaves_limit);
+      })
+      .catch((error) => {
+        console.error("Get setting failed : ", error);
+        toastWarning("Data admin tidak ditemukan");
+      });
   };
 
-  const getProfile = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
-      const { data } = await axios.get(
-        "http://localhost:3000/api/employee/profile",
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (data.data) {
-        setProfile(data.data);
-        localStorage.setItem("avatar", data.data[0].picture);
-      }
-    } catch (error) {}
+  const getProfile = () => {
+    axiosGet("http://localhost:3000/api/employee/profile", token)
+      .then((result) => {
+        setProfile(result);
+        localStorage.setItem("avatar", result[0].picture);
+      })
+      .catch((error) => {
+        console.error("Get profile failed : ", error);
+        toastWarning("Data admin tidak ditemukan");
+      });
   };
 
   const updateFotoProfile = async (event) => {
@@ -91,43 +77,18 @@ export default function DetailProfileEmployee() {
     }
   };
 
-  const logoutEmployee = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
-      const { data } = await axios.delete(
-        "http://localhost:3000/api/employee/logout",
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      // Jika logout berhasil, hapus token dari session storage
-      if (data.data) {
+  const logoutEmployee = () => {
+    axiosDelete("http://localhost:3000/api/employee/logout", token)
+      .then((result) => {
         sessionStorage.clear();
         localStorage.clear();
+        toastSuccess("See you!", "");
         // lalu redirect ke halaman login
         navigate("/");
-      }
-    } catch (error) {
-      if (error.response) {
-        console.error("Server Response:", error.response.data);
-      }
-    }
-  };
-
-  const dateFormat = (date) => {
-    let dateString = date;
-    let dateObject = new Date(dateString);
-
-    let hari = convertDayString(dateObject);
-    let tanggal = dateObject.getDate();
-    let bulan = dateObject.getMonth() + 1;
-    let tahun = dateObject.getFullYear();
-
-    let formatWaktu = `${hari} ${tanggal}/${bulan}/${tahun}`;
-    return formatWaktu;
+      })
+      .catch((error) => {
+        console.error("Logout failed : ", error);
+      });
   };
 
   useEffect(() => {

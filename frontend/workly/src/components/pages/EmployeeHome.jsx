@@ -8,7 +8,7 @@ import DetailProfileEmployee from "../offcanvas/DetailProfileEmployee";
 import ModalPengajuan from "../modals/ModalPengajuan";
 import ModalDaftarPengajuan from "../modals/ModalDaftarPengajuan";
 import { toastWarning, alertError, toastSuccess } from "../alert/SweetAlert";
-import axios from "axios";
+import { axiosGet, axiosDelete } from "../../controller/api-controller";
 
 const EmployeeHome = () => {
   const navigate = useNavigate();
@@ -18,77 +18,46 @@ const EmployeeHome = () => {
   const [worked, setWorked] = useState(false);
   const [isWorked, setIsWorked] = useState(false);
   const [officeName, setOfficeName] = useState("");
+  const token = sessionStorage.getItem("token");
 
   const handleAbsentState = () => {
     setIsWorked(!worked);
   };
 
-  const getAttendance = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
-      const { data } = await axios.get(
-        `http://localhost:3000/api/employee/attendance/day`,
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      setWorked(data.data.is_working);
-      setIsWorked(data.data.is_working);
-    } catch (error) {
-      // if (error.response) {
-      //   console.error("Server Response:", error.response.data);
-      // }
-    }
+  const getAttendance = () => {
+    axiosGet(`http://localhost:3000/api/employee/attendance/day`, token)
+      .then((result) => {
+        setWorked(result.is_working);
+        setIsWorked(result.is_working);
+      })
+      .catch((error) => {
+        console.error("Get attendance failed : ", error);
+      });
   };
 
-  const logoutEmployee = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
-      const { data } = await axios.delete(
-        "http://localhost:3000/api/employee/logout",
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      // Jika logout berhasil, hapus token dari session storage
-      if (data.data) {
+  const logoutEmployee = () => {
+    axiosDelete("http://localhost:3000/api/employee/logout", token)
+      .then((result) => {
         sessionStorage.clear();
         localStorage.clear();
-        toastSuccess("Logout berhasil", "See you!");
+        toastSuccess("See you!", "");
         // lalu redirect ke halaman login
         navigate("/");
-      }
-    } catch (error) {
-      console.error("Server Response:", error.response.data);
-      alertError("Logout gagal", error.response.data.errors);
-    }
+      })
+      .catch((error) => {
+        console.error("Logout failed : ", error);
+        alertError("Logout gagal", error.response.data.errors);
+      });
   };
 
-  const getSetting = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
-      const { data } = await axios.get(
-        "http://localhost:3000/api/employee/setting",
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (data.data) {
-        setOfficeName(data.data.office_name);
-      }
-    } catch (error) {
-      console.log(error);
-      toastWarning("Data setting kosong");
-    }
+  const getSetting = () => {
+    axiosGet("http://localhost:3000/api/employee/setting", token)
+      .then((result) => {
+        setOfficeName(result.office_name);
+      })
+      .catch((error) => {
+        console.error("Get setting failed : ", error);
+      });
   };
 
   useEffect(() => {

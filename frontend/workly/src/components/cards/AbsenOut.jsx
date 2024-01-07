@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import {
-  BsGeoAltFill,
   BsCalendar2Fill,
   BsClockFill,
   BsArrowLeftSquareFill,
 } from "react-icons/bs";
-import axios from "axios";
+import { axiosGet } from "../../controller/api-controller";
 import Swal from "sweetalert2";
 import { toastSuccess, alertError, toastWarning } from "../alert/SweetAlert";
 import { dayString, monthString, date, year } from "../../utils/date-time";
@@ -16,6 +15,7 @@ export default function AbsenOut({ isWorked }) {
   const [disable, setDisable] = useState(isWorked);
   const [hours, setHours] = useState(new Date().getHours());
   const [minutes, setMinutes] = useState(new Date().getMinutes());
+  const token = sessionStorage.getItem("token");
 
   const confirmOut = () => {
     Swal.fire({
@@ -35,23 +35,18 @@ export default function AbsenOut({ isWorked }) {
     });
   };
 
-  const absenOut = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
-      const { data } = await axios.get(
-        `http://localhost:3000/api/employee/absenOut/-6.935783427330478/107.5782643924172`,
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      toastSuccess(data.data, "See you!");
-    } catch (error) {
-      console.log(error);
-      alertError("Oops! Absen keluar gagal", error.response.data.errors);
-    }
+  const absenOut = () => {
+    axiosGet(
+      `http://localhost:3000/api/employee/absenOut/${latitude}/${longitude}`,
+      token
+    )
+      .then((result) => {
+        toastSuccess(result, "See you!");
+      })
+      .catch((error) => {
+        console.error("Absen out failed : ", error);
+        alertError("Oops! Absen keluar gagal", error.response.data.errors);
+      });
   };
 
   useEffect(() => {

@@ -1,42 +1,24 @@
-import axios from "axios";
+import { axiosGet } from "../../controller/api-controller";
 import { useState, useEffect } from "react";
 import { BsPersonFill, BsClockFill, BsGeoAltFill } from "react-icons/bs";
 import ShimmerCard from "../loading/shimmer";
+import { timeFormat } from "../../utils/date-time";
 
 export default function RecapDayAdmin() {
   const [dataRecap, setDataRecap] = useState([]);
   const [loading, setLoading] = useState(true);
+  const token = sessionStorage.getItem("token");
 
   const getRecap = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
-      const { data } = await axios.get(
-        `http://localhost:3000/api/admin/recap/day`,
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      //   console.log(data.data);
-      if (data.data) {
-        setDataRecap(data.data);
+    axiosGet(`http://localhost:3000/api/admin/recap/day`, token)
+      .then((result) => {
+        setDataRecap(result);
         setLoading(false);
-      }
-    } catch (error) {
-      console.error("Server Response:", error.response.data.errors);
-      setLoading(false);
-    }
-  };
-
-  const timeFormat = (date) => {
-    const dateOutString = date;
-    const dateOutObject = new Date(dateOutString);
-
-    const jam = dateOutObject.getHours();
-    const menit = dateOutObject.getMinutes();
-    return `${jam}:${menit < 10 ? "0" : ""}${menit}`;
+      })
+      .catch((error) => {
+        console.error("Get recap failed : ", error);
+        setLoading(false);
+      });
   };
 
   const showRecap = () => {
@@ -88,12 +70,13 @@ export default function RecapDayAdmin() {
 
   useEffect(() => {
     //reload data recap setiap 1 detik
-    const reloadRecap = () => {
-      getRecap();
-    };
-    reloadRecap();
-    const intervalId = setInterval(reloadRecap, 1000);
-    return () => clearInterval(intervalId);
+    // const reloadRecap = () => {
+    //   getRecap();
+    // };
+    // reloadRecap();
+    // const intervalId = setInterval(reloadRecap, 1000);
+    // return () => clearInterval(intervalId);
+    getRecap();
   }, []);
 
   return (

@@ -1,5 +1,6 @@
+import { axiosGet } from "../../controller/api-controller";
 import axios from "axios";
-import { toastSuccess, alertError } from "../alert/SweetAlert";
+import { toastSuccess, toastWarning } from "../alert/SweetAlert";
 import { useState, useEffect } from "react";
 
 export default function ModalUpdateAdmin({ adminId, modalId, reload }) {
@@ -13,27 +14,18 @@ export default function ModalUpdateAdmin({ adminId, modalId, reload }) {
   const token = sessionStorage.getItem("token");
 
   const getAdmin = async (id) => {
-    try {
-      const { data } = await axios.get(
-        `http://localhost:3000/api/admin/get/admin/${id}`,
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (data.data) {
-        setIdUser(data.data.id);
-        setName(data.data.name);
-        setNip(data.data.nip);
-        setEmail(data.data.email);
-        setStatus(data.data.is_super_admin);
-      }
-    } catch (error) {
-      console.error("Server Response:", error);
-      alertError("Data tidak ditemukan", error.response.data.errors);
-    }
+    axiosGet(`http://localhost:3000/api/admin/get/admin/${id}`, token)
+      .then((result) => {
+        setIdUser(result.id);
+        setName(result.name);
+        setNip(result.nip);
+        setEmail(result.email);
+        setStatus(result.is_super_admin);
+      })
+      .catch((error) => {
+        console.error("Get setting failed : ", error);
+        toastWarning("Data admin tidak ditemukan");
+      });
   };
 
   const updateAdmin = async (event) => {

@@ -35,8 +35,6 @@ export default function ModalTambahKaryawan() {
           },
         }
       );
-
-      //   console.log(data.data);
       if (data.data) {
         toastSuccess(`Karyawan ${name} berhasil ditambahkan`, "");
         setTimeout(function () {

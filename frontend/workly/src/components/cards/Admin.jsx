@@ -1,6 +1,6 @@
 import { BsPersonFill } from "react-icons/bs";
-import axios from "axios";
-import { alertError, toastSuccess, toastWarning } from "../alert/SweetAlert";
+import { axiosGet, axiosDelete } from "../../controller/api-controller";
+import { alertError, toastSuccess } from "../alert/SweetAlert";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import ShimmerCard from "../loading/shimmer";
@@ -11,25 +11,16 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   const token = sessionStorage.getItem("token");
 
-  const getAdmin = async () => {
-    try {
-      const { data } = await axios.get(
-        `http://localhost:3000/api/admin/get/admin`,
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (data.data) {
-        setData(data.data);
+  const getAdmin = () => {
+    axiosGet(`http://localhost:3000/api/admin/get/admin`, token)
+      .then((result) => {
+        setData(result);
         setLoading(false);
-      }
-    } catch (error) {
-      console.error("Server Response:", error);
-      setLoading(false);
-    }
+      })
+      .catch((error) => {
+        console.error("Get admin failed : ", error);
+        setLoading(false);
+      });
   };
 
   const confirmDelete = (nip, name) => {
@@ -49,25 +40,19 @@ export default function Admin() {
     });
   };
 
-  const deleteAdmin = async (nip) => {
-    try {
-      const { data } = await axios.delete(
-        `http://localhost:3000/api/admin/delete/admin/${nip}`,
-        {
-          headers: {
-            Authorization: token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (data.data) {
+  const deleteAdmin = (nip) => {
+    axiosDelete(`http://localhost:3000/api/admin/delete/admin/${nip}`, token)
+      .then((result) => {
         toastSuccess(`Admin dengan nip ${nip} berhasil dihapus`, "");
         getAdmin();
-      }
-    } catch (error) {
-      console.error("Server Response:", error);
-      alertError(`Admin nip ${nip} gagal dihapus`, error.response.data.errors);
-    }
+      })
+      .catch((error) => {
+        console.error("Delete admin failed : ", error);
+        alertError(
+          `Admin nip ${nip} gagal dihapus`,
+          error.response.data.errors
+        );
+      });
   };
 
   const showAdmin = () => {

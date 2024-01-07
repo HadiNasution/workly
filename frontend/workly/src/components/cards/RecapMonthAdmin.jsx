@@ -1,7 +1,10 @@
+import { axiosGetBlobContent } from "../../controller/api-controller";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import MonthCardAdmin from "./MonthCardAdmin";
 import { saveAs } from "file-saver";
+import { convertMonthString } from "../../utils/date-time";
+import { toastWarning } from "../alert/SweetAlert";
 
 export default function RecapMonthAdmin() {
   const currentTime = new Date();
@@ -30,14 +33,14 @@ export default function RecapMonthAdmin() {
           },
         }
       );
-      // console.log(data.data);
       setResult(data.data);
       setShowDownload(true);
     } catch (error) {
       setShowDownload(false);
-      // if (error.response) {
-      //   console.error("Server Response:", error.response.data);
-      // }
+      if (error.response) {
+        console.error("Server Response:", error.response.data.errors);
+        toastWarning(error.response.data.errors);
+      }
     }
   };
 
@@ -53,29 +56,20 @@ export default function RecapMonthAdmin() {
     }
   };
 
-  const downloadRecap = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:3000/api/admin/download/recap`,
-        {
-          headers: {
-            Authorization: token,
-          },
-          responseType: "blob",
-        }
-      );
-      saveAs(response.data, "attendance-recap.csv");
-    } catch (error) {
-      console.log(error);
-      if (error.response) {
-        console.error("Server Response:", error.response.data);
-      }
-    }
+  const downloadRecap = () => {
+    axiosGetBlobContent(`http://localhost:3000/api/admin/download/recap`, token)
+      .then((result) => {
+        saveAs(
+          result,
+          `attendance_recap/${convertMonthString(month)}/${year}.csv`
+        );
+      })
+      .catch((error) => {
+        console.error("Download recap failed ", error);
+      });
   };
 
-  useEffect(() => {
-    // console.log(result);
-  }, [result]);
+  useEffect(() => {}, [result]);
 
   return (
     <div className="row">
@@ -113,8 +107,6 @@ export default function RecapMonthAdmin() {
               value={year}
               onChange={(e) => setYear(e.target.value)}
             >
-              <option value="2021">2021</option>
-              <option value="2022">2022</option>
               <option value="2023">2023</option>
               <option value="2024">2024</option>
             </select>
