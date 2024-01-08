@@ -6,6 +6,7 @@ import { toastSuccess, alertError, toastWarning } from "../alert/SweetAlert";
 import RecapAdminTab from "../tabs/RecapAdmin";
 import ModalSetting from "../modals/ModalSetting";
 import ModalKelolaPengajuan from "../modals/ModalKelolaPengajuan";
+import ModalGantiPassword from "../modals/ModalGantiPassword";
 
 const AdminHome = () => {
   const navigate = useNavigate();
@@ -118,14 +119,17 @@ const AdminHome = () => {
                 </span>
               </h1>
             </div>
-            <button
-              type="button"
-              className="btn btn-danger h-25"
-              style={{ width: 80 }}
-              onClick={() => logoutAdmin()}
-            >
-              Logout
-            </button>
+            <div className="action">
+              <ModalGantiPassword />
+              <button
+                type="button"
+                className="btn btn-danger h-25 ms-3"
+                style={{ width: 80 }}
+                onClick={() => logoutAdmin()}
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </div>

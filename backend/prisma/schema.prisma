@@ -31,8 +31,8 @@ model Employee {
   nip String @db.VarChar(16) @unique
   email String @db.VarChar(100) @unique
   password String @db.VarChar(100)
-  role String? @db.VarChar(12)
-  departmen String? @db.VarChar(100)
+  role String? @db.VarChar(255)
+  departmen String? @db.VarChar(255)
   picture String? @db.VarChar(255)
   token String? @db.VarChar(100) @unique
   token_expires_at DateTime?

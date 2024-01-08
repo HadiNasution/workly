@@ -36,6 +36,15 @@ const reset = async (req, res, next) => {
   }
 };
 
+const changePassword = async (req, res, next) => {
+  try {
+    await adminService.changePassword(req.body, req.admin);
+    res.status(201).json({ data: "Password berhasil diubah" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getAdmin = async (req, res, next) => {
   try {
     const result = await adminService.get();
@@ -245,6 +254,7 @@ export default {
   regist,
   logout,
   reset,
+  changePassword,
   getAdmin,
   getAdminById,
   update,

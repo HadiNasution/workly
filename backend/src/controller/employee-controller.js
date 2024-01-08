@@ -27,6 +27,15 @@ const reset = async (req, res, next) => {
   }
 };
 
+const changePassword = async (req, res, next) => {
+  try {
+    await employeeService.changePassword(req.body, req.employee);
+    res.status(201).json({ data: "Password berhasil diubah" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const detail = async (req, res, next) => {
   try {
     const result = await employeeService.detail(req.employee.nip);
@@ -150,6 +159,7 @@ export default {
   login,
   logout,
   reset,
+  changePassword,
   detail,
   absenIn,
   absenOut,

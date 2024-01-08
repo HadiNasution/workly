@@ -8,6 +8,10 @@ const employeeLoginValidation = Joi.object({
   password: Joi.string().max(100).required(),
 });
 
+const employeeChangePasswordValidation = Joi.object({
+  password: Joi.string().max(100).required(),
+});
+
 const employeeResetValidation = Joi.object({
   name: Joi.string().max(100).required(),
   nip: Joi.string().max(16).required(),
@@ -31,6 +35,7 @@ const employeeCreatePermissionValidation = Joi.object({
 
 export {
   employeeLoginValidation,
+  employeeChangePasswordValidation,
   employeeGetValidation,
   employeeResetValidation,
   employeeCreatePermissionValidation,

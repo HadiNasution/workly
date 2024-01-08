@@ -31,6 +31,11 @@ const adminResetValidation = Joi.object({
     .required(),
 });
 
+// validasi untuk ganti password
+const changePasswordValidation = Joi.object({
+  password: Joi.string().max(100).required(),
+});
+
 //validasi get admin
 const adminGetValidation = Joi.string()
   .max(100)
@@ -45,8 +50,8 @@ const createAdminValidation = Joi.object({
     .max(100)
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
     .required(),
-  role: Joi.string().max(12),
-  departmen: Joi.string().max(100),
+  role: Joi.string().max(255),
+  departmen: Joi.string().max(255),
   join_date: Joi.date().required(),
   quit_date: Joi.date().required(),
 });
@@ -72,8 +77,8 @@ const adminUpdateEmployeeValidation = Joi.object({
     .max(100)
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
     .optional(),
-  role: Joi.string().max(12).optional(),
-  departmen: Joi.string().max(100).optional(),
+  role: Joi.string().max(255).optional(),
+  departmen: Joi.string().max(255).optional(),
   join_date: Joi.date().optional(),
   quit_date: Joi.date().optional(),
 });
@@ -109,6 +114,7 @@ export {
   adminRegistValidation,
   adminGetValidation,
   adminResetValidation,
+  changePasswordValidation,
   createAdminValidation,
   adminUpdateValidation,
   adminUpdateEmployeeValidation,

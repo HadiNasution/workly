@@ -10,6 +10,7 @@ employeeRoute.use(employeeAuthMiddleware); // auth middleware
 
 employeeRoute.delete("/logout", employeeController.logout);
 employeeRoute.get("/profile", employeeController.detail);
+employeeRoute.put("/change/password", employeeController.changePassword);
 employeeRoute.get(
   "/absenIn/:latitude/:longitude/:wfh",
   employeeController.absenIn

@@ -16,6 +16,7 @@ adminRoute.post("/create/employee", adminController.create);
 adminRoute.get("/get/employee", adminController.getEmployee);
 adminRoute.get("/get/employee/:employeeId", adminController.getEmployeeById);
 adminRoute.post("/update/employee", adminController.updateEmployee);
+adminRoute.put("/change/password", adminController.changePassword);
 adminRoute.delete(
   "/delete/employee/:employeeNip",
   adminController.deleteEmployee

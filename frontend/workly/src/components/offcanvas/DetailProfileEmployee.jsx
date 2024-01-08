@@ -40,7 +40,6 @@ export default function DetailProfileEmployee() {
       })
       .catch((error) => {
         console.error("Get profile failed : ", error);
-        toastWarning("Data admin tidak ditemukan");
       });
   };
 
@@ -48,7 +47,6 @@ export default function DetailProfileEmployee() {
     event.preventDefault();
     const fileInput = document.getElementById("profile");
     const file = fileInput.files[0];
-    const token = sessionStorage.getItem("token");
     try {
       const formData = new FormData();
       formData.append("profile", file);
@@ -75,6 +73,34 @@ export default function DetailProfileEmployee() {
       }
       alertError("Oops! Foto gagal disimpan", error.response.data.errors);
     }
+  };
+
+  const gantiPassword = async (event) => {
+    event.preventDefault();
+    const newPass = document.getElementById("password").value;
+    try {
+      const { data } = await axios.put(
+        "http://localhost:3000/api/employee/change/password",
+        {
+          password: newPass,
+        },
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (data.data) {
+        toastSuccess(data.data, "");
+      }
+    } catch (error) {
+      console.error("Server Response:", error);
+      if (error.response) {
+        alertError("Oops! Gagal ganti password", error.response.data.errors);
+      }
+    }
+    document.getElementById("password").value = "";
   };
 
   const logoutEmployee = () => {
@@ -139,7 +165,7 @@ export default function DetailProfileEmployee() {
           ></button>
         </div>
         <div className="offcanvas-body text-start">
-          <div className="d-flex align-items-center justify-content-between">
+          <div className="head text-center">
             <img
               src={
                 isPictNull
@@ -147,36 +173,19 @@ export default function DetailProfileEmployee() {
                   : `http://localhost:3000/${pict}`
               }
               alt="foto-profile"
-              className="profile rounded-circle me-3"
+              className="profile rounded-circle"
               width={100}
               height={100}
               style={{ cursor: "pointer", objectFit: "cover" }}
             />
-            <form
-              className="mb-3 w-75"
-              onSubmit={updateFotoProfile}
-              encType="multipart/form-data"
-            >
-              <label>Upload foto profile</label>
-              <input
-                className="form-control"
-                type="file"
-                name="profile"
-                id="profile"
-              />
-              <button
-                className="btn btn-secondary btn-sm w-100 mt-1"
-                type="submit"
-              >
-                Ganti foto
-              </button>
-            </form>
-          </div>
-          {profile ? (
-            <div className="profile mt-2">
+            {profile ? (
               <h3 style={{ fontWeight: "bolder" }} className="mt-3 mb-3">
                 {profile[0].name ?? <i>Data masih kosong</i>}
               </h3>
+            ) : null}
+          </div>
+          {profile ? (
+            <div className="profile mt-2">
               <div className="d-flex justify-content-between">
                 <p>
                   <b>NIP : </b>
@@ -217,15 +226,8 @@ export default function DetailProfileEmployee() {
                   {dateFormat(profile[0].quit_date) ?? <i>Data masih kosong</i>}
                 </p>
               </div>
-              <p className="mt-4">
-                <span
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: 16,
-                  }}
-                >
-                  Recap kehadiran bulan {monthString()}/{year}
-                </span>
+              <p className="mt-4" style={{ fontWeight: "bold", fontSize: 16 }}>
+                Recap kehadiran bulan {monthString()}/{year}
               </p>
               <div className="d-flex justify-content-between">
                 <p>
@@ -275,9 +277,48 @@ export default function DetailProfileEmployee() {
               </div>
             </div>
           ) : null}
+          <form
+            className="mb-3 mt-4"
+            onSubmit={updateFotoProfile}
+            encType="multipart/form-data"
+          >
+            <label style={{ fontWeight: "bold", fontSize: 16 }}>
+              Upload foto profile
+            </label>
+            <input
+              className="form-control"
+              type="file"
+              name="profile"
+              id="profile"
+            />
+            <button
+              className="btn btn-secondary btn-sm w-100 mt-1"
+              type="submit"
+            >
+              Ganti foto
+            </button>
+          </form>
+          <form className="mb-3 mt-4" onSubmit={gantiPassword}>
+            <label style={{ fontWeight: "bold", fontSize: 16 }}>
+              Ganti password
+            </label>
+            <input
+              className="form-control"
+              type="password"
+              placeholder="Password baru"
+              name="password"
+              id="password"
+            />
+            <button
+              className="btn btn-secondary btn-sm w-100 mt-1"
+              type="submit"
+            >
+              Ganti password
+            </button>
+          </form>
           <button
             onClick={logoutEmployee}
-            className="btn btn-danger w-100 mt-4"
+            className="btn btn-danger w-100 mt-3"
           >
             Logout
           </button>
