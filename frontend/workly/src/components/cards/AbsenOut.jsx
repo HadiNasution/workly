@@ -12,7 +12,7 @@ import { dayString, monthString, date, year } from "../../utils/date-time";
 export default function AbsenOut({ isWorked }) {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [disable, setDisable] = useState(isWorked);
+  const [disable, setDisable] = useState(!isWorked);
   const [hours, setHours] = useState(new Date().getHours());
   const [minutes, setMinutes] = useState(new Date().getMinutes());
   const token = sessionStorage.getItem("token");
@@ -37,7 +37,7 @@ export default function AbsenOut({ isWorked }) {
 
   const absenOut = () => {
     axiosGet(
-      `http://localhost:3000/api/employee/absenOut/${latitude}/${longitude}`,
+      `http://localhost:3000/api/employee/absenOut/-6.935783427330478/107.5782643924172`,
       token
     )
       .then((result) => {
@@ -109,7 +109,7 @@ export default function AbsenOut({ isWorked }) {
           className="btn btn-primary w-100 m-1"
           disabled={disable}
         >
-          Absen keluar
+          {!disable ? "Absen keluar" : "Anda sudah absen keluar"}
         </button>
       </div>
       {latitude && longitude ? null : (

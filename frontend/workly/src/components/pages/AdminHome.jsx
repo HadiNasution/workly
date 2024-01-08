@@ -1,7 +1,6 @@
-import axios from "axios";
 import { axiosDelete } from "../../controller/api-controller";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { isTokenExpired } from "../../auth/auth-login";
 import { toastSuccess, alertError, toastWarning } from "../alert/SweetAlert";
 import RecapAdminTab from "../tabs/RecapAdmin";

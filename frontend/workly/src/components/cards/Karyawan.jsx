@@ -79,6 +79,7 @@ export default function Karyawan() {
                     }
                     height={50}
                     width={50}
+                    style={{ objectFit: "cover" }}
                     alt="foto-karyawan"
                     className="rounded-circle me-3"
                   ></img>

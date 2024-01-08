@@ -308,13 +308,42 @@ const absenIn = async (latitude, longitude, wfh, employee) => {
     }
   }
 
+  // ambil id recap dari employee
+  const idRecap = await prismaClient.employee.findMany({
+    where: {
+      id: employee.id,
+    },
+    include: {
+      attendance_recap: {
+        select: {
+          id: true,
+          count_works: true,
+        },
+      },
+    },
+  });
+
+  // update count_works + 1
+  if (idRecap) {
+    await prismaClient.attendanceRecap.update({
+      data: {
+        count_works: idRecap[0].attendance_recap[0].count_works + 1,
+      },
+      where: {
+        id: idRecap[0].attendance_recap[0].id,
+      },
+    });
+  } else {
+    throw new ResponseError(404, "Data tidak ditemukan");
+  }
+
   logger.info("EMPLOYEE ABSEN IN BERHASIL");
   return prismaClient.attendance.create({
     data: {
       time_in: currentUTCTime,
       is_late: isLate,
       is_wfh: isWfh,
-      is_working: false,
+      is_working: true,
       latitude_in: latitude,
       longitude_in: longitude,
       employee_id: employee.id,
@@ -402,35 +431,6 @@ const absenOut = async (latitude, longitude, employee) => {
     }
   }
 
-  // ambil id recap dari employee
-  const idRecap = await prismaClient.employee.findMany({
-    where: {
-      id: employee.id,
-    },
-    include: {
-      attendance_recap: {
-        select: {
-          id: true,
-          count_works: true,
-        },
-      },
-    },
-  });
-
-  // update count_works + 1
-  if (idRecap) {
-    await prismaClient.attendanceRecap.update({
-      data: {
-        count_works: idRecap[0].attendance_recap[0].count_works + 1,
-      },
-      where: {
-        id: idRecap[0].attendance_recap[0].id,
-      },
-    });
-  } else {
-    throw new ResponseError(404, "Data tidak ditemukan");
-  }
-
   const currentUTCTime = new Date(); // set waktu sekarang dalam UTC
   logger.info("EMPLOYEE ABSEN OUT BERHASIL");
   return prismaClient.attendance.update({
@@ -441,7 +441,6 @@ const absenOut = async (latitude, longitude, employee) => {
       time_out: currentUTCTime,
       latitude_out: latitude,
       longitude_out: longitude,
-      is_working: true,
     },
   });
 };

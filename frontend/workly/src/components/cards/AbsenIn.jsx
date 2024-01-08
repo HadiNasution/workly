@@ -61,7 +61,7 @@ export default function AbsenIn({ onLogin }) {
 
   const absenIn = () => {
     axiosGet(
-      `http://localhost:3000/api/employee/absenIn/${latitude}/${longitude}/${wfh}`,
+      `http://localhost:3000/api/employee/absenIn/-6.935783427330478/107.5782643924172/${wfh}`,
       token
     )
       .then((result) => {
@@ -126,6 +126,8 @@ export default function AbsenIn({ onLogin }) {
       );
     }
   };
+  console.log(latitude);
+  console.log(longitude);
 
   useEffect(() => {
     // fungsi untuk cek state setiap detik

@@ -103,6 +103,7 @@ h1 {
 body {
   display: flex;
   place-items: center;
+  width: 100%;
   min-width: 320px;
   min-height: 100vh;
   overflow-x: hidden !important;

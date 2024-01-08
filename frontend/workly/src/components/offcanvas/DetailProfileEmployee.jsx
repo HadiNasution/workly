@@ -111,10 +111,10 @@ export default function DetailProfileEmployee() {
               : `http://localhost:3000/${pict}`
           }
           alt="foto-profile"
-          className="rounded-circle"
-          width={60}
-          height={60}
-          style={{ cursor: "pointer" }}
+          className="profile rounded-circle"
+          width={70}
+          height={70}
+          style={{ cursor: "pointer", objectFit: "cover" }}
         />
       </a>
       <div
@@ -139,7 +139,7 @@ export default function DetailProfileEmployee() {
           ></button>
         </div>
         <div className="offcanvas-body text-start">
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center justify-content-between">
             <img
               src={
                 isPictNull
@@ -147,13 +147,13 @@ export default function DetailProfileEmployee() {
                   : `http://localhost:3000/${pict}`
               }
               alt="foto-profile"
-              className="rounded-circle me-3"
+              className="profile rounded-circle me-3"
               width={100}
               height={100}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", objectFit: "cover" }}
             />
             <form
-              className="mb-3"
+              className="mb-3 w-75"
               onSubmit={updateFotoProfile}
               encType="multipart/form-data"
             >
