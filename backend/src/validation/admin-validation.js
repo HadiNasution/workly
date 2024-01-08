@@ -109,6 +109,12 @@ const adminUpdateSetting = Joi.object({
   using_shot: Joi.boolean().optional(),
 });
 
+// validasi untuk membuat announcement
+const adminCreateAnnouncementValidation = Joi.object({
+  announcement: Joi.string().optional(),
+  message: Joi.string().max(255).optional(),
+});
+
 export {
   adminLoginValidation,
   adminRegistValidation,
@@ -120,4 +126,5 @@ export {
   adminUpdateEmployeeValidation,
   adminSearchEmployeeValidation,
   adminUpdateSetting,
+  adminCreateAnnouncementValidation,
 };

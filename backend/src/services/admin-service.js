@@ -11,6 +11,7 @@ import {
   adminSearchEmployeeValidation,
   adminUpdateSetting,
   changePasswordValidation,
+  adminCreateAnnouncementValidation,
 } from "../validation/admin-validation.js";
 import { validate } from "../validation/validation.js";
 import bcrypt from "bcrypt";
@@ -1297,6 +1298,49 @@ const downloadRecap = async () => {
   return csvWriter.writeRecords(extractedData);
 };
 
+const createAnnouncement = async (request) => {
+  const createRequest = validate(adminCreateAnnouncementValidation, request);
+
+  const oldData = await prismaClient.announcement.findFirst({
+    where: {
+      id: 1,
+    },
+    select: {
+      announcement: true,
+      message: true,
+    },
+  });
+
+  const announcement = createRequest.announcement ?? oldData.announcement;
+  const message = createRequest.message ?? oldData.message;
+
+  return await prismaClient.announcement.update({
+    data: {
+      announcement,
+      message,
+    },
+    where: {
+      id: 1,
+    },
+    select: {
+      announcement: true,
+      message: true,
+    },
+  });
+};
+
+const getAnnouncement = async () => {
+  return prismaClient.announcement.findFirst({
+    where: {
+      id: 1,
+    },
+    select: {
+      announcement: true,
+      message: true,
+    },
+  });
+};
+
 export default {
   login,
   regist,
@@ -1323,4 +1367,6 @@ export default {
   getSetting,
   generateShot,
   downloadRecap,
+  createAnnouncement,
+  getAnnouncement,
 };

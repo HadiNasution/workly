@@ -249,6 +249,24 @@ const downloadRecap = async (req, res, next) => {
   }
 };
 
+const createAnnouncement = async (req, res, next) => {
+  try {
+    const result = await adminService.createAnnouncement(req.body);
+    res.status(201).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getAnnouncement = async (req, res, next) => {
+  try {
+    const result = await adminService.getAnnouncement();
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   login,
   regist,
@@ -275,4 +293,6 @@ export default {
   getSetting,
   generateShot,
   downloadRecap,
+  createAnnouncement,
+  getAnnouncement,
 };

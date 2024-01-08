@@ -9,6 +9,7 @@ import ModalPengajuan from "../modals/ModalPengajuan";
 import ModalDaftarPengajuan from "../modals/ModalDaftarPengajuan";
 import { toastWarning, alertError, toastSuccess } from "../alert/SweetAlert";
 import { axiosGet, axiosDelete } from "../../controller/api-controller";
+import ModalAnnouncement from "../modals/ModalAnnouncement";
 
 const EmployeeHome = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const EmployeeHome = () => {
   const [worked, setWorked] = useState(false);
   const [isWorked, setIsWorked] = useState(false);
   const [officeName, setOfficeName] = useState("");
+  const [message, setMessage] = useState("");
   const token = sessionStorage.getItem("token");
 
   const handleAbsentState = () => {
@@ -32,6 +34,16 @@ const EmployeeHome = () => {
       })
       .catch((error) => {
         console.error("Get attendance failed : ", error);
+      });
+  };
+
+  const getAnnouncement = () => {
+    axiosGet("http://localhost:3000/api/employee/announcement", token)
+      .then((result) => {
+        setMessage(result.message);
+      })
+      .catch((error) => {
+        console.error("Get announcement failed", error);
       });
   };
 
@@ -69,6 +81,7 @@ const EmployeeHome = () => {
       }
     };
 
+    getAnnouncement();
     getSetting();
     getAttendance();
     checkTokenExpiration();
@@ -104,7 +117,7 @@ const EmployeeHome = () => {
           </div>
         </div>
       </div>
-      <div className="row mt-3 mb-3">
+      <div className="row mt-3">
         <div className="col">
           {isWorked ? (
             <AbsenOut isWorked={worked} />
@@ -113,12 +126,22 @@ const EmployeeHome = () => {
           )}
         </div>
       </div>
+      <div className="row mt-1">
+        <div className="col-md">
+          <div className="pesan-berjalan">
+            <i>⛔{message}⛔</i>
+          </div>
+        </div>
+      </div>
       <div className="row">
         <div className="col-md mt-2">
           <ModalPengajuan />
         </div>
         <div className="col-md mt-2">
           <ModalDaftarPengajuan />
+        </div>
+        <div className="col-md mt-2">
+          <ModalAnnouncement />
         </div>
       </div>
       <div className="row">

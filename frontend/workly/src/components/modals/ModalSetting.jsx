@@ -87,14 +87,14 @@ export default function ModalSetting() {
   }, []);
 
   return (
-    <div className="d-inline ms-3">
+    <div className="d-inline ms-2">
       <a
         className="stretched-link"
         style={{ color: "white", cursor: "pointer" }}
         data-bs-toggle="modal"
         data-bs-target="#settingModal"
       >
-        Pengaturan Aplikasi
+        Pengaturan
       </a>
 
       <div

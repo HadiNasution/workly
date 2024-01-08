@@ -73,9 +73,7 @@ export default function Log() {
     }
   };
 
-  useEffect(() => {
-    // console.log(result);
-  }, [result]);
+  useEffect(() => {}, [result]);
 
   return (
     <div className="row">
@@ -89,7 +87,7 @@ export default function Log() {
             <select
               className="form-select m-1"
               aria-label="Default select example"
-              id="month"
+              id="month-log"
               value={month}
               onChange={(e) => setMonth(e.target.value)}
             >
@@ -109,7 +107,7 @@ export default function Log() {
             <select
               className="form-select m-1"
               aria-label="Default select example"
-              id="year"
+              id="year-log"
               value={year}
               onChange={(e) => setYear(e.target.value)}
             >

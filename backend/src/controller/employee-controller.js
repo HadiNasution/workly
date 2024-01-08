@@ -155,6 +155,15 @@ const getShot = async (req, res, next) => {
   }
 };
 
+const getAnnouncement = async (req, res, next) => {
+  try {
+    const result = await employeeService.getAnnouncement();
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   login,
   logout,
@@ -171,4 +180,5 @@ export default {
   getSetting,
   getRecap,
   getShot,
+  getAnnouncement,
 };

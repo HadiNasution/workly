@@ -7,6 +7,7 @@ import RecapAdminTab from "../tabs/RecapAdmin";
 import ModalSetting from "../modals/ModalSetting";
 import ModalKelolaPengajuan from "../modals/ModalKelolaPengajuan";
 import ModalGantiPassword from "../modals/ModalGantiPassword";
+import ModalCreateAnnouncement from "../modals/ModalCreateAnnouncement";
 
 const AdminHome = () => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const AdminHome = () => {
                   height={60}
                   width={60}
                 ></img>
-                <p className="d-inline ms-3">
+                <p className="d-inline ms-2">
                   <a
                     className="stretched-link"
                     style={{ color: "white", cursor: "pointer" }}
@@ -143,7 +144,7 @@ const AdminHome = () => {
                 height={60}
                 width={60}
               ></img>
-              <p className="d-inline ms-3">
+              <p className="d-inline ms-2">
                 <a
                   className="stretched-link"
                   style={{ color: "white", cursor: "pointer" }}
@@ -158,6 +159,9 @@ const AdminHome = () => {
         {showSuperAdminMenu()}
         <div className="col">
           <ModalKelolaPengajuan />
+        </div>
+        <div className="col">
+          <ModalCreateAnnouncement />
         </div>
       </div>
       <div className="row mt-4">

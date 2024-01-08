@@ -34,5 +34,7 @@ adminRoute.get("/log", adminController.log);
 adminRoute.get("/setting", adminController.getSetting);
 adminRoute.post("/setting", adminController.updateSetting);
 adminRoute.get("/download/recap", adminController.downloadRecap);
+adminRoute.post("/announcement", adminController.createAnnouncement);
+adminRoute.get("/announcement", adminController.getAnnouncement);
 
 export { adminRoute };

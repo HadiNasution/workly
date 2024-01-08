@@ -746,6 +746,18 @@ const getShot = async () => {
   });
 };
 
+const getAnnouncement = async () => {
+  return prismaClient.announcement.findFirst({
+    where: {
+      id: 1,
+    },
+    select: {
+      announcement: true,
+      message: true,
+    },
+  });
+};
+
 export default {
   login,
   logout,
@@ -762,4 +774,5 @@ export default {
   getSetting,
   getRecap,
   getShot,
+  getAnnouncement,
 };

@@ -83,7 +83,7 @@ export default function RecapMonthAdmin() {
             <select
               className="form-select m-1"
               aria-label="Default select example"
-              id="month"
+              id="month-recap"
               value={month}
               onChange={(e) => setMonth(e.target.value)}
             >
@@ -103,7 +103,7 @@ export default function RecapMonthAdmin() {
             <select
               className="form-select m-1"
               aria-label="Default select example"
-              id="year"
+              id="year-recap"
               value={year}
               onChange={(e) => setYear(e.target.value)}
             >

@@ -45,7 +45,6 @@ export default function ModalPengajuan() {
     const end_date = document.getElementById("waktu-selesai").value;
     const surat = document.getElementById("surat");
     const images = surat.files[0];
-    const token = sessionStorage.getItem("token");
 
     try {
       const formData = new FormData();
@@ -73,8 +72,10 @@ export default function ModalPengajuan() {
         );
       }
     } catch (error) {
-      console.error("Server Response:", error.response.data.errors);
-      alertError("Ops! Pengajuan gagal dikirim", error.response.data.errors);
+      console.error("Server Response:", error);
+      if (error.response) {
+        alertError("Ops! Pengajuan gagal dikirim", error.response.data.errors);
+      }
     }
   };
 

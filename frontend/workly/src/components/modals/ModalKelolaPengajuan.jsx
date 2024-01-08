@@ -138,7 +138,7 @@ export default function ModalKelolaPengajuan() {
             height={60}
             width={60}
           ></img>
-          <p className="d-inline ms-3">
+          <p className="d-inline ms-2">
             <a
               className="stretched-link"
               style={{ color: "white", cursor: "pointer" }}
