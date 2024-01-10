@@ -14,7 +14,7 @@ export default function RecapMonthAdmin() {
   const [month, setMonth] = useState(currentMonth + 1);
   const [result, setResult] = useState([]);
   const [showDownload, setShowDownload] = useState(false);
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("admin-token");
 
   const getRecap = async (event) => {
     event.preventDefault();

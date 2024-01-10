@@ -9,10 +9,10 @@ import Swal from "sweetalert2";
 import { toastSuccess, alertError, toastWarning } from "../alert/SweetAlert";
 import { dayString, monthString, date, year } from "../../utils/date-time";
 
-export default function AbsenOut({ isWorked }) {
+export default function AbsenOut() {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [disable, setDisable] = useState(!isWorked);
+  const [disable, setDisable] = useState(localStorage.getItem("disable"));
   const [hours, setHours] = useState(new Date().getHours());
   const [minutes, setMinutes] = useState(new Date().getMinutes());
   const token = sessionStorage.getItem("token");
@@ -29,7 +29,7 @@ export default function AbsenOut({ isWorked }) {
       cancelButtonText: "Batal",
     }).then((result) => {
       if (result.isConfirmed) {
-        setDisable(true);
+        setDisable(false);
         absenOut();
       }
     });
@@ -107,9 +107,9 @@ export default function AbsenOut({ isWorked }) {
         <button
           onClick={confirmOut}
           className="btn btn-primary w-100 m-1"
-          disabled={disable}
+          disabled={!disable}
         >
-          {!disable ? "Absen keluar" : "Anda sudah absen keluar"}
+          {!disable ? "Anda sudah absen keluar" : "Absen keluar"}
         </button>
       </div>
       {latitude && longitude ? null : (

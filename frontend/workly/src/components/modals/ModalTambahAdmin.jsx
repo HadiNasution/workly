@@ -7,7 +7,7 @@ export default function ModalTambahAdmin() {
   const [error, setError] = useState("");
   const [setting, setSetting] = useState("");
   const [superAdmin, setSuperAdmin] = useState(false);
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("admin-token");
 
   const tambahAdmin = async (event) => {
     event.preventDefault();

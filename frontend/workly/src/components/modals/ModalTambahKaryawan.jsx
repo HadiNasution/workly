@@ -14,7 +14,7 @@ export default function ModalTambahKaryawan() {
     const departmen = document.getElementById("departmen").value;
     const tanggalMasuk = document.getElementById("tanggal-masuk").value;
     const tanggalKeluar = document.getElementById("tanggal-keluar").value;
-    const token = sessionStorage.getItem("token");
+    const token = sessionStorage.getItem("admin-token");
 
     try {
       const { data } = await axios.post(

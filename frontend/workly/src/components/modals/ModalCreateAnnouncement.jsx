@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 export default function ModalCreateAnnouncement() {
   const [announcement, setAnnouncement] = useState("");
   const [message, setMessage] = useState("");
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("admin-token");
 
   const getAnnouncement = () => {
     axiosGet("http://localhost:3000/api/admin/announcement", token)
@@ -56,8 +56,8 @@ export default function ModalCreateAnnouncement() {
           <img
             src="../../../public/assets/announcement.png"
             alt="holiday"
-            height={60}
-            width={60}
+            height={50}
+            width={50}
           ></img>
           <p className="d-inline ms-3">
             <a

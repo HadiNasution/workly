@@ -115,22 +115,6 @@ body {
   height: auto;
 }
 
-.pesan-berjalan {
-  white-space: nowrap;
-  overflow: hidden;
-  position: relative;
-  animation: berjalanAnimasi 30s linear infinite;
-}
-
-@keyframes berjalanAnimasi {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-}
-
 @keyframes shimmerAnimation {
   0% {
     background-position: -200% 0;

@@ -32,12 +32,12 @@ export default function LoginAdminform() {
       const name = data.data.name;
       const emailResponse = data.data.email;
       // simpan di storage
-      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("admin-token", token);
       sessionStorage.setItem("is-super-admin", isSuperAdmin);
-      sessionStorage.setItem("token-expires-at", tokenExpiresAt);
-      localStorage.setItem("name", name);
-      localStorage.setItem("nip", nip);
-      localStorage.setItem("email", emailResponse);
+      sessionStorage.setItem("admin-token-expires-at", tokenExpiresAt);
+      localStorage.setItem("admin-name", name);
+      localStorage.setItem("admin-nip", nip);
+      localStorage.setItem("admin-email", emailResponse);
       toastSuccess("Login berhasil!", "Senang melihat anda lagi");
       // redirect ke halaman home admin
       navigate("/admin/home");

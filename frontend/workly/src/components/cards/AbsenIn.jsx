@@ -134,35 +134,42 @@ export default function AbsenIn({ onLogin }) {
     const shotInterval = setInterval(() => {
       setHours(new Date().getHours());
       setMinutes(new Date().getMinutes());
-      // Mendapatkan nilai terkini dari shot
-      getShot();
-      // mendapatkan nilai terkini dari checkbox wfh
-      const value = document.getElementById("wfh");
-      // dapatkan nilai wfh
-      setWfh(value.checked);
-      // apakah nilai berubah sejak update sebelumnya
+
+      if (enableWfh) {
+        // mendapatkan nilai terkini dari checkbox wfh
+        const value = document.getElementById("wfh");
+        // dapatkan nilai wfh
+        setWfh(value.checked);
+      }
+
+      if (usingShot) {
+        // Mendapatkan nilai terkini dari shot
+        getShot();
+      }
     }, 1000); // Setiap detik
 
-    // jika state di databse berubah, maka update oldShot dan acak tombol
-    if (oldShot !== shot) {
-      // Mengupdate state jika nilai berubah
-      setOldShot(shot);
-      // acak tombol
-      shuffleLinks();
-    }
+    if (usingShot) {
+      // jika state di databse berubah, maka update oldShot dan acak tombol
+      if (oldShot !== shot) {
+        // Mengupdate state jika nilai berubah
+        setOldShot(shot);
+        // acak tombol
+        shuffleLinks();
+      }
 
-    // jika pengguna salah pilih shot selama 2x, maka mulai hitung
-    if (counter === 0) {
-      setCountdown(3600); // selama 1 jam (dalam detik)
-      countDownInterval = setInterval(() => {
-        setCountdown((prevCountdown) => {
-          if (prevCountdown === 0) {
-            clearInterval(countDownInterval);
-            setCounter(2); // Set counter kembali ke 2 setelah hitungan mundur selesai
-          }
-          return prevCountdown - 1;
-        });
-      }, 1000);
+      // jika pengguna salah pilih shot selama 2x, maka mulai hitung
+      if (counter === 0) {
+        setCountdown(3600); // selama 1 jam (dalam detik)
+        countDownInterval = setInterval(() => {
+          setCountdown((prevCountdown) => {
+            if (prevCountdown === 0) {
+              clearInterval(countDownInterval);
+              setCounter(2); // Set counter kembali ke 2 setelah hitungan mundur selesai
+            }
+            return prevCountdown - 1;
+          });
+        }, 1000);
+      }
     }
 
     getSetting();
@@ -209,6 +216,16 @@ export default function AbsenIn({ onLogin }) {
             WFH
           </label>
         </div>
+        {wfh ? (
+          <div className="row">
+            <div className="col">
+              <i>
+                Pastikan anda sudah mengajukan izin WFH sebelum melakukan absen
+                WFH
+              </i>
+            </div>
+          </div>
+        ) : null}
       </div>
       <div className="card-body">
         {usingShot ? (

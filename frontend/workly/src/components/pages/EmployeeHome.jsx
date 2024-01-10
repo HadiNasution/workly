@@ -24,6 +24,7 @@ const EmployeeHome = () => {
 
   const handleAbsentState = () => {
     setIsWorked(!worked);
+    localStorage.setItem("disable", false);
   };
 
   const getAttendance = () => {
@@ -51,7 +52,10 @@ const EmployeeHome = () => {
     axiosDelete("http://localhost:3000/api/employee/logout", token)
       .then((result) => {
         sessionStorage.clear();
-        localStorage.clear();
+        localStorage.removeItem("name");
+        localStorage.removeItem("email");
+        localStorage.removeItem("role");
+        localStorage.removeItem("avatar");
         toastSuccess("See you!", "");
         // lalu redirect ke halaman login
         navigate("/");
@@ -88,7 +92,7 @@ const EmployeeHome = () => {
     const intervalId = setInterval(checkTokenExpiration, 60000);
 
     return () => clearInterval(intervalId);
-  }, [worked]);
+  }, []);
 
   return (
     <>
@@ -119,18 +123,7 @@ const EmployeeHome = () => {
       </div>
       <div className="row mt-3">
         <div className="col">
-          {isWorked ? (
-            <AbsenOut isWorked={worked} />
-          ) : (
-            <AbsenIn onLogin={handleAbsentState} />
-          )}
-        </div>
-      </div>
-      <div className="row mt-1">
-        <div className="col-md">
-          <div className="pesan-berjalan">
-            <i>⛔{message}⛔</i>
-          </div>
+          {isWorked ? <AbsenOut /> : <AbsenIn onLogin={handleAbsentState} />}
         </div>
       </div>
       <div className="row">
@@ -147,6 +140,13 @@ const EmployeeHome = () => {
       <div className="row">
         <div className="col">
           <RecapEmployeeTab />
+        </div>
+      </div>
+      <div className="row mt-1">
+        <div className="col-md">
+          <div className="rounded p-1 bg-info text-center bg-opacity-10 border border-info  m-2 w-100">
+            <i>📢{message}📢</i>
+          </div>
         </div>
       </div>
     </>

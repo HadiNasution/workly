@@ -11,7 +11,7 @@ export default function ModalUpdateAdmin({ adminId, modalId, reload }) {
   const [status, setStatus] = useState(false);
   const [idUser, setIdUser] = useState(0);
   const [id, setId] = useState(adminId);
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("admin-token");
 
   const getAdmin = async (id) => {
     axiosGet(`http://localhost:3000/api/admin/get/admin/${id}`, token)

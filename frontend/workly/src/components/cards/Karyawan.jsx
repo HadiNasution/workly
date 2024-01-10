@@ -9,7 +9,7 @@ import ModalUpdateKaryawan from "../modals/ModalUpdateKaryawan";
 export default function Karyawan() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("admin-token");
 
   const getEmployee = () => {
     axiosGet(`http://localhost:3000/api/admin/get/employee`, token)
@@ -162,7 +162,17 @@ export default function Karyawan() {
   return (
     <div>
       {loading ? (
-        <ShimmerCard />
+        <>
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+        </>
       ) : (
         <div>
           {data.length === 0 ? (

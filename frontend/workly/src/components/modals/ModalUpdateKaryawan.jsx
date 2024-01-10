@@ -14,7 +14,7 @@ export default function ModalUpdateKaryawan({ userId, modalId, reload }) {
   const [quit, setQuit] = useState("");
   const [idUser, setIdUser] = useState(0);
   const [id, setId] = useState(userId);
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("admin-token");
 
   const getEmployee = async (id) => {
     axiosGet(`http://localhost:3000/api/admin/get/employee/${id}`, token)

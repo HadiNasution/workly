@@ -17,7 +17,7 @@ export default function ModalSetting() {
   const [leavesLimit, setLeavesLimit] = useState(0);
   const [enableWfh, setEnableWfh] = useState(true);
   const [usingShot, setUsingShot] = useState(true);
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("admin-token");
 
   const getSetting = () => {
     axiosGet("http://localhost:3000/api/admin/setting", token)

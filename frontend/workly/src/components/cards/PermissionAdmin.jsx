@@ -29,7 +29,7 @@ export function CardPermissionAdminApproval({
   images,
   note,
 }) {
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("admin-token");
   const approve = (id) => {
     axiosPutNoContent(`http://localhost:3000/api/admin/permission/${id}`, token)
       .then((result) => {

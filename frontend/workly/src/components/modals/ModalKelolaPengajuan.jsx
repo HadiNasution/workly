@@ -11,7 +11,7 @@ export default function ModalKelolaPengajuan() {
   const [approved, setApproved] = useState(0);
   const [approve, setApprove] = useState(0);
   const [rejected, setRejected] = useState(0);
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("admin-token");
 
   const getPengajuan = () => {
     axiosGet("http://localhost:3000/api/admin/permission", token)
@@ -135,8 +135,8 @@ export default function ModalKelolaPengajuan() {
           <img
             src="../../../public/assets/bell.png"
             alt="pengajuan-icon"
-            height={60}
-            width={60}
+            height={50}
+            width={50}
           ></img>
           <p className="d-inline ms-2">
             <a
@@ -145,7 +145,7 @@ export default function ModalKelolaPengajuan() {
               data-bs-toggle="modal"
               data-bs-target="#kelolaPengajuanModal"
             >
-              Kelola Pengajuan
+              Pengajuan
             </a>
           </p>
         </div>

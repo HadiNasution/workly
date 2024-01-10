@@ -7,7 +7,7 @@ import { timeFormat } from "../../utils/date-time";
 export default function RecapDayAdmin() {
   const [dataRecap, setDataRecap] = useState([]);
   const [loading, setLoading] = useState(true);
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("admin-token");
 
   const getRecap = async () => {
     axiosGet(`http://localhost:3000/api/admin/recap/day`, token)
@@ -58,9 +58,7 @@ export default function RecapDayAdmin() {
             <p>
               {item.is_late ? (
                 <span style={{ color: "#ff4d52" }}>Terlambat</span>
-              ) : (
-                <span className="text-success">Terlambat</span>
-              )}
+              ) : null}
             </p>
           </div>
         </div>
@@ -70,19 +68,28 @@ export default function RecapDayAdmin() {
 
   useEffect(() => {
     //reload data recap setiap 1 detik
-    // const reloadRecap = () => {
-    //   getRecap();
-    // };
-    // reloadRecap();
-    // const intervalId = setInterval(reloadRecap, 1000);
-    // return () => clearInterval(intervalId);
-    getRecap();
+    const reloadRecap = () => {
+      getRecap();
+    };
+    reloadRecap();
+    const intervalId = setInterval(reloadRecap, 1000);
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
     <div>
       {loading ? (
-        <ShimmerCard />
+        <>
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+        </>
       ) : (
         <div>
           {dataRecap.length === 0 ? (

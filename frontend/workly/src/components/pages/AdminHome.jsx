@@ -1,7 +1,7 @@
 import { axiosDelete } from "../../controller/api-controller";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { isTokenExpired } from "../../auth/auth-login";
+import { isAdminTokenExpired } from "../../auth/auth-login";
 import { toastSuccess, alertError, toastWarning } from "../alert/SweetAlert";
 import RecapAdminTab from "../tabs/RecapAdmin";
 import ModalSetting from "../modals/ModalSetting";
@@ -11,18 +11,20 @@ import ModalCreateAnnouncement from "../modals/ModalCreateAnnouncement";
 
 const AdminHome = () => {
   const navigate = useNavigate();
-  const name = localStorage.getItem("name");
-  const email = localStorage.getItem("email");
-  const nip = localStorage.getItem("nip");
+  const name = localStorage.getItem("admin-name");
+  const email = localStorage.getItem("admin-email");
+  const nip = localStorage.getItem("admin-nip");
   const superAdmin = sessionStorage.getItem("is-super-admin");
   let role = superAdmin === "true" ? "Super admin" : "Administrator";
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("admin-token");
 
   const logoutAdmin = () => {
     axiosDelete("http://localhost:3000/api/admin/logout", token)
       .then((result) => {
         sessionStorage.clear();
-        localStorage.clear();
+        localStorage.removeItem("admin-name");
+        localStorage.removeItem("admin-nip");
+        localStorage.removeItem("admin-email");
         // lalu redirect ke halaman login
         toastSuccess("See you!", "");
         navigate("/");
@@ -43,8 +45,8 @@ const AdminHome = () => {
                 <img
                   src="../../../public/assets/admin.png"
                   alt="admin-icon"
-                  height={60}
-                  width={60}
+                  height={50}
+                  width={50}
                 ></img>
                 <p className="d-inline ms-2">
                   <a
@@ -52,7 +54,7 @@ const AdminHome = () => {
                     style={{ color: "white", cursor: "pointer" }}
                     onClick={() => navigate("/admin/manage/admin")}
                   >
-                    Kelola Admin
+                    Admin
                   </a>
                 </p>
               </div>
@@ -64,8 +66,8 @@ const AdminHome = () => {
                 <img
                   src="../../../public/assets/setting.png"
                   alt="admin-icon"
-                  height={60}
-                  width={60}
+                  height={50}
+                  width={50}
                 ></img>
                 <ModalSetting />
               </div>
@@ -81,7 +83,7 @@ const AdminHome = () => {
   useEffect(() => {
     // Fungsi untuk pengecekan expired token
     const checkTokenExpiration = () => {
-      if (isTokenExpired()) {
+      if (isAdminTokenExpired()) {
         toastWarning("Sesi habis", "Silahkan untuk login kembali");
         logoutAdmin();
       }
@@ -141,8 +143,8 @@ const AdminHome = () => {
               <img
                 src="../../../public/assets/employee.png"
                 alt="employee-icon"
-                height={60}
-                width={60}
+                height={50}
+                width={50}
               ></img>
               <p className="d-inline ms-2">
                 <a
@@ -150,7 +152,7 @@ const AdminHome = () => {
                   style={{ color: "white", cursor: "pointer" }}
                   onClick={() => navigate("/admin/manage/employee")}
                 >
-                  Kelola Karyawan
+                  Karyawan
                 </a>
               </p>
             </div>

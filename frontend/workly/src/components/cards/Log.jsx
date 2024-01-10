@@ -20,7 +20,7 @@ export default function Log() {
     event.preventDefault();
 
     try {
-      const token = sessionStorage.getItem("token");
+      const token = sessionStorage.getItem("admin-token");
       const { data } = await axios.get(`http://localhost:3000/api/admin/log`, {
         headers: {
           Authorization: token,

@@ -9,7 +9,7 @@ import ModalUpdateAdmin from "../modals/ModalUpdateAdmin";
 export default function Admin() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("admin-token");
 
   const getAdmin = () => {
     axiosGet(`http://localhost:3000/api/admin/get/admin`, token)
@@ -98,7 +98,17 @@ export default function Admin() {
   return (
     <div>
       {loading ? (
-        <ShimmerCard />
+        <>
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+          <ShimmerCard />
+        </>
       ) : (
         <div>
           {data.length === 0 ? (

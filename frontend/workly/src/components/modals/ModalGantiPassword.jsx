@@ -6,7 +6,7 @@ export default function ModalGantiPassword() {
     event.preventDefault();
     const newPass = document.getElementById("password").value;
     try {
-      const token = sessionStorage.getItem("token");
+      const token = sessionStorage.getItem("admin-token");
       const { data } = await axios.put(
         "http://localhost:3000/api/admin/change/password",
         {
