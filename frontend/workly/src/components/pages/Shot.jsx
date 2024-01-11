@@ -4,13 +4,13 @@ import { alertError } from "../alert/SweetAlert";
 
 export default function Shot() {
   const [shot, setShot] = useState("");
-  const [countdown, setCountdown] = useState(30); // Waktu mundur dalam detik
+  const [countdown, setCountdown] = useState(10); // Waktu mundur dalam detik
 
   const generateShot = () => {
     axiosPut(`http://localhost:3000/api/shot/generate`)
       .then((result) => {
         setShot(result.shot.toUpperCase());
-        setCountdown(30); // Mengatur ulang waktu mundur setelah generateShot (dalam detik)
+        setCountdown(10); // Mengatur ulang waktu mundur setelah generateShot (dalam detik)
       })
       .catch((error) => {
         console.error("Get shot failed : ", error);
@@ -27,7 +27,7 @@ export default function Shot() {
     // Fungsi untuk menjalankan generateShot setiap 30 detik (dalam milidetik)
     const intervalId = setInterval(() => {
       generateShot();
-    }, 30000);
+    }, 10000);
     generateShot();
     // Membersihkan interval saat komponen di-unmount atau selesai
     return () => {

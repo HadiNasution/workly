@@ -24,6 +24,16 @@
     display: block !important;
     margin-top: 8px;
   }
+
+  .card-login {
+    padding: 20px !important;
+    width: 100% !important;
+  }
+
+  .text-center {
+    width: 100% !important;
+    margin-bottom: 30px !important;
+  }
 }
 
 * {

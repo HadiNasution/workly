@@ -1,16 +1,22 @@
 import axios from "axios";
 import { toastSuccess, alertError } from "../alert/SweetAlert";
+import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
+import { useState } from "react";
 
 export default function ModalGantiPassword() {
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+
   const gantiPassword = async (event) => {
     event.preventDefault();
-    const newPass = document.getElementById("password").value;
     try {
       const token = sessionStorage.getItem("admin-token");
       const { data } = await axios.put(
         "http://localhost:3000/api/admin/change/password",
         {
-          password: newPass,
+          password,
         },
         {
           headers: {
@@ -64,13 +70,26 @@ export default function ModalGantiPassword() {
             </div>
             <div className="modal-body">
               <form onSubmit={gantiPassword}>
-                <input
-                  className="form-control"
-                  type="password"
-                  placeholder="Password baru"
-                  name="password"
-                  id="password"
-                />
+                <div class="input-group mb-3">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    className="form-control"
+                    aria-describedby="show"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  ></input>
+                  <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    style={{ cursor: "pointer" }}
+                    id="show"
+                  >
+                    {showPassword ? <BsEyeFill /> : <BsEyeSlashFill />}
+                  </button>
+                </div>
                 <button
                   className="btn btn-secondary btn-sm w-100 mt-3"
                   type="submit"

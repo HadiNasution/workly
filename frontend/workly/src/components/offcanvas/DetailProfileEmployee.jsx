@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { axiosGet, axiosDelete } from "../../controller/api-controller";
 import { toastSuccess, alertError } from "../alert/SweetAlert";
+import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 
 export default function DetailProfileEmployee() {
   const [profile, setProfile] = useState(null);
@@ -11,7 +12,11 @@ export default function DetailProfileEmployee() {
   const [pict, setPict] = useState(localStorage.getItem("avatar"));
   const [wfhLimit, setWfhLimit] = useState(0);
   const [leavesLimit, setLeavesLimit] = useState(0);
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const token = sessionStorage.getItem("token");
+
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   let isPictNull;
   if (pict === "null") {
@@ -82,7 +87,7 @@ export default function DetailProfileEmployee() {
       const { data } = await axios.put(
         "http://localhost:3000/api/employee/change/password",
         {
-          password: newPass,
+          password,
         },
         {
           headers: {
@@ -302,17 +307,27 @@ export default function DetailProfileEmployee() {
             <label style={{ fontWeight: "bold", fontSize: 16 }}>
               Ganti password
             </label>
-            <input
-              className="form-control"
-              type="password"
-              placeholder="Password baru"
-              name="password"
-              id="password"
-            />
-            <button
-              className="btn btn-secondary btn-sm w-100 mt-1"
-              type="submit"
-            >
+            <div class="input-group mb-1">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                className="form-control"
+                aria-describedby="show"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              ></input>
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                onClick={togglePasswordVisibility}
+                style={{ cursor: "pointer" }}
+                id="show"
+              >
+                {showPassword ? <BsEyeFill /> : <BsEyeSlashFill />}
+              </button>
+            </div>
+            <button className="btn btn-secondary btn-sm w-100" type="submit">
               Ganti password
             </button>
           </form>

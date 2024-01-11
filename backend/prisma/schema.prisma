@@ -62,7 +62,7 @@ model Attendance {
   updated_at DateTime? @updatedAt
   deleted_at DateTime? 
   employee_id Int?
-  employee Employee? @relation(fields: [employee_id], references: [id])
+  employee Employee? @relation(fields: [employee_id], references: [id], onDelete: Cascade)
 
   @@map("Attendance")
 }
@@ -77,7 +77,7 @@ model AttendanceRecap {
   count_works Int? @default(0)
   date DateTime
   employee_id Int?
-  employee Employee? @relation(fields: [employee_id], references: [id])
+  employee Employee? @relation(fields: [employee_id], references: [id],onDelete: Cascade)
   permission Permission[]
 
   @@map("AttendanceRecap")
@@ -98,9 +98,9 @@ model Permission {
   employee_id Int?
   admin_id Int?
   attendance_recap_id Int?
-  employee Employee? @relation(fields: [employee_id], references: [id])
+  employee Employee? @relation(fields: [employee_id], references: [id],onDelete: Cascade)
   admin Admin? @relation(fields: [admin_id], references: [id])
-  attendance_recap AttendanceRecap? @relation(fields: [attendance_recap_id], references: [id])
+  attendance_recap AttendanceRecap? @relation(fields: [attendance_recap_id], references: [id],onDelete: Cascade)
 
   @@map("Permission")
 }

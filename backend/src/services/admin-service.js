@@ -1259,7 +1259,7 @@ const downloadRecap = async () => {
     (data &&
       data.map((item, index) => {
         return {
-          no: index,
+          no: index + 1,
           late: item.count_late,
           sick: item.count_sick,
           permits: item.count_permits,

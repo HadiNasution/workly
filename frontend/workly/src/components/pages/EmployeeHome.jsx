@@ -142,9 +142,9 @@ const EmployeeHome = () => {
           <RecapEmployeeTab />
         </div>
       </div>
-      <div className="row mt-1">
+      <div className="row mt-1 text-center">
         <div className="col-md">
-          <div className="rounded p-1 bg-info text-center bg-opacity-10 border border-info  m-2 w-100">
+          <div className="info-message rounded p-1 bg-info bg-opacity-10 border border-info  m-2 w-100">
             <i>📢{message}📢</i>
           </div>
         </div>

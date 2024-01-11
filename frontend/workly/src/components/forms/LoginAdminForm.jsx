@@ -2,16 +2,21 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toastSuccess } from "../alert/SweetAlert";
+import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 
 export default function LoginAdminform() {
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState(null);
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+
   async function loginAdmin(event) {
     event.preventDefault();
 
     try {
       const email = document.getElementById("admin-email").value;
-      const password = document.getElementById("admin-password").value;
       const { data } = await axios.post(
         "http://localhost:3000/api/admin/login",
         {
@@ -72,13 +77,26 @@ export default function LoginAdminform() {
         <label htmlFor="admin-password" className="form-label">
           Password
         </label>
-        <input
-          type="password"
-          id="admin-password"
-          name="admin-password"
-          className="form-control"
-          aria-describedby="passwordHelpBlock"
-        ></input>
+        <div class="input-group mb-1">
+          <input
+            type={showPassword ? "text" : "password"}
+            id="admin-password"
+            name="admin-password"
+            className="form-control"
+            aria-describedby="show"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          ></input>
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            onClick={togglePasswordVisibility}
+            style={{ cursor: "pointer" }}
+            id="show"
+          >
+            {showPassword ? <BsEyeFill /> : <BsEyeSlashFill />}
+          </button>
+        </div>
         <button
           type="button"
           className="btn btn-link w-100 text-end"
