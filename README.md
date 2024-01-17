@@ -1,15 +1,23 @@
-# workly
+# Workly
 
 is an Employee Attendance Web App. It's my final project at WGS Bootcamp Batch 7.
 
+## Role
+- Super Admin
+- Admin
+- Employee
+
 ## Main feature
 
-- Employee Attendance by geolocation or QR code
-- Attendance recap
-- Employee profile details
+- Employee attendance by geolocation and Shot
+- Download attendance recap (CSV)
+- Permission approval (sick, leaves, permits, wfh)
+- WFH Support
 - Employee management by Admin
 - Admin management by Superadmin
-- Employee Attandance recap
+- Employee attandance recap by day and month
+- Post announcement and message by Admin
+- Setting
 
 ## Built using
 
